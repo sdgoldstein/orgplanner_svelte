@@ -3,15 +3,20 @@ module.exports = {
 	root: true,
 	extends: [
 		'eslint:recommended',
-		'plugin:@typescript-eslint/recommended',
-		'plugin:svelte/recommended'
+		'plugin:@typescript-eslint/recommended-type-checked',
+		'plugin:@typescript-eslint/stylistic-type-checked',
+		'plugin:svelte/recommended',
+		'../.eslintrc.base.js'
 	],
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint'],
 	parserOptions: {
+		project: './tsconfig.json',
 		sourceType: 'module',
 		ecmaVersion: 2020,
-		extraFileExtensions: ['.svelte']
+		extraFileExtensions: ['.svelte'],
+		ecmaFeatures: {
+			jsx: false
+		}
 	},
 	env: {
 		browser: true,

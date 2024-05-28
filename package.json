@@ -1,0 +1,11 @@
+{
+  "name": "orgplanner",
+  "version": "0.1",
+  "description": "Web Application for Planning and Communicating an Employee Organization Structure",
+  "private": true,
+  "workspaces": [
+    "common",
+    "frontend",
+    "backend"
+  ]
+}
