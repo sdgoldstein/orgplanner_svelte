@@ -1,0 +1,28 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./build",
+    "module": "ES2022",
+    "target": "ES2015",
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": [
+        "src/main/*"
+      ],
+      "@test_src/*": [
+        "src/test/*"
+      ],
+      "@mock_src/*": [
+        "src/mock/*"
+      ]
+    },
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
+}
