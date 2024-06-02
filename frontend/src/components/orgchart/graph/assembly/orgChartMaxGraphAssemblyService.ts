@@ -48,7 +48,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
     createExpandOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
-        const expandedImage = new ImageBox('resources/images/expanded.gif', 9, 9);
+        const expandedImage = new ImageBox('expanded.gif', 9, 9);
         this._expandedOverlay = new CellOverlay(expandedImage, 'Collapse', constants.ALIGN.CENTER);
         this._expandedOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
         this._expandedOverlay.addListener(InternalEvent.CLICK, clickListener);
@@ -56,7 +56,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
     createCollapseOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
-        const collapsedImage = new ImageBox('resources/images/collapsed.gif', 9, 9);
+        const collapsedImage = new ImageBox('collapsed.gif', 9, 9);
         this._collapsedOverlay = new CellOverlay(collapsedImage, 'Expand', constants.ALIGN.CENTER);
         this._collapsedOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
         this._collapsedOverlay.addListener(InternalEvent.CLICK, clickListener);
