@@ -1,5 +1,14 @@
 
+import {
+    DefaultServiceManagerStrategyImpl,
+    ServiceManager,
+    type ServiceManagerStrategy
+} from "@sphyrna/service-manager-ts";
+import {
+    OrgChartMaxGraphAssemblyServiceImpl
+} from "@src/components/orgchart/graph/assembly/orgChartMaxGraphAssemblyService";
 import {OrgPlannerManager} from "@src/model/orgPlanner";
+import {BrowserBasedFileService} from "orgplanner-common/jscore";
 
 import {OrgTemplateFactoryImpl} from "../../../common/src/main/model/orgTemplate";
 
@@ -13,25 +22,21 @@ class OrgPlannerAppServices
 
     static initServices(): void
     {
-        const serviceManager: ServiceManager = ServiceManagerFactory.getInstance().getServiceManager();
+        const serviceManagerStrategy: DefaultServiceManagerStrategyImpl = new DefaultServiceManagerStrategyImpl();
+        ServiceManager.setDefaultStrategy(serviceManagerStrategy);
 
-        const orgPlannerFactoryServiceProvider = new SingletonServiceProvider(OrgPlannerManager);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.ORG_PLANNER_MANAGER_SERVICE,
-                                     orgPlannerFactoryServiceProvider);
-
-        const orgTemplateFactoryServiceProvider = new SingletonServiceProvider(OrgTemplateFactoryImpl);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.ORG_TEMPLATE_FACTORY_SERVICE,
-                                     orgTemplateFactoryServiceProvider);
-
-        const localStorageDataServiceProvider = new SingletonServiceProvider(LocalStorageDataService);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.LOCAL_STORAGE_DATA_SERVICE,
-                                     localStorageDataServiceProvider);
-
-        const fileServiceProvider = new SingletonServiceProvider(BrowserBasedFileService);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.FILE_SERVICE, fileServiceProvider);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_PLANNER_MANAGER_SERVICE,
+                                                        OrgPlannerManager);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_TEMPLATE_FACTORY_SERVICE,
+                                                        OrgTemplateFactoryImpl);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.LOCAL_STORAGE_DATA_SERVICE,
+                                                        LocalStorageDataService);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.FILE_SERVICE,
+                                                        BrowserBasedFileService);
 
         // let dataServiceProvider = new SingletonServiceProvider(ServerDataService);
-        // serviceManager.defineService(OrgPlannerAppServicesConstants.DATA_SERVICE, dataServiceProvider);
+        // serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.DATA_SERVICE,
+        // dataServiceProvider);
 
         // let startupDataServiceConfig: ServiceConfiguration = new DefaultServiceConfiguration(new Map<string, any>([ [
         //     ChainingDataService.SERVICE_CHAIN_PROPERTY,
@@ -39,7 +44,8 @@ class OrgPlannerAppServices
         //     ]
         //] ]));
         // let startupDataServiceProvider = new SingletonServiceProvider(ChainingDataService);
-        // serviceManager.defineService(OrgPlannerAppServicesConstants.STARTUP_DATA_SERVICE, startupDataServiceProvider,
+        // serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.STARTUP_DATA_SERVICE,
+        // startupDataServiceProvider,
         //                              false, startupDataServiceConfig);
 
         // let startupDataServiceConfig: ServiceConfiguration = new DefaultServiceConfiguration(new Map<string, any>([ [
@@ -50,17 +56,12 @@ class OrgPlannerAppServices
         // let startupDataServiceProvider = new SingletonServiceProvider(ChainingDataService);
         //
 
-        const orgPlannerImportServiceProvider = new SingletonServiceProvider(TreeBasedOrgPlannerImportService);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.ORG_PLANNER_IMPORT_SERVICE,
-                                     orgPlannerImportServiceProvider);
-
-        const orgPlannerExportServiceProvider = new SingletonServiceProvider(OrgPlannerExportServiceDefaultImpl);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.ORG_PLANNER_EXPORT_SERVICE,
-                                     orgPlannerExportServiceProvider);
-
-        const orgChartMaxGraphAssemblyService = new NewInstanceServiceProvider(OrgChartMaxGraphAssemblyServiceImpl);
-        serviceManager.defineService(OrgPlannerAppServicesConstants.ORG_CHART_MAX_GRAPH_ASSEMBLY_SERVICE,
-                                     orgChartMaxGraphAssemblyService);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_PLANNER_IMPORT_SERVICE,
+                                                        TreeBasedOrgPlannerImportService);
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_PLANNER_EXPORT_SERVICE,
+                                                        OrgPlannerExportServiceDefaultImpl);
+        serviceManagerStrategy.registerSingletonService(
+            OrgPlannerAppServicesConstants.ORG_CHART_MAX_GRAPH_ASSEMBLY_SERVICE, OrgChartMaxGraphAssemblyServiceImpl);
     }
 }
 

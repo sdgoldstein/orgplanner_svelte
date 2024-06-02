@@ -1,5 +1,7 @@
 /**
  * PubSubListener is an interface used for listening to pub sub events
+ *
+ * // FIXME - This should be a Service
  */
 
 /**

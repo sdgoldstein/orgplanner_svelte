@@ -18,7 +18,7 @@ const config = {
 	},
 
 	compilerOptions: {
-		runes: true
+		/*runes: true*/ /* Need to turn this off for Flowbite */
 	}
 };
 
