@@ -1,6 +1,19 @@
-import { type Service, BaseService } from "@sphyrna/service-manager-ts";
-import { type OrgPlanner, OrgPlannerDefaultImpl } from "@src/model/orgPlanner";
-import { OrgDataCoreDefaultImpl, OrgPlanDefaultImpl, OrgSnapshotDefaultImpl, PlanningProjectDefaultImpl, TreeBasedOrgStructure, type ColorHex, type OrgDataCore, type OrgEntityPropertyDescriptor, type OrgPlan, type OrgPlannerColorTheme, type OrgSnapshot, type PlanningProject } from "orgplanner-common/model";
+import {BaseService, type Service} from "@sphyrna/service-manager-ts";
+import {type OrgPlanner, OrgPlannerDefaultImpl} from "@src/model/orgPlanner";
+import {
+    type ColorHex,
+    type OrgDataCore,
+    OrgDataCoreDefaultImpl,
+    type OrgEntityColorTheme,
+    type OrgEntityPropertyDescriptor,
+    type OrgPlan,
+    OrgPlanDefaultImpl,
+    type OrgSnapshot,
+    OrgSnapshotDefaultImpl,
+    type PlanningProject,
+    PlanningProjectDefaultImpl,
+    TreeBasedOrgStructure
+} from "orgplanner-common/model";
 
 interface JSONImport
 {
@@ -92,11 +105,11 @@ interface OrgPlannerImportService extends Service
 
 class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlannerImportService
 {
-    /**
-     * Populate the org structure from a json string.  This can be generated with a call to toJSON
-     *
-     * @param {string} json the json string contained the org structure data
-     */
+/**
+ * Populate the org structure from a json string.  This can be generated with a call to toJSON
+ *
+ * @param {string} json the json string contained the org structure data
+ */
     import(json: string):
         Promise <OrgPlanner> {
             return new Promise((resolve, reject) => {
@@ -116,7 +129,7 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
 
         const jsonColorTheme = orgPlanner.settings.colorTheme;
         const
-        colorTheme : OrgPlannerColorTheme = {
+        colorTheme : OrgEntityColorTheme = {
             name : jsonColorTheme.name,
                  label: jsonColorTheme.label,
                  managerColor: jsonColorTheme.managerColor,

@@ -1,7 +1,7 @@
 import {BaseService, type Service} from "@sphyrna/service-manager-ts";
 import type {OrgPlanner} from "@src/model/orgPlanner";
 import type {
-    Employee, OrgDataCore, OrgEntityPropertyDescriptor, OrgPlannerColorTheme, OrgSnapshot, OrgStructureVisitor,
+    Employee, OrgDataCore, OrgEntityColorTheme, OrgEntityPropertyDescriptor, OrgSnapshot, OrgStructureVisitor,
     Team} from "orgplanner-common/model";
 
 class JSONStringBuilder
@@ -178,10 +178,10 @@ class OrgPlannerExportServiceDefaultImpl extends BaseService implements OrgPlann
         jsonBuilder.closeArrayKey();
 
         jsonBuilder.appendObjectKey("colorTheme");
-        const colorTheme: OrgPlannerColorTheme = orgPlannerSettings.colorTheme;
+        const colorTheme: OrgEntityColorTheme = orgPlannerSettings.colorTheme;
         for (const nextKey in colorTheme)
         {
-            jsonBuilder.appendKey(nextKey, colorTheme[nextKey as keyof OrgPlannerColorTheme]);
+            jsonBuilder.appendKey(nextKey, colorTheme[nextKey as keyof OrgEntityColorTheme]);
         }
 
         jsonBuilder.closeObjectKey();

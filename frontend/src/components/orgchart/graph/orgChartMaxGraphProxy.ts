@@ -1,6 +1,6 @@
 
 
-import type {Employee, OrgEntity, OrgPlannerColorTheme, OrgStructure} from "orgplanner-common/model";
+import type {Employee, OrgEntity, OrgEntityColorTheme, OrgStructure} from "orgplanner-common/model";
 
 import type {OrgChartEntityVisibleState} from "../orgChartViewState";
 
@@ -11,7 +11,7 @@ interface OrgChartMaxGraphProxy
 {
     orgStructure: OrgStructure;
     visibilityState: OrgChartEntityVisibleState;
-    colorTheme: OrgPlannerColorTheme;
+    colorTheme: OrgEntityColorTheme;
     isReadOnly: boolean;
 
     isEntitySelected(): boolean
@@ -30,9 +30,9 @@ class OrgChartMaxGraphProxyImpl implements OrgChartMaxGraphProxy
     private _orgStructure: OrgStructure;
     private _visibilityState: OrgChartEntityVisibleState;
     private _isReadOnly: boolean;
-    private _colorTheme: OrgPlannerColorTheme;
+    private _colorTheme: OrgEntityColorTheme;
 
-    constructor(element: HTMLElement, orgStructure: OrgStructure, colorTheme: OrgPlannerColorTheme,
+    constructor(element: HTMLElement, orgStructure: OrgStructure, colorTheme: OrgEntityColorTheme,
                 visibilityState: OrgChartEntityVisibleState, isReadOnly: boolean)
     {
         this._element = element;
@@ -65,12 +65,12 @@ class OrgChartMaxGraphProxyImpl implements OrgChartMaxGraphProxy
         this._visibilityState = visibiltyStateToSet;
     }
 
-    get colorTheme(): OrgPlannerColorTheme
+    get colorTheme(): OrgEntityColorTheme
     {
         return this._colorTheme;
     }
 
-    set colorTheme(colorThemeToSet: OrgPlannerColorTheme)
+    set colorTheme(colorThemeToSet: OrgEntityColorTheme)
     {
         this._colorTheme = colorThemeToSet;
 

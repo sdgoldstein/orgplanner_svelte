@@ -1,62 +1,100 @@
 import {GuardedMap} from '@sphyrna/tscore';
 
+import {OrgEntityType, OrgEntityTypes} from "../orgStructure/orgEntity";
+
 type ColorHex = `#${string}`;
 
-interface OrgPlannerColorTheme {
-  name: string;
-  label: string;
-  managerColor: ColorHex;
-  icColor: ColorHex;
-  teamColor: ColorHex;
+interface OrgEntityTypeColorAssignment
+{
+    primary: ColorHex;
+    textOnPrimary: ColorHex;
+}
+interface OrgEntityColorTheme
+{
+    name: string;
+    label: string;
+
+    getColorAssignment(orgEntityType: OrgEntityType): OrgEntityTypeColorAssignment;
 }
 
-class OrgPlannerColorThemes {
-  private static readonly NAME_TO_THEME_MAP:
-      GuardedMap<string, OrgPlannerColorTheme> =
-          new Map<string, OrgPlannerColorTheme>();
+class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
+{
+    private readonly _typeToAssignmentMap: GuardedMap<OrgEntityType, OrgEntityTypeColorAssignment> =
+        new Map<OrgEntityType, OrgEntityTypeColorAssignment>();
 
-  static readonly DEEP_BLUE_THEME: OrgPlannerColorTheme = {
-    name: 'DEEP_BLUE_THEME',
-    label: 'Deep Blue',
-    managerColor: '#00004d',
-    teamColor: '#000080',
-    icColor: '#0000b3'
-  };
-  static readonly DEEP_RED_THEME: OrgPlannerColorTheme = {
-    name: 'DEEP_RED_THEME',
-    label: 'Deep Red',
-    managerColor: '#4d0000',
-    teamColor: '#800000',
-    icColor: '#b30000'
-  };
-  static readonly DEEP_GREEN_THEME: OrgPlannerColorTheme = {
-    name: 'DEEP_GREEN_THEME',
-    label: 'Deep Green',
-    managerColor: '#004d00',
-    teamColor: '#008000',
-    icColor: '#00b300'
-  };
+    constructor(public name: string, public label: string) {}
 
-  static {
-    OrgPlannerColorThemes.NAME_TO_THEME_MAP.set(
-        this.DEEP_BLUE_THEME.name, this.DEEP_BLUE_THEME);
-    OrgPlannerColorThemes.NAME_TO_THEME_MAP.set(
-        this.DEEP_RED_THEME.name, this.DEEP_RED_THEME);
-    OrgPlannerColorThemes.NAME_TO_THEME_MAP.set(
-        this.DEEP_GREEN_THEME.name, this.DEEP_GREEN_THEME);
-  }
-  static getColorThemeByName(name: string): OrgPlannerColorTheme {
-    if (!this.NAME_TO_THEME_MAP.has(name)) {
-      throw new Error('Color theme by name not found, ' + name);
+    getColorAssignment(orgEntityType: OrgEntityType): OrgEntityTypeColorAssignment
+    {
+        if (!this._typeToAssignmentMap.has(orgEntityType))
+        {
+
+            throw new Error(`Color assignment not found for org entity type, ${orgEntityType.name}`);
+        }
+
+        return this._typeToAssignmentMap.get(orgEntityType);
     }
 
-    return this.NAME_TO_THEME_MAP.get(name);
-  }
-
-  static themeIterator(): IterableIterator<OrgPlannerColorTheme> {
-    return this.NAME_TO_THEME_MAP.values();
-  }
+    setColorAssignment(orgEntityType: OrgEntityType, colorAssignment: OrgEntityTypeColorAssignment)
+    {
+        this._typeToAssignmentMap.set(orgEntityType, colorAssignment);
+    }
 }
 
-export {OrgPlannerColorThemes};
-export type {OrgPlannerColorTheme, ColorHex};
+class OrgEntityColorThemes
+{
+    private static readonly NAME_TO_THEME_MAP: GuardedMap<string, OrgEntityColorTheme> =
+        new Map<string, OrgEntityColorTheme>();
+
+    static readonly DEEP_BLUE_THEME: OrgEntityColorTheme =
+        new DefaultOrgEntityColorThemeImpl("DEEP_BLUE_THEME", "Deep Blue");
+    static readonly DEEP_RED_THEME: OrgEntityColorTheme =
+        new DefaultOrgEntityColorThemeImpl("DEEP_RED_THEME", "Deep Red");
+    static readonly DEEP_GREEN_THEME: OrgEntityColorTheme =
+        new DefaultOrgEntityColorThemeImpl("DEEP_GREEN_THEME", "Deep Green");
+
+    static
+    {
+        /* A bit ugly here in that we're type casting, but not sure of a better way to handle this without passing a
+         * mapping in the constructor */
+        let deepBlueTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_BLUE_THEME as DefaultOrgEntityColorThemeImpl)
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#00004d", textOnPrimary : "#FFFFFF"});
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                                         {primary : "#000080", textOnPrimary : "#FFFFFF"});
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#0000b3", textOnPrimary : "#FFFFFF"});
+
+        let deepRedTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_RED_THEME as DefaultOrgEntityColorThemeImpl)
+        deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#4d0000", textOnPrimary : "#FFFFFF"});
+        deepRedTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                                        {primary : "#800000", textOnPrimary : "#FFFFFF"});
+        deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#b30000", textOnPrimary : "#FFFFFF"});
+
+        let deepGreenTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_GREEN_THEME as DefaultOrgEntityColorThemeImpl)
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#004d00", textOnPrimary : "#FFFFFF"});
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                                          {primary : "#008000", textOnPrimary : "#FFFFFF"});
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#00b300", textOnPrimary : "#FFFFFF"});
+
+        OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_BLUE_THEME.name, this.DEEP_BLUE_THEME);
+        OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_RED_THEME.name, this.DEEP_RED_THEME);
+        OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_GREEN_THEME.name, this.DEEP_GREEN_THEME);
+    }
+
+    static getColorThemeByName(name: string): OrgEntityColorTheme
+    {
+        if (!this.NAME_TO_THEME_MAP.has(name))
+        {
+            throw new Error('Color theme by name not found, ' + name);
+        }
+
+        return this.NAME_TO_THEME_MAP.get(name);
+    }
+
+    static themeIterator(): IterableIterator<OrgEntityColorTheme>
+    {
+        return this.NAME_TO_THEME_MAP.values();
+    }
+}
+
+export {OrgEntityColorThemes};
+export type {OrgEntityColorTheme, ColorHex};

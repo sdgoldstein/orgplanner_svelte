@@ -7,11 +7,11 @@ import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppService
 import {
     EmployeeReservedPropertyDescriptors,
     OrgDataCoreDefaultImpl,
+    type OrgEntityColorTheme,
+    OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
     type OrgPlan,
     OrgPlanDefaultImpl,
-    type OrgPlannerColorTheme,
-    OrgPlannerColorThemes,
     type OrgSnapshot,
     type OrgStructure,
     type OrgTemplate,
@@ -29,14 +29,14 @@ const DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS: Set<OrgEntityPropertyDescriptor> = 
 
 interface OrgPlannerSettings
 {
-    colorTheme: OrgPlannerColorTheme;
+    colorTheme: OrgEntityColorTheme;
     employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>;
 }
 
 class OrgPlannerSettingsDefaultImpl implements OrgPlannerSettings
 {
     employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor> = DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS;
-    colorTheme: OrgPlannerColorTheme = OrgPlannerColorThemes.DEEP_BLUE_THEME;
+    colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
 }
 
 /**

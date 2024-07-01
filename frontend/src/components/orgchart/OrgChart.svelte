@@ -2,7 +2,7 @@
 
 <script lang="ts">
     import {
-        OrgPlannerColorThemes,
+        OrgEntityColorThemes,
         type OrgEntityPropertyDescriptor,
     } from "orgplanner-common/model";
 
@@ -13,11 +13,12 @@
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;
     let orgChartHelper: OrgChartHelper | undefined;
+    let width: number = $state(0);
 
     let {
         orgStructure,
         mode = OrgChartMode.PLANNING,
-        colorTheme = OrgPlannerColorThemes.DEEP_BLUE_THEME,
+        colorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME,
         propertyDescriptors = new Set<OrgEntityPropertyDescriptor>(),
     }: OrgChartProps = $props();
 
@@ -40,17 +41,22 @@
         if (!orgChartHelper) {
             throw new Error("orgChartHelper undefined in $effect");
         }
-        orgChartHelper.updated({
-            orgStructure,
-            mode,
-            colorTheme,
-            propertyDescriptors,
-        });
+        if (width > 0) {
+            orgChartHelper.updated({
+                orgStructure,
+                mode,
+                colorTheme,
+                propertyDescriptors,
+            });
+        }
     });
 </script>
 
 <div
+    id="chart-container"
     data-id="chart-container"
     data-testid="chart-container"
+    class="w-full"
     bind:this={chartContainer}
+    bind:clientWidth={width}
 ></div>

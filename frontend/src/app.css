@@ -2,7 +2,120 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+    :root {
+        /* =~= Theme Properties =~= */
+        --theme-font-family: 'Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+        --theme-font-color-base: var(--color-primary-900);
+        --theme-border-base: 1px;
+
+        /* =~= Theme On-X Colors =~= */
+        --text-on-success: var(--color-primary-900);
+        --text-on-warning: var(--color-primary-900);
+        --text-on-error: var(--color-primary-900);
+        --text-on-surface: 0 0 0;
+
+        /* success | #62E498 */
+        --color-success-50: 231 251 240;
+        /* #e7fbf0 */
+        --color-success-100: 224 250 234;
+        /* #e0faea */
+        --color-success-200: 216 248 229;
+        /* #d8f8e5 */
+        --color-success-300: 192 244 214;
+        /* #c0f4d6 */
+        --color-success-400: 145 236 183;
+        /* #91ecb7 */
+        --color-success-500: 98 228 152;
+        /* #62E498 */
+        --color-success-600: 88 205 137;
+        /* #58cd89 */
+        --color-success-700: 74 171 114;
+        /* #4aab72 */
+        --color-success-800: 59 137 91;
+        /* #3b895b */
+        --color-success-900: 48 112 74;
+        /* #30704a */
+
+        /* warning | #FFF275 */
+        --color-warning-50: 255 253 234;
+        /* #fffdea */
+        --color-warning-100: 255 252 227;
+        /* #fffce3 */
+        --color-warning-200: 255 252 221;
+        /* #fffcdd */
+        --color-warning-300: 255 250 200;
+        /* #fffac8 */
+        --color-warning-400: 255 246 158;
+        /* #fff69e */
+        --color-warning-500: 255 242 117;
+        /* #FFF275 */
+        --color-warning-600: 230 218 105;
+        /* #e6da69 */
+        --color-warning-700: 191 182 88;
+        /* #bfb658 */
+        --color-warning-800: 153 145 70;
+        /* #999146 */
+        --color-warning-900: 125 119 57;
+        /* #7d7739 */
+
+        /* error | #FA0F3A */
+        --color-error-50: 254 219 225;
+        /* #fedbe1 */
+        --color-error-100: 254 207 216;
+        /* #fecfd8 */
+        --color-error-200: 254 195 206;
+        /* #fec3ce */
+        --color-error-300: 253 159 176;
+        /* #fd9fb0 */
+        --color-error-400: 252 87 117;
+        /* #fc5775 */
+        --color-error-500: 250 15 58;
+        /* #FA0F3A */
+        --color-error-600: 225 14 52;
+        /* #e10e34 */
+        --color-error-700: 188 11 44;
+        /* #bc0b2c */
+        --color-error-800: 150 9 35;
+        /* #960923 */
+        --color-error-900: 123 7 28;
+        /* #7b071c */
+
+        /* surface | #939E9F */
+        --color-surface-50: 239 240 241;
+        /* #eff0f1 */
+        --color-surface-100: 233 236 236;
+        /* #e9ecec */
+        --color-surface-200: 228 231 231;
+        /* #e4e7e7 */
+        --color-surface-300: 212 216 217;
+        /* #d4d8d9 */
+        --color-surface-400: 179 187 188;
+        /* #b3bbbc */
+        --color-surface-500: 147 158 159;
+        /* #939E9F */
+        --color-surface-600: 132 142 143;
+        /* #848e8f */
+        --color-surface-700: 110 119 119;
+        /* #6e7777 */
+        --color-surface-800: 88 95 95;
+        /* #585f5f */
+        --color-surface-900: 72 77 78;
+        /* #484d4e */
+    }
+}
+
+@layer components {
+    .rounded-container {
+        @apply !rounded-md;
+    }
+
+    .rounded-component {
+        @apply !rounded-lg;
+    }
+}
+
 body {
-    @apply font-body;
     @apply min-h-screen;
+    font-family: var(--theme-font-family);
 }

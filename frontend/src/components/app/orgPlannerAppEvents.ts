@@ -1,3 +1,5 @@
+import {BasePubSubEvent} from "orgplanner-common/jscore";
+
 class OrgPlannerAppEvents
 {
     public static readonly CREATE_NEW_ORG: string = "CREATE_NEW_ORG";
@@ -28,4 +30,20 @@ class OrgPlannerAppEvents
     public static readonly VIEW_TOGGABLE_ENTITY_TOGGLED = "VIEW_TOGGABLE_ENTITY_TOGGLED";
 }
 
-export {OrgPlannerAppEvents};
+class CreateNewOrgEvent extends BasePubSubEvent
+{
+    private readonly _orgName: string;
+
+    constructor(orgName: string)
+    {
+        super(OrgPlannerAppEvents.CREATE_NEW_ORG);
+        this._orgName = orgName;
+    }
+
+    public get orgName(): string
+    {
+        return this._orgName;
+    }
+}
+
+export {OrgPlannerAppEvents, CreateNewOrgEvent};

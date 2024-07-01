@@ -1,6 +1,6 @@
 import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {CellRenderer, type CellStateStyle, constants, Perimeter, StyleRegistry} from "@maxgraph/core";
-import type {OrgPlannerColorTheme} from "orgplanner-common/model";
+import {type OrgEntityColorTheme, OrgEntityTypes} from "orgplanner-common/model";
 
 import type {MaxGraphTheme} from "./maxGraphTheme";
 import {OrgChartLeafEdgeStyle} from "./orgChartLeafEdgeStyle";
@@ -20,7 +20,7 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
 
     private readonly nodeTypeToStyleMap: GuardedMap<string, CellStateStyle> = new Map<string, CellStateStyle>();
     private readonly edgeTypeToStyleMap: GuardedMap<string, CellStateStyle> = new Map<string, CellStateStyle>();
-    private colorTheme: OrgPlannerColorTheme;
+    private colorTheme: OrgEntityColorTheme;
 
     static
     {
@@ -79,20 +79,21 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
         StyleRegistry.putValue(OrgChartMaxGraphTheme.leafEdgeStyle, OrgChartLeafEdgeStyle.orgChartLeafEdgeStyleFun)
     }
 
-    constructor(colorTheme: OrgPlannerColorTheme)
+    constructor(colorTheme: OrgEntityColorTheme)
     {
         this.colorTheme = colorTheme;
 
         const managerStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
-        managerStyle.strokeColor = this.colorTheme.managerColor;
+        managerStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.MANAGER).primary;
         this.nodeTypeToStyleMap.set('manager', managerStyle)
 
         const icStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
-        icStyle.strokeColor = this.colorTheme.icColor; // #f2efcf
+        icStyle.strokeColor =
+            this.colorTheme.getColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR).primary; // #f2efcf
         this.nodeTypeToStyleMap.set('ic', icStyle)
 
         const teamStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
-        teamStyle.strokeColor = this.colorTheme.teamColor;
+        teamStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.TEAM).primary;
         this.nodeTypeToStyleMap.set('team', teamStyle)
 
         const defaultEdgeStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE);

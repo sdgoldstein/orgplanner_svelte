@@ -3,10 +3,10 @@ import {BasePubSubEvent, type PubSubEvent, type PubSubListener, PubSubManager} f
 import {
     type Employee,
     type OrgEntity,
+    type OrgEntityColorTheme,
+    OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
     OrgEntityTypes,
-    type OrgPlannerColorTheme,
-    OrgPlannerColorThemes,
     type OrgStructure
 } from "orgplanner-common/model";
 
@@ -24,7 +24,7 @@ interface OrgChartProps
 {
     orgStructure: OrgStructure;
     mode: OrgChartMode;
-    colorTheme: OrgPlannerColorTheme;
+    colorTheme: OrgEntityColorTheme;
     propertyDescriptors: Set<OrgEntityPropertyDescriptor>;
 }
 
@@ -49,7 +49,7 @@ class ShowAddEmployeeModalEvent extends BasePubSubEvent
 
 class OrgChartHelper implements PubSubListener
 {
-    private _colorTheme: OrgPlannerColorTheme = OrgPlannerColorThemes.DEEP_BLUE_THEME;
+    private _colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
     private _orgStructure?: OrgStructure;
     private _mode: OrgChartMode = OrgChartMode.READ_ONLY;
     private _currentGraph?: OrgChartMaxGraph;

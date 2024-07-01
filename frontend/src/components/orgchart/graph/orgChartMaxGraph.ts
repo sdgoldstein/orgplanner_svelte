@@ -12,7 +12,7 @@ import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 import {type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import type {
-    Employee, OrgEntity, OrgPlannerColorTheme, OrgStructure, OrgStructureVisitor, Team} from "orgplanner-common/model";
+    Employee, OrgEntity, OrgEntityColorTheme, OrgStructure, OrgStructureVisitor, Team} from "orgplanner-common/model";
 
 import type {OrgChartEntityVisibleState, ViewToggableEntity} from "../orgChartViewState";
 
@@ -331,7 +331,7 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         });
     }
 
-    requestUpdate(updatedOrgStructure?: OrgStructure, updatedColorTheme?: OrgPlannerColorTheme,
+    requestUpdate(updatedOrgStructure?: OrgStructure, updatedColorTheme?: OrgEntityColorTheme,
                   updatedViewState?: OrgChartEntityVisibleState)
     {
         let needsRehydrate: boolean = false;
