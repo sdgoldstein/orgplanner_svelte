@@ -1,9 +1,7 @@
 <script lang="ts">
-    import OrgChart from "@src/components/orgchart/OrgChart.svelte";
-    import OrgChartEditingToolbar from "@src/components/orgchart/toolbar/OrgChartEditingToolbar.svelte";
-    import { OrgChartMode } from "@src/components/orgchart/orgChartViewState";
     import { Pane, Splitpanes } from "svelte-splitpanes";
     import { getAppDynamicColorTheme } from "@src/components/theme.js";
+    import OrgChartPane from "@src/components/orgchart/OrgChartPane.svelte";
 
     let { data } = $props();
 
@@ -18,15 +16,10 @@
 <div class="h-screen flex">
     <Splitpanes theme="org-chart-splitter-theme">
         <Pane class="p-2">
-            <OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
-            ></OrgChartEditingToolbar>
-            <OrgChart
-                data-id="org_chart"
+            <OrgChartPane
+                {appDynamicColorTheme}
                 {orgStructure}
-                mode={OrgChartMode.PLANNING}
-                colorTheme={data.orgPlanner.settings.colorTheme}
-                propertyDescriptors={data.orgPlanner.settings
-                    .employeePropertyDescriptors}
+                settings={data.orgPlanner.settings}
             />
         </Pane>
         <!--    <Pane size="0" class="p-2">dlfjsdlf</Pane>  -->
