@@ -1,7 +1,8 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
+    import { ButtonBar } from "@sphyrna/uicomponents";
 
     interface OrgChartEditingToolbarProps
         extends OrgPlannerColorThemableComponentProps {
@@ -43,7 +44,7 @@
         $props();
 </script>
 
-<div class="fixed z-40 mt-1 ml-1">
+<ButtonBar>
     <OrgChartEditingToolbarButton
         symbol="add"
         {appDynamicColorTheme}
@@ -64,4 +65,4 @@
     ></OrgChartEditingToolbarButton>
     <OrgChartEditingToolbarButton symbol="settings" {appDynamicColorTheme}
     ></OrgChartEditingToolbarButton>
-</div>
+</ButtonBar>

@@ -1,6 +1,6 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     import type { Snippet } from "svelte";
 
     export type FormSubmitEvent = SubmitEvent & {

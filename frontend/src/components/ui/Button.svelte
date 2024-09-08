@@ -1,6 +1,7 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module lang="ts">
+	import { Button } from '@sphyrna/uicomponents'
 
     interface ButtonProps extends OrgPlannerColorThemableComponentProps {
         disabled?: boolean;
@@ -11,9 +12,8 @@
 </script>
 <script lang="ts">
  
-    import { Button } from "flowbite-svelte";
     import type { Snippet } from "svelte";
-    import { getDefaultStyle, themedTWMerge, type OrgPlannerColorThemableComponentProps } from "../theme";
+    import { getDefaultStyle, tempgetDynamicColorTheme, themedTWMerge, type OrgPlannerColorThemableComponentProps } from "../theme";
 
     let { class:styleClass, appDynamicColorTheme, colorSelector, disabled = false,  onclick = ()=>{}, children, ...restProps }: ButtonProps = $props();
     styleClass = themedTWMerge("m-2 rounded-component",
@@ -21,4 +21,5 @@
     );
 </script>
 
-<Button {disabled} class={styleClass} style={getDefaultStyle(appDynamicColorTheme, colorSelector)} on:click={onclick} {...restProps}>{@render children()}</Button>
+<!-- <Button {disabled} class={styleClass} style={getDefaultStyle(appDynamicColorTheme, colorSelector)} on:click={onclick} {...restProps}>{@render children()}</Button> -->
+<Button colorVariant={colorSelector?.toString()} dynamicColorTheme={tempgetDynamicColorTheme(appDynamicColorTheme)} on:click={onclick} {...restProps}>{@render children()}</Button>

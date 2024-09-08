@@ -7,5 +7,8 @@
     "common",
     "frontend",
     "backend"
-  ]
+  ],
+  "devDependencies": {
+    "svelte": "5.0.0-next.238"
+  }
 }

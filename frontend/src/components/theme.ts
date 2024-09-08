@@ -1,5 +1,6 @@
 import {type ColorHex, type OrgEntityColorTheme, OrgEntityTypes} from "orgplanner-common/model";
-import {extendTailwindMerge} from 'tailwind-merge';
+import {extendTailwindMerge} from "tailwind-merge";
+import type {DynamicColorTheme} from "@sphyrna/uicomponents";
 
 interface AppDynamicColorTheme
 {
@@ -19,6 +20,17 @@ interface OrgPlannerColorThemableComponentProps
 {
     appDynamicColorTheme: AppDynamicColorTheme;
     colorSelector?: AppDynamicColorThemeColorSelector;
+}
+
+function tempgetDynamicColorTheme(colorTheme: AppDynamicColorTheme): DynamicColorTheme
+{
+    return {
+        colorThemes : new Map([
+            [ "primary", {coreColor : colorTheme.primary, textColor : colorTheme.textOnPrimary} ],
+            [ "secondary", {coreColor : colorTheme.secondary, textColor : colorTheme.textOnSecondary} ],
+            [ "none", {coreColor : "rgb(var(--color-surface))", textColor : "rgb(var(--text-on-surface))"} ]
+        ])
+    };
 }
 
 function getAppDynamicColorTheme(orgEntityColorTheme: OrgEntityColorTheme): AppDynamicColorTheme
@@ -50,7 +62,7 @@ function getDefaultStyle(appDynamicColorTheme: AppDynamicColorTheme,
         color = appDynamicColorTheme.textOnSecondary;
         break;
     case AppDynamicColorThemeColorSelector.NONE:
-        bgColor = "rgb(var(--color-surface-200))"
+        bgColor = "rgb(var(--color-surface))"
         color = "rgb(var(--text-on-surface))"
         break;
     default:
@@ -64,12 +76,12 @@ function getDefaultStyle(appDynamicColorTheme: AppDynamicColorTheme,
 }
 
 enum FixedThemeColor {
-    PRIMARY = 'primary',
-    SECONDARY = 'secondary',
-    TERTIARY = 'tertiary',
-    WARNING = 'warning',
-    SUCCESS = 'success',
-    ERROR = 'error',
+    PRIMARY = "primary",
+    SECONDARY = "secondary",
+    TERTIARY = "tertiary",
+    WARNING = "warning",
+    SUCCESS = "success",
+    ERROR = "error",
 }
 function getFixedThemeColorByValue(themeColorValue: string): FixedThemeColor
 {
@@ -91,7 +103,7 @@ function getColorClassesForFixedThemeColor(themeColor: FixedThemeColor): string
 const themedTWMerge = extendTailwindMerge({
     extend : {
         classGroups : {
-            rounded : [ {rounded : [ 'component', 'container' ]} ],
+            rounded : [ {rounded : [ "component", "container" ]} ],
         },
     },
 })
@@ -99,7 +111,10 @@ const themedTWMerge = extendTailwindMerge({
 export
 {
     FixedThemeColor, AppDynamicColorThemeColorSelector, getFixedThemeColorByValue, getColorClassesForFixedThemeColor,
-        getAppDynamicColorTheme, getDefaultStyle, themedTWMerge
+        getAppDynamicColorTheme, getDefaultStyle, themedTWMerge, tempgetDynamicColorTheme
 }
 
-export type {OrgPlannerColorThemableComponentProps}
+export type
+{
+    OrgPlannerColorThemableComponentProps
+}

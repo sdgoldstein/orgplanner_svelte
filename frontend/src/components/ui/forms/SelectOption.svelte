@@ -1,6 +1,6 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     import type { ParentComponentProps } from "../uicomponents";
 
     export interface SelectOptionProps extends ParentComponentProps {

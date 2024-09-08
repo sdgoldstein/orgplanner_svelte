@@ -1,6 +1,6 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     export interface CancelButtonProps
         extends OrgPlannerColorThemableComponentProps {
         oncancel: (event: MouseEvent) => void;

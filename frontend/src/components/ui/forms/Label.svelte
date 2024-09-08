@@ -1,6 +1,6 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     export interface LabelProps extends ParentComponentProps {
         for: string;
     }

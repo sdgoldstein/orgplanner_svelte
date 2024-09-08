@@ -3,9 +3,10 @@
 <script lang="ts">
     import {
         AppDynamicColorThemeColorSelector,
+        tempgetDynamicColorTheme,
         type OrgPlannerColorThemableComponentProps,
     } from "@src/components/theme";
-    import Button from "@src/components/ui/Button.svelte";
+    import { IconButton } from "@sphyrna/uicomponents";
 
     interface OrgChartEditingToolbarButtonProps
         extends OrgPlannerColorThemableComponentProps {
@@ -21,14 +22,13 @@
     }: OrgChartEditingToolbarButtonProps = $props();
 </script>
 
-<Button
-    class="flex justify-center w-8 h-8 rounded-full mb-1.5 p-0"
-    {appDynamicColorTheme}
-    colorSelector={AppDynamicColorThemeColorSelector.SECONDARY}
-    {...restProps}
+<IconButton
+    colorVariant={AppDynamicColorThemeColorSelector.SECONDARY.toString()}
+    dynamicColorTheme={tempgetDynamicColorTheme(appDynamicColorTheme)}
     {onclick}
+    {...restProps}
 >
     <svg class="w-4 h-4 fill-white">
         <use xlink:href="symbols.svg#{symbol}"> </use>
     </svg>
-</Button>
+</IconButton>

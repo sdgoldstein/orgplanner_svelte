@@ -1,6 +1,5 @@
 <script module  lang="ts">
-
-interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
+    interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId:string;
@@ -8,12 +7,17 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
 </script>
 
 <script lang="ts">
-    import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
+    import type { OrgPlannerColorThemableComponentProps } from "@src/components/theme";
+    import Input from "@src/components/ui/forms/Input.svelte";
+    import Label from "@src/components/ui/forms/Label.svelte";
+    import Select from "@src/components/ui/forms/Select.svelte";
+    import SelectOption from "@src/components/ui/forms/SelectOption.svelte";
     import { zExtended } from "@src/components/ui/forms/form";
+    import SubmitCancelModal from "@src/components/ui/modal/SubmitCancelModal.svelte";
+    import Radio from "@src/components/ui/Radio.svelte";
+    import type { BaseComponentProps } from "@src/components/ui/uicomponents";
     import type { OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
     import { PubSubManager } from "orgplanner-common/jscore";
-    import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
-    import type { BaseComponentProps } from "@src/components/ui/uicomponents";
 
     function handleSubmit(formData:FormData): void 
     {
@@ -64,21 +68,14 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         open = $bindable(),
         orgStructure,
         managerId,
-        appDynamicColorTheme,
         ...restProps
     }: NewEmployeeeModalProps = $props();
 
-    const colorVariant=AppDynamicColorThemeColorSelector.PRIMARY.toString();
-    const dynamicColorTheme=tempgetDynamicColorTheme(appDynamicColorTheme);
 </script>
 
 <SubmitCancelModal
-    bind:open={open}    
+    bind:open
     title="New Employee"
-    description="Create a new employee"
-    actionButtonText="Create"
-    {colorVariant}
-    {dynamicColorTheme}
     onsubmit={handleSubmit}
     {...restProps}
 >
@@ -88,8 +85,6 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         name="name_input_name"
         placeholder="John Stevens"
         schema = {zExtended.requiredString("Name")}
-        {colorVariant}
-        {dynamicColorTheme}
     />
 
     <Label for="title_input_id">Title</Label>
@@ -98,8 +93,6 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         name="title_input_name"
         placeholder="Senior Member of Staff"
         schema = {zExtended.requiredString("Title")}
-        {colorVariant}
-        {dynamicColorTheme}
     />
 
     <Label for="team_input_id">Team</Label>
@@ -107,8 +100,6 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         id="team_input_id"
         name="team_input_name"
         onchange={handleTeamChange}
-        {colorVariant}
-        {dynamicColorTheme}
     >
         <SelectOption value="Team One">Team One</SelectOption>
         <SelectOption value="NO_TEAM_ID"
@@ -122,8 +113,6 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         id="new_team_name_input_id"
         name="new_team_name_input_name"
         class="hidden"
-        {colorVariant}
-        {dynamicColorTheme}
     />
 
     {#each orgStructure.employeePropertyIterator() as propertyDescriptor:OrgEntityProperyDescriptor}
@@ -132,28 +121,23 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
             id="{propertyDescriptor.name}_input_id"
             name="{propertyDescriptor.name}_input_name"
             placeholder={propertyDescriptor.defaultValue}
-            {colorVariant}
-            {dynamicColorTheme}
         />
     {/each}
 
-    <Label for="is_manager_option_id">Manager</Label>
-    <RadioGroup id="is_manager_option_id" 
-                name="is_manager_option_name"         
-                {colorVariant}
-                {dynamicColorTheme}>
-            <RadioGroupOption
+    <Label>Manager</Label>
+    <div class="radio_container">
+        <div>
+            <Radio
                 id="is_manager_yes_option_id"
                 value="true"
                 group="is_manager_option_name"
-                checked
-                {colorVariant}
-                {dynamicColorTheme}>Yes</RadioGroupOption>
-            <RadioGroupOption
+                checked>Yes</Radio>
+        </div>
+        <div>
+            <Radio
                 id="is_manager_no_option_id"
                 value="false"
-                group="iis_manager_option_name"
-                {colorVariant}
-                {dynamicColorTheme}>No</RadioGroupOption>
-</RadioGroup>
+                group="iis_manager_option_name">No</Radio>
+        </div>
+    </div>
 </SubmitCancelModal>

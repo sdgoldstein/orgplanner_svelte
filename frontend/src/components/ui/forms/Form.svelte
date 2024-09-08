@@ -1,6 +1,6 @@
 <svelte:options runes={true} />
 
-<script context="module" lang="ts">
+<script module  lang="ts">
     export type FormSubmissionHandler = (formData:FormData) => void;
 
     export type FormSubmitEvent = SubmitEvent & {
