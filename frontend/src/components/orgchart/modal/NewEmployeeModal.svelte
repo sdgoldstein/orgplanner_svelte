@@ -14,6 +14,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
     import { PubSubManager } from "orgplanner-common/jscore";
     import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
     import type { BaseComponentProps } from "@src/components/ui/uicomponents";
+    import { NewEmployeeEvent } from "../orgChartHelper";
 
     function handleSubmit(formData:FormData): void 
     {
@@ -44,7 +45,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         for (const propertyDescriptor of orgStructure.employeePropertyIterator())
         {
             const propertyElement: FormDataEntryValue | null = formData.get(`${propertyDescriptor.name}_input_name`);
-            if (!propertyElement)
+            if (propertyElement === null)
             {
                 throw new Error("Could not find element for property, " + propertyDescriptor.name);
             }
@@ -63,7 +64,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
     let {
         open = $bindable(),
         orgStructure,
-        managerId,
+        managerId= $bindable(),
         appDynamicColorTheme,
         ...restProps
     }: NewEmployeeeModalProps = $props();

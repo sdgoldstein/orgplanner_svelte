@@ -30,12 +30,9 @@ interface OrgChartProps
 
 class NewEmployeeEvent extends BasePubSubEvent
 {
-    newEmployee: Employee;
-
-    constructor(newEmployeeIn: Employee)
+    constructor(public newEmployee: Employee)
     {
         super(OrgPlannerAppEvents.ADD_EMPLOYEE);
-        this.newEmployee = newEmployeeIn;
     }
 }
 
@@ -170,8 +167,5 @@ class OrgChartHelper implements PubSubListener
     }
 }
 
-export type {OrgChartProps};
-export {
-    OrgChartHelper,
-    ShowAddEmployeeModalEvent,
-};
+export type{OrgChartProps};
+export {OrgChartHelper, ShowAddEmployeeModalEvent, NewEmployeeEvent};

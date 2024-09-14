@@ -13,6 +13,7 @@
     } from "orgplanner-common/jscore";
     import { OrgPlannerAppEvents } from "../app/orgPlannerAppEvents";
     import { onMount } from "svelte";
+    import type { ShowAddEmployeeModalEvent } from "./orgChartHelper";
 
     interface OrgChartPaneProps extends OrgPlannerColorThemableComponentProps {
         orgStructure: OrgStructure;
@@ -22,6 +23,9 @@
     class OrgChartPanePubSubListener implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
             if (eventName === OrgPlannerAppEvents.SHOW_ADD_EMPLOYEE_MODAL) {
+                newEmployeeManagerId = (
+                    eventToHandle as ShowAddEmployeeModalEvent
+                ).managerId;
                 newEmployeeModalOpen = true;
             }
         }
@@ -37,7 +41,8 @@
 
     let { orgStructure, settings, appDynamicColorTheme }: OrgChartPaneProps =
         $props();
-    let newEmployeeModalOpen = $state(false);
+    let newEmployeeModalOpen: boolean = $state(false);
+    let newEmployeeManagerId: string = $state("");
 </script>
 
 <OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
@@ -52,6 +57,7 @@
 
 <NewEmployeeModal
     bind:open={newEmployeeModalOpen}
+    bind:managerId={newEmployeeManagerId}
     {appDynamicColorTheme}
     {orgStructure}
 />
