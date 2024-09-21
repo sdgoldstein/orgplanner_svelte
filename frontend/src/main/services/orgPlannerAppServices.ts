@@ -10,7 +10,7 @@ import {
 import {OrgPlannerManager} from "@src/model/orgPlanner";
 import {BrowserBasedFileService} from "orgplanner-common/jscore";
 
-import {OrgTemplateFactoryImpl} from "../../../common/src/main/model/orgTemplate";
+import {OrgTemplateFactoryImpl} from "../../../../common/src/main/model/orgTemplate";
 
 import {LocalStorageDataService} from "./data/localStorageDataService";
 import {OrgPlannerExportServiceDefaultImpl} from "./import/orgPlannerExportService";

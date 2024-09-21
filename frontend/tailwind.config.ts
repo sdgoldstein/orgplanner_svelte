@@ -5,7 +5,7 @@ import colors from "tailwindcss/colors";
 export default {
     content:
         [
-            "./src/**/*.{html,js,svelte,ts}", "../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
+            "./src/main/**/*.{html,js,svelte,ts}", "../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
             "./node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}"
         ],
     safelist:
@@ -35,7 +35,14 @@ export default {
             },
             success: {DEFAULT: "#C1DD97", text: colors.black},
             warning: {DEFAULT: "#E4C25E", text: colors.black},
-            error: {DEFAULT: "#D17F81", text: colors.black},
+            error: {
+                lightest: "#EFD2D2",
+                light: "#E4B4B5",
+                DEFAULT: "#D17F81",
+                dark: "#C9696B",
+                darkest: "#B44143x",
+                text: colors.black
+            },
         }
     },
 

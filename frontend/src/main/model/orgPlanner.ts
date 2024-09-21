@@ -20,7 +20,7 @@ import {
     PlanningProjectDefaultImpl,
     TreeBasedOrgStructure
 } from "orgplanner-common/model";
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuidv4} from "uuid";
 
 import {OrgPlannerConstants} from "./orgPlannerConstants";
 
@@ -218,4 +218,4 @@ class OrgPlannerManager extends BaseService implements Service
 }
 
 export {OrgPlannerManager, OrgPlannerDefaultImpl, DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS};
-export type {OrgPlanner, OrgPlannerSettings};
+export type{OrgPlanner, OrgPlannerSettings};

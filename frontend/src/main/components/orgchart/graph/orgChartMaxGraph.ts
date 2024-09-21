@@ -128,9 +128,9 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         this._orgChartMaxGraphBuilderService.configureBaseOptions();
         this._orgChartMaxGraphBuilderService.applyTheme(this.graphTheme);
         this._orgChartMaxGraphBuilderService.createExpandOverlay(
-            (sender: EventTarget, event: EventObject) => { this.collapseSubtree(event.getProperty('cell') as Cell); });
+            (sender: EventTarget, event: EventObject) => { this.collapseSubtree(event.getProperty("cell") as Cell); });
         this._orgChartMaxGraphBuilderService.createCollapseOverlay(
-            (sender: EventTarget, event: EventObject) => { this.expandSubtree(event.getProperty('cell') as Cell); });
+            (sender: EventTarget, event: EventObject) => { this.expandSubtree(event.getProperty("cell") as Cell); });
 
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.SAVE_AS_IMAGE, this);
 
@@ -348,9 +348,9 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
 
             // FIXME - Duplicate Code
             const graphStylesheet = this.getStylesheet();
-            graphStylesheet.putCellStyle('manager', this.graphTheme.getStyleForNodeType('manager'));
-            graphStylesheet.putCellStyle('ic', this.graphTheme.getStyleForNodeType('ic'));
-            graphStylesheet.putCellStyle('team', this.graphTheme.getStyleForNodeType('team'));
+            graphStylesheet.putCellStyle("manager", this.graphTheme.getStyleForNodeType("manager"));
+            graphStylesheet.putCellStyle("ic", this.graphTheme.getStyleForNodeType("ic"));
+            graphStylesheet.putCellStyle("team", this.graphTheme.getStyleForNodeType("team"));
 
             needsStyleUpdate = true;
         }
@@ -400,7 +400,7 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         const managerCell = this.model.getCell(team.managerId);
         if (managerCell)
         {
-            this.insertEdge(parent, team.managerId + team.title, '', managerCell, newCell);
+            this.insertEdge(parent, team.managerId + team.title, "", managerCell, newCell);
         }
 
         return newCell;
@@ -465,10 +465,10 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
 
     private saveAsImage(): void
     {
-        const a = document.createElement('a');
-        const file = new Blob([ this.container.innerHTML ], {type : 'image/svg+xml'});
+        const a = document.createElement("a");
+        const file = new Blob([ this.container.innerHTML ], {type : "image/svg+xml"});
         a.href = URL.createObjectURL(file);
-        a.download = 'orgPlan.svg';
+        a.download = "orgPlan.svg";
         a.click();
     }
 

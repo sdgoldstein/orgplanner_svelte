@@ -35,6 +35,7 @@ interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
 </script>
 
 <SubmitCancelModal
+    id="new_org_modal"
     bind:open={open}
     title="New Organization"
     description="Please enter a title for the new organization."

@@ -34,10 +34,7 @@
 		"typescript": "5.5.4",
 		"vite": "5.4.2",
 		"vitest": "2.0.5",
-		"@sphyrna/uicomponents": "file:../../svelte-sphyrna-components"
-	},
-	"type": "module",
-	"dependencies": {
+		"@sphyrna/uicomponents": "file:../../svelte-sphyrna-components",
 		"@maxgraph/core": "0.13.0",
 		"@sphyrna/service-manager-ts": "0.3.7",
 		"clsx": "2.1.1",
@@ -47,5 +44,7 @@
 		"tailwind-variants": "0.2.1",
 		"uuid": "10.0.0",
 		"zod": "3.23.8"
-	}
+	},
+	"type": "module",
+	"dependencies": {}
 }

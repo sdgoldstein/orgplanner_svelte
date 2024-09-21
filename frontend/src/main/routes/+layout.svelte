@@ -4,7 +4,7 @@
         OrgPlannerAppEvents,
         CreateNewOrgEvent,
     } from "@src/components/app/orgPlannerAppEvents";
-    import "../app.css";
+    import "@src/app/app.css";
 
     import OrgPlannerAppHeader from "@src/components/app/appheader/OrgPlannerAppHeader.svelte";
     import PageHeader from "@src/components/page/header/PageHeader.svelte";

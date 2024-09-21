@@ -19,6 +19,7 @@
     hidden={false}
 >
     <NavLi
+        data-testid="new_org_main_nav_item_testid"
         onclick={() => {
             open = true;
         }}

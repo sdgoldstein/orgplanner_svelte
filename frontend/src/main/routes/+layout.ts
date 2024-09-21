@@ -2,7 +2,7 @@ import {ServiceManager} from "@sphyrna/service-manager-ts";
 import type {OrgPlanner, OrgPlannerManager} from "@src/model/orgPlanner";
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 
-import type {LayoutLoad} from './$types';
+import type {LayoutLoad} from "./$types";
 
 export const ssr = false;
 

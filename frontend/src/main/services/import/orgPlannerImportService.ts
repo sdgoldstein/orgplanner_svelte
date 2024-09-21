@@ -99,7 +99,7 @@ interface JSONTeam
 
 interface OrgPlannerImportService extends Service
 {
-    import(json: string): Promise <OrgPlanner>;
+    import(json: string): Promise<OrgPlanner>;
     importSync(json: string): OrgPlanner;
 }
 
@@ -111,7 +111,7 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
  * @param {string} json the json string contained the org structure data
  */
     import(json: string):
-        Promise <OrgPlanner> {
+        Promise<OrgPlanner> {
             return new Promise((resolve, reject) => {
                        const OrgPlannerToReturn = this.importSync(json);
                        resolve(OrgPlannerToReturn);
@@ -138,7 +138,7 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
         };
 
         const
-        employeePropertyDescriptors : Set <OrgEntityPropertyDescriptor> = new Set <OrgEntityPropertyDescriptor>();
+        employeePropertyDescriptors : Set<OrgEntityPropertyDescriptor> = new Set<OrgEntityPropertyDescriptor>();
         if(orgPlanner.settings.employeePropertyDescriptors) {
             for (const nextJSONPropertyDescriptor of orgPlanner.settings.employeePropertyDescriptors)
             {
@@ -180,7 +180,7 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
     }
 
     private importPlanningProject(jsonPlanningProject: JSONPlanningProject,
-                                  employeePropertyDescriptors: Set <OrgEntityPropertyDescriptor>): PlanningProject {
+                                  employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>): PlanningProject {
         const title: string = jsonPlanningProject.title; const
         orgPlans : OrgPlan[] = []; jsonPlanningProject.orgPlans.forEach(
             (nextOrgPlan: JSONOrgPlan,
@@ -188,14 +188,14 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
         return new PlanningProjectDefaultImpl(title, orgPlans[0]);
     }
 
-    private importOrgPlan(jsonOrgPlan: JSONOrgPlan, employeePropertyDescriptors: Set <OrgEntityPropertyDescriptor>):
+    private importOrgPlan(jsonOrgPlan: JSONOrgPlan, employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>):
     OrgPlan {
         const orgCoreData: OrgDataCore = this.importOrgDataCore(jsonOrgPlan, employeePropertyDescriptors);
         return new OrgPlanDefaultImpl(orgCoreData);
     }
 
     private importOrgDataCore(orgCoreData: JSONOrgDataCore,
-                              employeePropertyDescriptors: Set <OrgEntityPropertyDescriptor>): OrgDataCore {
+                              employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>): OrgDataCore {
         const title = orgCoreData.title
 
         const jsonOrgStructure = orgCoreData.orgStructure;
@@ -293,4 +293,4 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
 }
 
 export { TreeBasedOrgPlannerImportService };
-        export type {OrgPlannerImportService};
+        export type{OrgPlannerImportService};
