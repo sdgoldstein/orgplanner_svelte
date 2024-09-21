@@ -26,22 +26,23 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
     {
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.perimeter = Perimeter.RectanglePerimeter;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.rounded = true;
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fillColor = '#ffffff';
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fillColor = "#ffffff";
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.arcSize = 5;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.autoSize = true;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.strokeWidth = 2;
         // defaultCellStyle.strokeColor = '#CFD7F2';
         // defaultCellStyle.strokeColor = '#BD0F15';
         // defaultCellStyle.fontColor = '#424c55';
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fontColor = 'black';
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.cellHeaderFontColor = 'white';
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fontColor = "black";
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.cellHeaderFontColor = "white";
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fontSize = 12;
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fontFamily = 'Arial, Helvetica, sans-serif';
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.fontFamily =
+            "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji";
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.spacing = 5;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.align = constants.ALIGN.CENTER;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.verticalAlign = constants.ALIGN.MIDDLE;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.foldable = true;
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.shape = 'partialFillNodeShape';
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.shape = "partialFillNodeShape";
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.rotatable = false;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.resizable = false;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.deletable = true;
@@ -52,7 +53,7 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.rounded = false;
         // OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.loopStyle = chartEdgeStyleFun;
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.edgeStyle = constants.EDGESTYLE.TOPTOBOTTOM;
-        OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.strokeColor = '#424c55';
+        OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.strokeColor = "#424c55";
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.strokeWidth = 1.5;
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.align = constants.ALIGN.CENTER;
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.verticalAlign = constants.ALIGN.MIDDLE;
@@ -73,7 +74,7 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
         // DEFAULT_EDGE_STYLE[mxClient.mxConstants.STYLE_ROUNDED] = 1;
 
         //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape('partialFillNodeShape', PartialFillNodeShape);
+        CellRenderer.registerShape("partialFillNodeShape", PartialFillNodeShape);
 
         // Put edge style in registry
         StyleRegistry.putValue(OrgChartMaxGraphTheme.leafEdgeStyle, OrgChartLeafEdgeStyle.orgChartLeafEdgeStyleFun)
@@ -85,19 +86,19 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
 
         const managerStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
         managerStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.MANAGER).primary;
-        this.nodeTypeToStyleMap.set('manager', managerStyle)
+        this.nodeTypeToStyleMap.set("manager", managerStyle)
 
         const icStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
         icStyle.strokeColor =
             this.colorTheme.getColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR).primary; // #f2efcf
-        this.nodeTypeToStyleMap.set('ic', icStyle)
+        this.nodeTypeToStyleMap.set("ic", icStyle)
 
         const teamStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
         teamStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.TEAM).primary;
-        this.nodeTypeToStyleMap.set('team', teamStyle)
+        this.nodeTypeToStyleMap.set("team", teamStyle)
 
         const defaultEdgeStyle = Object.assign({}, OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE);
-        this.edgeTypeToStyleMap.set('default', defaultEdgeStyle);
+        this.edgeTypeToStyleMap.set("default", defaultEdgeStyle);
     }
 
     getStyleForNodeType(nodeType: string): CellStateStyle
@@ -127,4 +128,4 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
 }
 
 export {OrgChartMaxGraphTheme as OrgChartMaxGraphThemeBase};
-export type {OrgChartMaxGraphThemeCellStateStyle};
+export type{OrgChartMaxGraphThemeCellStateStyle};
