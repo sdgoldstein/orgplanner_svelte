@@ -1,12 +1,12 @@
 import {GuardedMap} from "@sphyrna/tscore";
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuidv4} from "uuid";
 
-import {Node, Tree, TreeVisitor} from '../../jscore/tree';
+import {Node, Tree, TreeVisitor} from "../../jscore/tree";
 
-import {BaseIndividualContributor, BaseManager, Employee, Manager} from './employee';
-import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from './orgEntity';
-import {OrgStructure, OrgStructureVisitor} from './orgStructure';
-import {BaseTeam, Team} from './team';
+import {BaseIndividualContributor, BaseManager, Employee, Manager} from "./employee";
+import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
+import {OrgStructure, OrgStructureVisitor} from "./orgStructure";
+import {BaseTeam, Team, TeamConstants} from "./team";
 
 class OrgStructureVisitorWrappingTreeVisitor extends TreeVisitor<string, Employee>
 {
@@ -68,7 +68,7 @@ class TeamMoveOrgStructureVisitor implements OrgStructureVisitor
  */
 class TreeBasesOrgStructure implements OrgStructure
 {
-    private static readonly ROOT_MANAGER_ID: string = 'ROOT';
+    private static readonly ROOT_MANAGER_ID: string = "ROOT";
 
     locked: boolean = false;
 
@@ -155,7 +155,7 @@ class TreeBasesOrgStructure implements OrgStructure
     {
         if (!this._managerIdToTeamsMap.has(manager.id))
         {
-            throw new Error('Manager does not have any teams');
+            throw new Error("Manager does not have any teams");
         }
 
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -248,7 +248,7 @@ class TreeBasesOrgStructure implements OrgStructure
     {
         if (!this._orgLeader)
         {
-            throw new Error('Org Leader has not yet been created.');
+            throw new Error("Org Leader has not yet been created.");
         }
 
         return this._orgLeader;
@@ -409,7 +409,8 @@ class TreeBasesOrgStructure implements OrgStructure
         this._employeeIdToEmployeeMap = new Map<string, Employee>();
 
         // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
-        this._createTeamImpl("NO_TEAM_ID", "NO_TEAM_TITLE", TreeBasesOrgStructure.ROOT_MANAGER_ID);
+        this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE,
+                             TreeBasesOrgStructure.ROOT_MANAGER_ID);
     }
 }
 

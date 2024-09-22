@@ -68,7 +68,8 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         ...restProps
     }: NewEmployeeeModalProps = $props();
 
-    let showNewTeamNameInput = $state(false);
+    let selectedTeam:{value:any,label:string}|undefined = $state();
+    let showNewTeamNameInput = $derived((selectedTeam && selectedTeam.value=="<<-- New Team -->>") ? true : false );
 
     const colorVariant=AppDynamicColorThemeColorSelector.PRIMARY.toString();
     const dynamicColorTheme=tempgetDynamicColorTheme(appDynamicColorTheme);
@@ -109,14 +110,15 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         id="team_input_id"
         name="team_input_name"
         placeholder="Select a Team"
+        bind:selected={selectedTeam}
         {colorVariant}
         {dynamicColorTheme}
     >
-        <SelectOption value="Team One">Team One</SelectOption>
-        <SelectOption value="NO_TEAM_ID"
-            >__ No Team __</SelectOption
-        >
-        <SelectOption value="<<__ New Team __>>">__ New Team __</SelectOption>
+        {#each orgStructure.getTeams() as nextTeam:Team}
+            <SelectOption value={nextTeam.id}>{nextTeam.title}</SelectOption>
+        {/each}
+
+        <SelectOption value="<<-- New Team -->>">-- New Team --</SelectOption>
     </Select>
 
     {#if showNewTeamNameInput}
@@ -124,7 +126,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         <Input
             id="new_team_name_input_id"
             name="new_team_name_input_name"
-            class="hidden"
+            placeholder="New Team Name"
             {colorVariant}
             {dynamicColorTheme}
         />

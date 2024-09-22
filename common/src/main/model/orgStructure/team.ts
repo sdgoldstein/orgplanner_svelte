@@ -1,5 +1,12 @@
 import {OrgEntity, OrgEntityType, OrgEntityTypes} from "./orgEntity";
 
+// FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
+class TeamConstants
+{
+    static readonly NO_TEAM_ID: string = "NO_TEAM_ID";
+    static readonly NO_TEAM_TITLE: string = "-- No Team --";
+}
+
 /**
  * Team represents a scrum
  */
@@ -56,5 +63,5 @@ class BaseTeam implements Team
     }
 }
 
-export {BaseTeam};
-export type {Team};
+export {BaseTeam, TeamConstants};
+export type{Team};
