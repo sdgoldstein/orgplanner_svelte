@@ -59,7 +59,6 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         PubSubManager.instance.fireEvent(eventToFire);
     }
 
-    function handleTeamChange():void{}
 
     let {
         open = $bindable(),
@@ -68,6 +67,8 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         appDynamicColorTheme,
         ...restProps
     }: NewEmployeeeModalProps = $props();
+
+    let showNewTeamNameInput = $state(false);
 
     const colorVariant=AppDynamicColorThemeColorSelector.PRIMARY.toString();
     const dynamicColorTheme=tempgetDynamicColorTheme(appDynamicColorTheme);
@@ -107,7 +108,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
     <Select
         id="team_input_id"
         name="team_input_name"
-        onchange={handleTeamChange}
+        placeholder="Select a Team"
         {colorVariant}
         {dynamicColorTheme}
     >
@@ -118,14 +119,16 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         <SelectOption value="<<__ New Team __>>">__ New Team __</SelectOption>
     </Select>
 
-    <Label for="new_team_name_input" class="hidden">New Team Name</Label>
-    <Input
-        id="new_team_name_input_id"
-        name="new_team_name_input_name"
-        class="hidden"
-        {colorVariant}
-        {dynamicColorTheme}
-    />
+    {#if showNewTeamNameInput}
+        <Label for="new_team_name_input">New Team Name</Label>
+        <Input
+            id="new_team_name_input_id"
+            name="new_team_name_input_name"
+            class="hidden"
+            {colorVariant}
+            {dynamicColorTheme}
+        />
+    {/if}
 
     {#each orgStructure.employeePropertyIterator() as propertyDescriptor:OrgEntityProperyDescriptor}
         <Label for="{propertyDescriptor.name}_input_id">{propertyDescriptor.title}</Label>
@@ -142,12 +145,12 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
     <RadioGroup id="is_manager_option_id" 
                 name="is_manager_option_name"         
                 {colorVariant}
-                {dynamicColorTheme}>
+                {dynamicColorTheme}
+                value="true">
             <RadioGroupOption
                 id="is_manager_yes_option_id"
                 value="true"
                 group="is_manager_option_name"
-                checked
                 {colorVariant}
                 {dynamicColorTheme}>Yes</RadioGroupOption>
             <RadioGroupOption

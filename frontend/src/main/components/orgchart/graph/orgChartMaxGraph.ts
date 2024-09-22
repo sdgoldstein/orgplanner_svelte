@@ -235,19 +235,20 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
                 if (cellValue instanceof OrgPlannerChartEmployeeVertex)
                 {
                     const employee = cellValue.employee;
-                    valueToReturn += `<div data-testid="chart-cell-text-title-${employee.id}">${employee.title}</div>`;
+                    valueToReturn +=
+                        `<div data-testid="chart_cell_text_title_${employee.id}_testid">${employee.title}</div>`;
 
                     for (const nextProperty of employee.propertyIterator())
                     {
                         if (this.visibilityState.isVisible(nextProperty[0]))
                         {
-                            valueToReturn += `<div data-testid="chart-cell-text-${nextProperty[0].name}-${
-                                employee.id}">${nextProperty[1]}</div>`;
+                            valueToReturn += `<div data-testid="chart_cell_text_${nextProperty[0].name}-${
+                                employee.id}_testid">${nextProperty[1]}</div>`;
                         }
                     }
 
-                    valueToReturn +=
-                        `<div data-testid="chart-cell-text-team-${employee.id}"><i>${employee.team.title}</i></div>`;
+                    valueToReturn += `<div data-testid="chart_cell_text_team_${employee.id}_testid"><i>${
+                        employee.team.title}</i></div>`;
                 }
                 else if (cellValue instanceof OrgPlannerChartTeamVertex)
                 {

@@ -1,6 +1,7 @@
 import flowbitePlugin from "flowbite/plugin"
 import type {Config} from "tailwindcss";
 import colors from "tailwindcss/colors";
+import plugin from "tailwindcss/plugin";
 
 export default {
     content:
@@ -27,11 +28,11 @@ export default {
             overlay: colors.neutral["950"],
             surface: {
                 lightest: "#FFFFFF",
-                light: "#FFFFFF",
+                light: "#F7F7F7",
                 DEFAULT: "#FFFFFF",
-                dark: "#FFFFFFF",
-                darkest: "#FFFFFF",
-                text: colors.black
+                dark: "#F0F0F0",
+                darkest: "#F0F0F0",
+                text: {DEFAULT: colors.black, placeholder: "#BFBFBF"}
             },
             success: {DEFAULT: "#C1DD97", text: colors.black},
             warning: {DEFAULT: "#E4C25E", text: colors.black},
@@ -43,8 +44,14 @@ export default {
                 darkest: "#B44143x",
                 text: colors.black
             },
-        }
+        },
+        placeholderColor: {surface: "#BFBFBF"},
     },
 
-    plugins: [ flowbitePlugin ]
+    plugins:
+        [
+            flowbitePlugin, plugin(function({addVariant}) {
+                addVariant("data_placeholder", "&[data-placeholder]");
+            })
+        ]
 } as Config;
