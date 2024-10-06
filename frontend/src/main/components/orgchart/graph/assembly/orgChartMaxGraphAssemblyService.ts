@@ -6,7 +6,8 @@ import {
     EventObject,
     Graph,
     ImageBox,
-    InternalEvent
+    InternalEvent,
+    Point
 } from "@maxgraph/core";
 import {BaseService, type Service, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
 import type {Employee, IndividualContributor, Manager, Team} from "orgplanner-common/model";
@@ -19,6 +20,11 @@ import {
     VertexType
 } from "../orgPlannerChartModel";
 import type {MaxGraphTheme} from "../themes/maxGraphTheme";
+import {
+    DefaultOrgChartCellOverlay,
+    DeleteButtonCellOverlay,
+    EditButtonCellOverlay
+} from "../themes/orgChartCellOverlay";
 
 interface OrgChartMaxGraphAssemblyService extends Service
 {
@@ -26,70 +32,103 @@ interface OrgChartMaxGraphAssemblyService extends Service
     configureBaseOptions(): void;
     applyTheme(theme: MaxGraphTheme): void;
     updateStyle(vertex: Cell): void;
-    createExpandOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    createCollapseOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    addExpandedOverlay(cell: Cell): unknown;
-    addCollapsedOverlay(cell: Cell): unknown;
+    createToggleSubtreeOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    addToggleSubtreeOverlay(cell: Cell): void;
+    addEditButtonOverlay(cell: Cell): void;
     addManagerNode(manager: Manager): Cell;
     addICNode(ic: IndividualContributor): Cell;
     addTeamNode(team: Team): Cell;
+    deleteOrgEntities(cellsToDelete: Cell[]): unknown;
 }
 
 class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChartMaxGraphAssemblyService
 {
-    private _expandedOverlay?: CellOverlay;
-    private _collapsedOverlay?: CellOverlay;
-    private _graph?: Graph;
+    private _toggleSubtreeOverlay?: CellOverlay;
+    private _editButtonOverlay?: CellOverlay;
+    private _deleteButtonOverlay?: CellOverlay
+
+        private _graph?: Graph;
 
     insertGraph(graph: Graph): void
     {
         this._graph = graph;
     }
 
-    createExpandOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    createToggleSubtreeOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
-        const expandedImage = new ImageBox('expanded.gif', 9, 9);
-        this._expandedOverlay = new CellOverlay(expandedImage, 'Collapse', constants.ALIGN.CENTER);
-        this._expandedOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
-        this._expandedOverlay.addListener(InternalEvent.CLICK, clickListener);
+        const transaprentImage = new ImageBox("transparent.png", 9, 9);
+        // const transaprentImage = new ImageBox("square.png", 9, 9);
+        this._toggleSubtreeOverlay = new DefaultOrgChartCellOverlay("toggleSubtree", transaprentImage, "Toggle",
+                                                                    constants.ALIGN.CENTER, constants.ALIGN.BOTTOM);
+        this._toggleSubtreeOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._toggleSubtreeOverlay.addListener(InternalEvent.CLICK, clickListener);
     }
 
-    createCollapseOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
-    {
-        const collapsedImage = new ImageBox('collapsed.gif', 9, 9);
-        this._collapsedOverlay = new CellOverlay(collapsedImage, 'Expand', constants.ALIGN.CENTER);
-        this._collapsedOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
-        this._collapsedOverlay.addListener(InternalEvent.CLICK, clickListener);
-    }
-
-    addExpandedOverlay(managerCell: Cell): void
+    addToggleSubtreeOverlay(managerCell: Cell): void
     {
         if (!this._graph)
         {
             throw new Error("Graph has not be inserted");
         }
 
-        if (!this._expandedOverlay)
+        if (!this._toggleSubtreeOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this._graph.addCellOverlay(managerCell, this._expandedOverlay);
+        this._graph.addCellOverlay(managerCell, this._toggleSubtreeOverlay);
     }
 
-    addCollapsedOverlay(managerCell: Cell): void
+    createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    {
+        const transaprentImage = new ImageBox("transparent.png", 9, 9);
+        // const transaprentImage = new ImageBox("square.png", 9, 9);
+        this._editButtonOverlay =
+            new EditButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._editButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._editButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+    }
+
+    addEditButtonOverlay(cell: Cell): void
     {
         if (!this._graph)
         {
             throw new Error("Graph has not be inserted");
         }
 
-        if (!this._collapsedOverlay)
+        if (!this._editButtonOverlay)
         {
-            throw new Error("Collapsed Overlay has not been created");
+            throw new Error("Expanded Overlay has not been created");
         }
 
-        this._graph.addCellOverlay(managerCell, this._collapsedOverlay);
+        this._graph.addCellOverlay(cell, this._editButtonOverlay);
+    }
+
+    createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    {
+        const transaprentImage = new ImageBox("transparent.png", 9, 9);
+        // const transaprentImage = new ImageBox("square.png", 9, 9);
+        this._deleteButtonOverlay =
+            new DeleteButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._deleteButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._deleteButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+    }
+
+    addDeleteButtonOverlay(cell: Cell): void
+    {
+        if (!this._graph)
+        {
+            throw new Error("Graph has not be inserted");
+        }
+
+        if (!this._deleteButtonOverlay)
+        {
+            throw new Error("Expanded Overlay has not been created");
+        }
+
+        this._graph.addCellOverlay(cell, this._deleteButtonOverlay);
     }
 
     init(configuration: ServiceConfiguration): void
@@ -124,12 +163,12 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
         // Creates the default style for vertices
 
-        graphStylesheet.putCellStyle('manager', theme.getStyleForNodeType('manager'));
-        graphStylesheet.putCellStyle('ic', theme.getStyleForNodeType('ic'));
-        graphStylesheet.putCellStyle('team', theme.getStyleForNodeType('team'));
+        graphStylesheet.putCellStyle("manager", theme.getStyleForNodeType("manager"));
+        graphStylesheet.putCellStyle("ic", theme.getStyleForNodeType("ic"));
+        graphStylesheet.putCellStyle("team", theme.getStyleForNodeType("team"));
 
         // Creates the default style for edges
-        graphStylesheet.putDefaultEdgeStyle(theme.getStyleForEdgeType('default'));
+        graphStylesheet.putDefaultEdgeStyle(theme.getStyleForEdgeType("default"));
 
         // https://www.templatemonster.com/blog/pastel-color-schemes-for-refined-website-design/
         // https://coolors.co/bfe2ca-d0e2ec-424c55-d62839-ff7f11
@@ -144,9 +183,9 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
         const graphStylesheet = this._graph.getStylesheet();
 
-        const newICStyle: CellStateStyle|undefined = graphStylesheet.styles.get('ic');
-        const newManagerStyle: CellStateStyle|undefined = graphStylesheet.styles.get('manager');
-        const newTeamStyle: CellStateStyle|undefined = graphStylesheet.styles.get('team');
+        const newICStyle: CellStateStyle|undefined = graphStylesheet.styles.get("ic");
+        const newManagerStyle: CellStateStyle|undefined = graphStylesheet.styles.get("manager");
+        const newTeamStyle: CellStateStyle|undefined = graphStylesheet.styles.get("team");
         if (!newICStyle || !newManagerStyle || !newTeamStyle)
         {
             throw new Error("Style not found");
@@ -179,6 +218,8 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
     addManagerNode(manager: Manager): Cell
     {
+        let cellToReturn;
+
         if (!this._graph)
         {
             throw new Error("Graph has not be inserted");
@@ -188,11 +229,18 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
         const orgChartManager = new OrgPlannerChartManagerVertex(manager);
         // FIX ME - Last Param
-        return this._insertEmployeeNode(manager, orgChartManager, graphStylesheet.styles.get("manager")!);
+        cellToReturn = this._insertEmployeeNode(manager, orgChartManager, graphStylesheet.styles.get("manager")!);
+        this.addToggleSubtreeOverlay(cellToReturn);
+        this.addEditButtonOverlay(cellToReturn);
+        this.addDeleteButtonOverlay(cellToReturn);
+
+        return cellToReturn;
     }
 
     addICNode(ic: IndividualContributor): Cell
     {
+        let cellToReturn;
+
         if (!this._graph)
         {
             throw new Error("Graph has not be inserted");
@@ -202,7 +250,12 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         const orgChartEmployee = new OrgPlannerChartICVertex(ic);
 
         // FIX ME = Last param
-        return this._insertEmployeeNode(ic, orgChartEmployee, graphStylesheet.styles.get('ic')!);
+        cellToReturn = this._insertEmployeeNode(ic, orgChartEmployee, graphStylesheet.styles.get("ic")!);
+        this.addToggleSubtreeOverlay(cellToReturn);
+        this.addEditButtonOverlay(cellToReturn);
+        this.addDeleteButtonOverlay(cellToReturn);
+
+        return cellToReturn;
     }
 
     addTeamNode(): Cell
@@ -225,7 +278,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         const managerCell = this._graph.model.getCell(employee.managerId);
         if (managerCell)
         {
-            this._graph.insertEdge(parent, employee.managerId + employee.id, '', managerCell, newCell);
+            this._graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
         }
         /*else
         {
@@ -239,4 +292,4 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 }
 
 export {OrgChartMaxGraphAssemblyServiceImpl};
-export type {OrgChartMaxGraphAssemblyService};
+export type{OrgChartMaxGraphAssemblyService};

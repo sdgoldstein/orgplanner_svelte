@@ -36,17 +36,17 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
     {
         super(element, orgStructure, theme, viewState);
 
-        PubSubManager.instance.registerListener(OrgPlannerAppEvents.DELETE_EMPLOYEE_FROM_PLAN, this);
+        PubSubManager.instance.registerListener(OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN, this);
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.EMPLOYEE_EDITED, this);
 
-        const addImage = new ImageBox('resources/images/symbols.svg#add', 18, 18);
-        this._addOverlay = new CellOverlay(addImage, 'Add', constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        const addImage = new ImageBox("resources/images/symbols.svg#add", 18, 18);
+        this._addOverlay = new CellOverlay(addImage, "Add", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
         this._addOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
         this._addOverlay.addListener(InternalEvent.CLICK, (sender: EventTarget, event: EventObject) => {});
 
-        const editImage = new ImageBox('resources/images/resources/images/symbols.svg#edit', 18, 18);
-        this._editOverlay = new CellOverlay(editImage, 'Edit', constants.ALIGN.RIGHT, constants.ALIGN.TOP);
+        const editImage = new ImageBox("resources/images/resources/images/symbols.svg#edit", 18, 18);
+        this._editOverlay = new CellOverlay(editImage, "Edit", constants.ALIGN.RIGHT, constants.ALIGN.TOP);
         this._editOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
         this._editOverlay.addListener(InternalEvent.CLICK, (sender: EventTarget, event: EventObject) => {});
     }
@@ -55,7 +55,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
     {
         super.disconnect();
 
-        PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.DELETE_EMPLOYEE_FROM_PLAN, this);
+        PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN, this);
         PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.EMPLOYEE_EDITED, this);
     }
@@ -131,7 +131,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
         });
 
         this.addListener(InternalEvent.DOUBLE_CLICK, (sender: any, mouseEvent: EventObject) => {
-            const cell = mouseEvent.getProperty('cell') as Cell;
+            const cell = mouseEvent.getProperty("cell") as Cell;
             if (cell)
             {
                 const vertexValue = cell.getValue() as OrgPlannerChartVertex;
@@ -230,7 +230,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
 
     onEvent(eventName: string, event: PubSubEvent): void
     {
-        if (eventName === OrgPlannerAppEvents.DELETE_EMPLOYEE_FROM_PLAN)
+        if (eventName === OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN)
         {
             this.deleteSelectedEmployee();
         }

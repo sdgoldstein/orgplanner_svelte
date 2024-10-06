@@ -4,7 +4,7 @@ import {type OrgEntityColorTheme, OrgEntityTypes} from "orgplanner-common/model"
 
 import type {MaxGraphTheme} from "./maxGraphTheme";
 import {OrgChartLeafEdgeStyle} from "./orgChartLeafEdgeStyle";
-import {PartialFillNodeShape} from "./partialFillNodeShape";
+import {OrgChartNodeShape} from "./orgChartNodeShape";
 
 type CellStateStyleExtension = {
     cellHeaderFontColor?: string;
@@ -42,13 +42,13 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.align = constants.ALIGN.CENTER;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.verticalAlign = constants.ALIGN.MIDDLE;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.foldable = true;
-        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.shape = "partialFillNodeShape";
+        OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.shape = "orgChartNodeShape";
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.rotatable = false;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.resizable = false;
         OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE.deletable = true;
 
         // Allow the node shape to augment the style where necessary
-        PartialFillNodeShape.configureStyle(OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
+        OrgChartNodeShape._configureStyle(OrgChartMaxGraphTheme.DEFAULT_CELL_STYLE);
 
         OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.rounded = false;
         // OrgChartMaxGraphTheme.DEFAULT_EDGE_STYLE.loopStyle = chartEdgeStyleFun;
@@ -74,7 +74,7 @@ class OrgChartMaxGraphTheme implements MaxGraphTheme
         // DEFAULT_EDGE_STYLE[mxClient.mxConstants.STYLE_ROUNDED] = 1;
 
         //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("partialFillNodeShape", PartialFillNodeShape);
+        CellRenderer.registerShape("orgChartNodeShape", OrgChartNodeShape);
 
         // Put edge style in registry
         StyleRegistry.putValue(OrgChartMaxGraphTheme.leafEdgeStyle, OrgChartLeafEdgeStyle.orgChartLeafEdgeStyleFun)

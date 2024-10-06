@@ -1,20 +1,44 @@
 <script module  lang="ts">
 
+class NewEmployeeEvent extends BasePubSubEvent
+{
+    // Shorthand declaring these in constuctor didn't work within svelte
+    name:string;
+    title:string;
+    managerId: string;
+    teamId: string;
+    isManager: boolean;
+    properties: OrgEntityPropertyBag;
+
+    constructor(name: string, title: string,  managerId: string,  teamId: string, isManager: boolean, properties: OrgEntityPropertyBag)
+    {
+        super(OrgPlannerAppEvents.ADD_EMPLOYEE);
+        this.name=name;
+        this.title=title;
+        this.managerId=managerId;
+        this.teamId=teamId;
+        this.isManager=isManager;
+        this.properties=properties;
+    }
+}
+
 interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId:string;
     }
+
+    export {NewEmployeeEvent};
 </script>
 
 <script lang="ts">
     import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
     import { zExtended } from "@src/components/ui/forms/form";
     import type { OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
-    import { PubSubManager } from "orgplanner-common/jscore";
+    import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
     import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
     import type { BaseComponentProps } from "@src/components/ui/uicomponents";
-    import { NewEmployeeEvent } from "../orgChartHelper";
+    import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
 
     function handleSubmit(formData:FormData): void 
     {
@@ -51,12 +75,12 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
             }
             properties.set(propertyDescriptor, propertyElement.valueOf() as string);
         }
-        const employeeCreated = orgStructure.createEmployee(nameElement.valueOf() as string, titleElement.valueOf() as string, managerId,
-                                                                 teamId, isManagerElement.valueOf() as boolean, properties)
+
+        const eventToFire = new NewEmployeeEvent(nameElement.valueOf() as string, titleElement.valueOf() as string, managerId,
+        teamId, isManagerElement.valueOf() as boolean, properties)
+        PubSubManager.instance.fireEvent(eventToFire);
 
         open = false;
-        const eventToFire = new NewEmployeeEvent(employeeCreated);
-        PubSubManager.instance.fireEvent(eventToFire);
     }
 
 

@@ -1,3 +1,5 @@
+import {OrgStatistics} from "../stats/orgStatistics";
+
 import {Employee, Manager} from "./employee";
 import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
 import {Team} from "./team";
@@ -11,6 +13,11 @@ interface OrgStructure
      * if the org structure is locked for editing
      */
     locked: boolean;
+
+    /**
+     * Statistics of this org structure
+     */
+    orgStatistics: OrgStatistics;
 
     /*
      * The leader of this org
@@ -159,4 +166,4 @@ interface OrgStructureVisitor
     visitLeave(employee: Employee): void;
 }
 
-export type {OrgStructure, OrgStructureVisitor};
+export type{OrgStructure, OrgStructureVisitor};

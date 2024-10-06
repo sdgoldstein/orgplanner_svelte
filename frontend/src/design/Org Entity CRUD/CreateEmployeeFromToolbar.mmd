@@ -1,0 +1,52 @@
+sequenceDiagram
+    actor User
+
+    %% User Activates a Control
+    User->>+NewEmployeeToolbarButtonListener: Activates
+    
+
+    %% Toolbar fires an AddEmployeeToolbarEvent event
+    create participant AddEmployeeToolbarEvent
+    NewEmployeeToolbarButtonListener->>AddEmployeeToolbarEvent: Create
+    NewEmployeeToolbarButtonListener->>+PubSubManager: Fire AddEmployeeToolbarEvent Event
+    
+    %% Mediator recieves the event
+    PubSubManager--)+OrgViewMediatorSvelte: Sends AddEmployeeToolbarEvent Event 
+    PubSubManager->>-NewEmployeeToolbarButtonListener: void   
+    NewEmployeeToolbarButtonListener->>-User:void
+
+    %% Org View Mediator Svelte Component Opens Modal
+    OrgViewMediatorSvelte->>+OrgViewMediator: getSelectedManager()
+    OrgViewMediator->>-OrgViewMediatorSvelte: Selected Manager
+    OrgViewMediatorSvelte->>+ShowAddEmployeeModal: Open with Selected Manager
+    OrgViewMediatorSvelte->>-PubSubManager: void
+
+    %% User Submit Model
+    User->>+ShowAddEmployeeModal:Submit
+    create participant NewEmployeeEvent
+    ShowAddEmployeeModal->>+NewEmployeeEvent: Create
+
+    ShowAddEmployeeModal->>+PubSubManager: Fire NewEmployeeEven Event
+    PubSubManager--)+OrgViewMediator: Sends NewEmployeeEven Event
+    PubSubManager->>-ShowAddEmployeeModal: void
+    ShowAddEmployeeModal-->-User:void
+
+    %% Org View Mediator updates the org structure, and fires org structure changed event
+    OrgViewMediator->>+OrgStructure: Updates
+    OrgStructure->>-OrgViewMediator: void
+    create participant OrgStructureChangeEvent
+    OrgViewMediator->>OrgStructureChangeEvent: Create
+    OrgViewMediator->>+PubSubManager: Fire Event
+    
+    %% Any number of sub views handle the org structure changed event and updates
+    PubSubManager--)+OrgChartProxy: Sends Event
+    PubSubManager->>-OrgViewMediator: void
+    
+    OrgViewMediator->>-PubSubManager: void
+    OrgChartProxy->>OrgChartProxy: Process and Update
+    OrgChartProxy->>-PubSubManager: void
+
+        
+
+    
+    

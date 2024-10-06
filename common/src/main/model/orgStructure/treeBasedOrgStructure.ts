@@ -2,6 +2,8 @@ import {GuardedMap} from "@sphyrna/tscore";
 import {v4 as uuidv4} from "uuid";
 
 import {Node, Tree, TreeVisitor} from "../../jscore/tree";
+import {OrgStatistics} from "../stats/orgStatistics";
+import {StatsCollector} from "../stats/statsCollector";
 
 import {BaseIndividualContributor, BaseManager, Employee, Manager} from "./employee";
 import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
@@ -72,6 +74,8 @@ class TreeBasesOrgStructure implements OrgStructure
 
     locked: boolean = false;
 
+    orgStatistics: OrgStatistics;
+
     private _orgLeader: Employee|undefined;
     private _employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>;
 
@@ -88,6 +92,9 @@ class TreeBasesOrgStructure implements OrgStructure
     {
         this._employeePropertyDescriptors = propertyDescriptors;
         this.initOrReset();
+
+        // FIXME
+        this.orgStatistics = StatsCollector.instance.collectStats(this);
     }
 
     public deepClone(): OrgStructure

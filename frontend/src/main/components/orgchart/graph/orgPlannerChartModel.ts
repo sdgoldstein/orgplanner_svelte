@@ -1,3 +1,4 @@
+import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {Cell, GraphDataModel} from "@maxgraph/core";
 import type {Employee, IndividualContributor, Manager, OrgEntity, Team} from "orgplanner-common/model";
 
@@ -73,17 +74,21 @@ interface OrgPlannerChartVertex
 {
     orgEntity: OrgEntity;
     getVertexType(): VertexType;
+    setProperty(name: string, value: string): void;
+    getProperty(name: string): string;
+    hasProperty(name: string): boolean;
 }
 
 abstract class OrgPlannerChartEmployeeVertex implements OrgPlannerChartVertex
 {
     orgEntity: Employee;
+    private propertyMap: GuardedMap<string, string> = new Map<string, string>() as GuardedMap<string, string>;
 
     protected constructor(employee: Employee)
     {
         if (!employee)
         {
-            throw new Error('employee cannot be null');
+            throw new Error("employee cannot be null");
         }
 
         this.orgEntity = employee;
@@ -100,6 +105,26 @@ abstract class OrgPlannerChartEmployeeVertex implements OrgPlannerChartVertex
     set employee(employeeToSet: Employee)
     {
         this.orgEntity = employeeToSet;
+    }
+
+    setProperty(name: string, value: string): void
+    {
+        this.propertyMap.set(name, value);
+    }
+
+    getProperty(name: string): string
+    {
+        if (!this.propertyMap.has(name))
+        {
+            throw new Error(`A property with ${name} does not exist`);
+        }
+
+        return this.propertyMap.get(name);
+    }
+
+    hasProperty(name: string): boolean
+    {
+        return this.propertyMap.has(name);
     }
 
     // Default implementation
@@ -195,4 +220,4 @@ export {
     OrgPlannerChartModel,
     VertexType
 };
-export type {OrgPlannerChartVertex};
+export type{OrgPlannerChartVertex};

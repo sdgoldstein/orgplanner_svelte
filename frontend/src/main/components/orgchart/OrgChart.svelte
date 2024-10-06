@@ -7,12 +7,12 @@
     } from "orgplanner-common/model";
 
     import { OrgChartMode } from "./orgChartViewState";
-    import { OrgChartHelper, type OrgChartProps } from "./orgChartHelper";
+    import { OrgChartProxy, type OrgChartProps } from "./orgChartProxy";
     import { onMount } from "svelte";
 
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;
-    let orgChartHelper: OrgChartHelper | undefined;
+    let orgChartHelper: OrgChartProxy | undefined;
     let width: number = $state(0);
 
     let {
@@ -26,7 +26,7 @@
         if (!chartContainer) {
             throw new Error("chartContainer undefined in mount");
         }
-        orgChartHelper = new OrgChartHelper(chartContainer);
+        orgChartHelper = new OrgChartProxy(chartContainer);
         orgChartHelper.onMount();
 
         return () => {

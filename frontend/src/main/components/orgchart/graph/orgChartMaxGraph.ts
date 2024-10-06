@@ -9,6 +9,7 @@
 import {Cell, type CellStateStyle, EventObject, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
 import {ServiceManager} from "@sphyrna/service-manager-ts";
 import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
+import {DeleteEmployeeFromPlanEvent} from "../orgChartProxy";
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 import {type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import type {
@@ -26,6 +27,25 @@ import {
 } from "./orgPlannerChartModel";
 import type {MaxGraphTheme} from "./themes/maxGraphTheme";
 import {OrgChartMaxGraphThemeBase} from "./themes/orgChartMaxGraphThemeBase";
+import {EditEmployeeActionEvent} from "@src/components/page/orgViewMediator";
+
+/**
+ * A visitor used to apply logic while traversing the nodes of the graph
+ */
+class OrgPlannerChartVisitor
+{
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    visitEnter(cell: Cell): void
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    {
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    visitLeave(cell: Cell): void
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    {
+    }
+}
 
 class OrgPlannerChartLayoutManager extends LayoutManager
 {
@@ -57,15 +77,17 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
 
     visitEnter(employee: Employee): void
     {
+        let newCell: Cell;
+
         if (employee.isManager())
         {
-            const newManagerCell = this._orgChartMaxGraphBuilderService.addManagerNode(employee);
-            this._orgChartMaxGraphBuilderService.addExpandedOverlay(newManagerCell);
+            newCell = this._orgChartMaxGraphBuilderService.addManagerNode(employee);
+            // this._orgChartMaxGraphBuilderService.addToggleSubtreeOverlay(newCell);
 
             if (!this.rootCell)
             {
                 // Root cell is the first manager created
-                this.rootCell = newManagerCell;
+                this.rootCell = newCell;
             }
 
             // Not sure if this will stay here
@@ -84,8 +106,10 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
         }
         else
         {
-            this._orgChartMaxGraphBuilderService.addICNode(employee);
+            newCell = this._orgChartMaxGraphBuilderService.addICNode(employee);
         }
+
+        // this._orgChartMaxGraphBuilderService.addEditButtonOverlay(newCell);
     }
 
     visitLeave(employee: Employee): void
@@ -94,6 +118,13 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
     }
 }
 
+/**
+ * The org chart graph visual component.
+ *
+ * It delegates to the OrgChartMaxGraphAssemblyService to add or remove visual elements to the graph.  Otherwise, all
+ * other actions/logic it handles directly.  It also is responsible for directly updated the underlying orgstructure
+ * when changs occur
+ */
 class OrgChartMaxGraph extends Graph implements PubSubListener
 {
     orgStructure: OrgStructure;
@@ -127,14 +158,50 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         this._orgChartMaxGraphBuilderService.insertGraph(this);
         this._orgChartMaxGraphBuilderService.configureBaseOptions();
         this._orgChartMaxGraphBuilderService.applyTheme(this.graphTheme);
-        this._orgChartMaxGraphBuilderService.createExpandOverlay(
-            (sender: EventTarget, event: EventObject) => { this.collapseSubtree(event.getProperty("cell") as Cell); });
-        this._orgChartMaxGraphBuilderService.createCollapseOverlay(
-            (sender: EventTarget, event: EventObject) => { this.expandSubtree(event.getProperty("cell") as Cell); });
+        this._orgChartMaxGraphBuilderService.createToggleSubtreeOverlay(
+            (sender: EventTarget, event: EventObject) => { this.toggleSubtree(event.getProperty("cell") as Cell); });
+        this._orgChartMaxGraphBuilderService.createDeleteButtonOverlay((sender: EventTarget, event: EventObject) => {
+            const cellToDelete = event.getProperty("cell") as Cell;
+            this._deleteOrgEntity(cellToDelete);
+        });
+        this._orgChartMaxGraphBuilderService.createEditButtonOverlay((sender: EventTarget, event: EventObject) => {
+            const cellToEdit = event.getProperty("cell") as Cell;
+            const employeeToEdit = (cellToEdit.value as OrgPlannerChartEmployeeVertex).employee;
+            const eventToFire = new EditEmployeeActionEvent(employeeToEdit);
+            PubSubManager.instance.fireEvent(eventToFire);
+        });
 
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.SAVE_AS_IMAGE, this);
 
         this.initializemxGraph(); // This is doing nothing in the base graph
+    }
+
+    private _deleteOrgEntity(cellToDelete: Cell)
+    {
+        const cellsToDelete: Cell[] = [];
+        const employeesToRemove: Employee[] = [];
+        const teamsToRemove = [];
+
+        this.traverse({
+            visitEnter(cellToVisit: Cell) {
+                cellsToDelete.push(cellToVisit);
+                let vertexValue = cellToVisit.value;
+                if (vertexValue instanceof OrgPlannerChartTeamVertex)
+                {
+                    teamsToRemove.push(vertexValue.team);
+                }
+                else
+                {
+                    employeesToRemove.push(vertexValue.employee);
+                }
+            },
+            visitLeave(cell: Cell) {},
+        },
+                      cellToDelete);
+        this.batchUpdate(() => {
+            this._orgChartMaxGraphBuilderService.deleteOrgEntities(cellsToDelete);
+            this.orgStructure.removeEmployees(employeesToRemove);
+        });
     }
 
     disconnect(): void
@@ -215,11 +282,6 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         this.refreshStyles();
     }
 
-    /*createCellRenderer(): CellRenderer
-    {
-        return new OrgChartCellRenderer(this._viewState);
-    }*/
-
     /**
      * Returns the value to be used for the label.
      *
@@ -242,8 +304,10 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
                     {
                         if (this.visibilityState.isVisible(nextProperty[0]))
                         {
+                            let nextPropertyToDisplay = (nextProperty[1].length != 0) ? nextProperty[1] : "(unknown)";
+
                             valueToReturn += `<div data-testid="chart_cell_text_${nextProperty[0].name}-${
-                                employee.id}_testid">${nextProperty[1]}</div>`;
+                                employee.id}_testid">${nextPropertyToDisplay}</div>`;
                         }
                     }
 
@@ -321,13 +385,23 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
     addEmployee(employeeToAdd: Employee): void
     {
         this.batchUpdate(() => {
+            let cellAdded;
             if (employeeToAdd.isManager())
             {
-                this._orgChartMaxGraphBuilderService.addManagerNode(employeeToAdd);
+                cellAdded = this._orgChartMaxGraphBuilderService.addManagerNode(employeeToAdd);
             }
             else
             {
-                this._orgChartMaxGraphBuilderService.addICNode(employeeToAdd);
+                cellAdded = this._orgChartMaxGraphBuilderService.addICNode(employeeToAdd);
+            }
+
+            // Expand the parent in case it is collapsed so the new cell shows
+            const managerCell = this.model.getCell(employeeToAdd.managerId);
+            if (managerCell != null)
+            {
+                // It hsould always be non-null
+
+                this.showHideSubtree(managerCell, true);
             }
         });
     }
@@ -407,39 +481,65 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         return newCell;
     }
 
-    private expandSubtree(cell: Cell): void
+    private toggleSubtree(cell: Cell): void
     {
-        this.toggleSubtree(cell, true);
-        this.clearCellOverlays(cell);
-        this._orgChartMaxGraphBuilderService.addExpandedOverlay(cell);
+        let isCollapsed = false;
+        const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
+        if (orgChartVertext.hasProperty("collapsed"))
+        {
+            isCollapsed = (orgChartVertext.getProperty("collapsed") == "true");
+        }
+        this.showHideSubtree(cell, isCollapsed);
     }
 
-    private collapseSubtree(cell: Cell): void
+    private traverse(chartVisitor: OrgPlannerChartVisitor, startCell: Cell): void
     {
-        this.toggleSubtree(cell, false);
-        this.clearCellOverlays(cell);
-        this._orgChartMaxGraphBuilderService.addCollapsedOverlay(cell)
+        this.traverseImpl(chartVisitor, startCell, new Set<string>())
     }
 
-    private toggleSubtree(cell: Cell, show: boolean): void
+    private traverseImpl(chartVisitor: OrgPlannerChartVisitor, cellToVisit: Cell, visited: Set<string>): void
+    {
+        const cellToVisitValue: OrgPlannerChartVertex = cellToVisit.value as OrgPlannerChartVertex;
+
+        if (!visited.has(cellToVisitValue.orgEntity.id))
+        {
+            chartVisitor.visitEnter(cellToVisit);
+            visited.add(cellToVisitValue.orgEntity.id);
+            const edgeCount = cellToVisit.getEdgeCount();
+            if (edgeCount > 0)
+            {
+                for (let i = 0; i < edgeCount; i += 1)
+                {
+                    const nextEdge = cellToVisit.getEdgeAt(i);
+                    if (nextEdge.getTerminal(true) === cellToVisit)
+                    {
+                        const nextCellToVisit: Cell|null = nextEdge.getTerminal(false);
+                        if (nextCellToVisit)
+                        {
+                            this.traverseImpl(chartVisitor, nextCellToVisit, visited);
+                        }
+                    }
+                }
+            }
+            chartVisitor.visitLeave(cellToVisit);
+        }
+    }
+
+    private showHideSubtree(cell: Cell, show: boolean): void
     {
         this.batchUpdate(() => {
             const cells: Cell[] = [];
             const savedGraph = this;
 
-            // FIX ME - Is there a more efficient way to do this?
-            this._layout?.traverse({
-                vertex : cell,
-                directed : true,
-                func : (vertex: Cell) => {
-                    let valueToReturn = true;
-                    if (vertex != cell)
+            this.traverse({
+                visitEnter(cellToVisit: Cell) {
+                    if (cellToVisit != cell)
                     {
-                        cells.push(vertex);
+                        cells.push(cellToVisit);
 
                         // HACK - FIX ME - The only state we have to determine if the cell is expanded or not is the
                         // overlays
-                        const overLays = savedGraph.getCellOverlays(vertex);
+                        // const overLays = savedGraph.getCellOverlays(cellToVisit);
 
                         // If we're expanding and the vertex collapsed, don't expand it - FIXME
                         /*if ((overLays != null) && show && (overLays[0] == savedGraph._collapsedOverlay))
@@ -447,13 +547,19 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
                             valueToReturn = false;
                         }*/
                     }
-                    return valueToReturn;
                 },
-                edge : null,
-                visited : null
-            });
+                visitLeave(cell: Cell) {
+
+                },
+            },
+                          cell);
 
             this.toggleCells(show, cells, true);
+
+            const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
+            orgChartVertext.setProperty("collapsed", (!show).toString());
+            // Is this the best way to force a redraw?
+            this.refresh(cell);
         });
     }
 

@@ -18,7 +18,6 @@ interface OrgSnapshot
 interface OrgDataCore
 {
     title: string;
-    orgStatistics: OrgStatistics;
     orgStructure: OrgStructure;
     clone(): OrgDataCore;
 }
@@ -26,14 +25,12 @@ interface OrgDataCore
 class OrgDataCoreDefaultImpl implements OrgDataCore
 {
     title: string;
-    orgStatistics: OrgStatistics;
     orgStructure: OrgStructure;
 
     constructor(title: string, orgStructure: OrgStructure)
     {
         this.title = title;
         this.orgStructure = orgStructure;
-        this.orgStatistics = StatsCollector.instance.collectStats(this.orgStructure);
     }
     clone(): OrgDataCore
     {
@@ -62,4 +59,4 @@ class OrgSnapshotDefaultImpl implements OrgSnapshot
 }
 
 export {OrgDataCoreDefaultImpl, OrgPlanDefaultImpl, OrgSnapshotDefaultImpl};
-export type {OrgDataCore, OrgPlan, OrgSnapshot};
+export type{OrgDataCore, OrgPlan, OrgSnapshot};

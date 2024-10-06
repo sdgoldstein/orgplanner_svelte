@@ -1,0 +1,37 @@
+sequenceDiagram
+    actor User
+
+    %% User Activates a Control
+    User->>+UIControl: Activates
+
+    %% Control fires an action level event
+    create participant ActionEvent
+    UIControl->>ActionEvent: Create
+    UIControl->>+PubSubManager: Fire Event
+    
+    %% Mediator recieves the event
+    PubSubManager--)+OrgViewMediator: Sends Event 
+    PubSubManager->>-UIControl: void   
+    UIControl->>-User:void
+
+    %% Org View Mediator updates the org structure, and fires org structure changed event
+    OrgViewMediator->>+OrgStructure: Updates
+    OrgStructure->>-OrgViewMediator: void
+    create participant OrgStructureChangeEvent
+    OrgViewMediator->>OrgStructureChangeEvent: Create
+    OrgViewMediator->>+PubSubManager: Fire Event
+    
+    %% Any number of sub views handle the org structure changed event and updates
+    PubSubManager--)+OrgViewSubview: Sends Event
+    PubSubManager->>-OrgViewMediator: void
+    
+    OrgViewMediator->>-PubSubManager: void
+    OrgViewSubview->>OrgViewSubview: Process and Update
+    OrgViewSubview->>-PubSubManager: void
+
+        
+
+    
+    
+
+   

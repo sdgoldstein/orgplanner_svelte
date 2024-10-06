@@ -19,6 +19,7 @@ import {
     OrgChartMode,
     ViewToggableEntityToggledEvent,
 } from "./orgChartViewState";
+import {OrgStructureChangedEventEntityAdded, OrgStructureChangedEvents} from "../page/orgViewMediator";
 
 interface OrgChartProps
 {
@@ -26,14 +27,6 @@ interface OrgChartProps
     mode: OrgChartMode;
     colorTheme: OrgEntityColorTheme;
     propertyDescriptors: Set<OrgEntityPropertyDescriptor>;
-}
-
-class NewEmployeeEvent extends BasePubSubEvent
-{
-    constructor(public newEmployee: Employee)
-    {
-        super(OrgPlannerAppEvents.ADD_EMPLOYEE);
-    }
 }
 
 class ShowAddEmployeeModalEvent extends BasePubSubEvent
@@ -44,7 +37,21 @@ class ShowAddEmployeeModalEvent extends BasePubSubEvent
     }
 }
 
-class OrgChartHelper implements PubSubListener
+class DeleteEmployeeFromPlanEvent extends BasePubSubEvent
+{
+    constructor()
+    {
+        super(OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN);
+    }
+}
+
+/**
+ * This is a class used by all clients/external logic of the orgchart to make orgchat changes, whether by event or
+ * direect invocation.  All execution flow leads into the graph.
+ *
+ * If the graph needs to communicate in the other direction, it will use events
+ */
+class OrgChartProxy implements PubSubListener
 {
     private _colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
     private _orgStructure?: OrgStructure;
@@ -61,8 +68,7 @@ class OrgChartHelper implements PubSubListener
         pubSubManager.registerListener(OrgPlannerAppEvents.TOGGLE_TEAM_MODE, this);
         pubSubManager.registerListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.registerListener(OrgPlannerAppEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
-        pubSubManager.registerListener(OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION, this);
-        pubSubManager.registerListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
+        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
     }
 
     onDismount(): void
@@ -72,8 +78,7 @@ class OrgChartHelper implements PubSubListener
         pubSubManager.unregisterListener(OrgPlannerAppEvents.TOGGLE_TEAM_MODE, this);
         pubSubManager.unregisterListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.unregisterListener(OrgPlannerAppEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
-        pubSubManager.unregisterListener(OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION, this);
-        pubSubManager.unregisterListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
+        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
 
         this._currentGraph?.destroy();
     }
@@ -136,36 +141,13 @@ class OrgChartHelper implements PubSubListener
             const newState = viewToggableEvent.getNewState();
             this.currentGraph.onVisibilityUpdate(entity, newState);
         }
-        else if (eventName === OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION)
+        else if (eventName === OrgStructureChangedEvents.ORG_ENTITY_ADDED)
         {
-            if (!this._orgStructure)
-            {
-                throw new Error("Org Structure is not defined");
-            }
-
-            if (!this._currentGraph)
-            {
-                throw new Error("Current graph is not defined");
-            }
-
-            let managerId: string = this._orgStructure?.orgLeader.id;
-            if (this._currentGraph.isEntitySelected())
-            {
-                const selectedEntity: OrgEntity = this._currentGraph.getSelectedEntity();
-                if (selectedEntity.orgEntityType == OrgEntityTypes.MANAGER)
-                {
-                    managerId = selectedEntity.id;
-                }
-            }
-            const eventToFire = new ShowAddEmployeeModalEvent(managerId);
-            PubSubManager.instance.fireEvent(eventToFire);
-        }
-        else if (eventName === OrgPlannerAppEvents.ADD_EMPLOYEE)
-        {
-            this.currentGraph.addEmployee((event as NewEmployeeEvent).newEmployee);
+            const orgEntityAddedEvent = event as OrgStructureChangedEventEntityAdded;
+            this.currentGraph.addEmployee(orgEntityAddedEvent.entityAded as Employee);
         }
     }
 }
 
 export type{OrgChartProps};
-export {OrgChartHelper, ShowAddEmployeeModalEvent, NewEmployeeEvent};
+export {OrgChartProxy, ShowAddEmployeeModalEvent, DeleteEmployeeFromPlanEvent};
