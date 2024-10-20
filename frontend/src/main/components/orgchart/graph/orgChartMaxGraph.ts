@@ -6,10 +6,18 @@
  * 6.  Snapshots
  */
 
-import {Cell, type CellStateStyle, EventObject, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
+import {
+    Cell,
+    CellState,
+    type CellStateStyle,
+    EventObject,
+    Graph,
+    GraphLayout,
+    LayoutManager,
+    VertexHandler
+} from "@maxgraph/core";
 import {ServiceManager} from "@sphyrna/service-manager-ts";
-import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
-import {DeleteEmployeeFromPlanEvent} from "../orgChartProxy";
+
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 import {type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import type {
@@ -27,7 +35,13 @@ import {
 } from "./orgPlannerChartModel";
 import type {MaxGraphTheme} from "./themes/maxGraphTheme";
 import {OrgChartMaxGraphThemeBase} from "./themes/orgChartMaxGraphThemeBase";
-import {EditEmployeeActionEvent} from "@src/components/page/orgViewMediator";
+import {
+    DeleteEmployeeActionEvent,
+    EditEmployeeActionEvent,
+    OrgPageSelectionChangedEvent
+} from "@src/components/page/orgPageEvents";
+import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
+import {OrgChartVertexHandler} from "./themes/orgChartVertexHandler";
 
 /**
  * A visitor used to apply logic while traversing the nodes of the graph
@@ -161,8 +175,10 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         this._orgChartMaxGraphBuilderService.createToggleSubtreeOverlay(
             (sender: EventTarget, event: EventObject) => { this.toggleSubtree(event.getProperty("cell") as Cell); });
         this._orgChartMaxGraphBuilderService.createDeleteButtonOverlay((sender: EventTarget, event: EventObject) => {
-            const cellToDelete = event.getProperty("cell") as Cell;
-            this._deleteOrgEntity(cellToDelete);
+            const cellToEdit = event.getProperty("cell") as Cell;
+            const employeeToDelete = (cellToEdit.value as OrgPlannerChartEmployeeVertex).employee;
+            const eventToFire = new DeleteEmployeeActionEvent(employeeToDelete);
+            PubSubManager.instance.fireEvent(eventToFire);
         });
         this._orgChartMaxGraphBuilderService.createEditButtonOverlay((sender: EventTarget, event: EventObject) => {
             const cellToEdit = event.getProperty("cell") as Cell;
@@ -174,34 +190,6 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.SAVE_AS_IMAGE, this);
 
         this.initializemxGraph(); // This is doing nothing in the base graph
-    }
-
-    private _deleteOrgEntity(cellToDelete: Cell)
-    {
-        const cellsToDelete: Cell[] = [];
-        const employeesToRemove: Employee[] = [];
-        const teamsToRemove = [];
-
-        this.traverse({
-            visitEnter(cellToVisit: Cell) {
-                cellsToDelete.push(cellToVisit);
-                let vertexValue = cellToVisit.value;
-                if (vertexValue instanceof OrgPlannerChartTeamVertex)
-                {
-                    teamsToRemove.push(vertexValue.team);
-                }
-                else
-                {
-                    employeesToRemove.push(vertexValue.employee);
-                }
-            },
-            visitLeave(cell: Cell) {},
-        },
-                      cellToDelete);
-        this.batchUpdate(() => {
-            this._orgChartMaxGraphBuilderService.deleteOrgEntities(cellsToDelete);
-            this.orgStructure.removeEmployees(employeesToRemove);
-        });
     }
 
     disconnect(): void
@@ -382,6 +370,10 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         });
     }
 
+    createVertexHandler(state: CellState): VertexHandler
+    {
+        return new OrgChartVertexHandler(state);
+    }
     addEmployee(employeeToAdd: Employee): void
     {
         this.batchUpdate(() => {
@@ -403,6 +395,53 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
 
                 this.showHideSubtree(managerCell, true);
             }
+
+            // Set the newly added cell to be selected
+            this.setSelectionCell(cellAdded);
+
+            // FIX - Move to selrction handler
+            const eventToFire = new OrgPageSelectionChangedEvent([ employeeToAdd ]);
+            PubSubManager.instance.fireEvent(eventToFire);
+        });
+    }
+
+    employeeEdited(employee: Employee): void
+    {
+        this.batchUpdate(() => {
+            const vertex: Cell|null = this.model.getCell(employee.id);
+            if (!vertex)
+            {
+                throw new Error("Could not find cell for edited employee");
+            }
+
+            // Is this the best way to force a redraw?
+            this.refresh(vertex);
+
+            /*const cellState: CellState|null = this.view.getState(vertex);
+            if (!cellState)
+            {
+                throw new Error("Could not find cell state for edited employee");
+            }
+
+            this.cellRenderer.redrawLabel(cellState, true);*/
+        });
+    }
+
+    public employeesDeleted(employeesToRemove: Employee[])
+    {
+        this.batchUpdate(() => {
+            const cellsToRemove: Cell[] = [];
+            employeesToRemove.forEach((nextEmployeeToRemove) => {
+                const vertex: Cell|null = this.model.getCell(nextEmployeeToRemove.id);
+                if (!vertex)
+                {
+                    throw new Error("Could not find cell for edited employee");
+                }
+
+                cellsToRemove.push(vertex);
+            });
+
+            this.removeCells(cellsToRemove);
         });
     }
 

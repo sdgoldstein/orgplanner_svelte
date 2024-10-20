@@ -1,45 +1,31 @@
-<script module  lang="ts">
+<script module lang="ts">
 
-class NewEmployeeEvent extends BasePubSubEvent
-{
-    // Shorthand declaring these in constuctor didn't work within svelte
-    name:string;
-    title:string;
-    managerId: string;
-    teamId: string;
-    isManager: boolean;
-    properties: OrgEntityPropertyBag;
-
-    constructor(name: string, title: string,  managerId: string,  teamId: string, isManager: boolean, properties: OrgEntityPropertyBag)
-    {
-        super(OrgPlannerAppEvents.ADD_EMPLOYEE);
-        this.name=name;
-        this.title=title;
-        this.managerId=managerId;
-        this.teamId=teamId;
-        this.isManager=isManager;
-        this.properties=properties;
-    }
+type NewEditEmployeeModalMode = "Edit" | "New";
+class NewEditEmployeeModalModes {
+    static readonly EDIT:NewEditEmployeeModalMode = "Edit"
+    static readonly NEW:NewEditEmployeeModalMode = "New"
 }
-
-interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
+interface NewEditEmployeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId:string;
+        employeeToEdit?:Employee;
+        mode:NewEditEmployeeModalMode;
     }
 
-    export {NewEmployeeEvent};
+export {NewEditEmployeeModalModes};
+export type {NewEditEmployeeModalMode};
 </script>
 
 <script lang="ts">
     import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
     import { zExtended } from "@src/components/ui/forms/form";
-    import type { OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
-    import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
+    import type { Employee, OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
+    import { PubSubManager } from "orgplanner-common/jscore";
     import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
     import type { BaseComponentProps } from "@src/components/ui/uicomponents";
-    import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
-
+    import { EditEmployeeEvent, NewEmployeeEvent } from "@src/components/page/orgPageEvents";
+    
     function handleSubmit(formData:FormData): void 
     {
         const nameElement: FormDataEntryValue | null = formData.get("name_input_name");
@@ -76,34 +62,52 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
             properties.set(propertyDescriptor, propertyElement.valueOf() as string);
         }
 
-        const eventToFire = new NewEmployeeEvent(nameElement.valueOf() as string, titleElement.valueOf() as string, managerId,
-        teamId, isManagerElement.valueOf() as boolean, properties)
-        PubSubManager.instance.fireEvent(eventToFire);
+        let eventToFire;
+        if (mode==NewEditEmployeeModalModes.EDIT && employeeToEdit)
+        {
+            eventToFire = new EditEmployeeEvent(nameElement.valueOf() as string, titleElement.valueOf() as string,
+            teamId, properties, employeeToEdit); 
+        }
+        else
+        {
+            eventToFire = new NewEmployeeEvent(nameElement.valueOf() as string, titleElement.valueOf() as string, managerId,
+            teamId, isManagerElement.valueOf() === "true", properties);
+        }
 
+        PubSubManager.instance.fireEvent(eventToFire);
+        
         open = false;
     }
 
 
     let {
-        open = $bindable(),
+        open = $bindable(false),
+        mode = $bindable(NewEditEmployeeModalModes.NEW),
         orgStructure,
         managerId= $bindable(),
+        employeeToEdit=$bindable(),
         appDynamicColorTheme,
         ...restProps
-    }: NewEmployeeeModalProps = $props();
+    }: NewEditEmployeeModalProps = $props();
 
-    let selectedTeam:{value:any,label:string}|undefined = $state();
+    let selectedTeam:{value:any,label:string}|undefined = $state(undefined);
     let showNewTeamNameInput = $derived((selectedTeam && selectedTeam.value=="<<-- New Team -->>") ? true : false );
 
     const colorVariant=AppDynamicColorThemeColorSelector.PRIMARY.toString();
     const dynamicColorTheme=tempgetDynamicColorTheme(appDynamicColorTheme);
+
+    $effect.pre(() =>
+    {
+        selectedTeam = (mode==NewEditEmployeeModalModes.EDIT && employeeToEdit) ? {value:employeeToEdit.team.id, label:employeeToEdit.team.title} : undefined;
+    });
 </script>
 
 <SubmitCancelModal
+    id="new_edit_employee_modal_form_id"
     bind:open={open}    
-    title="New Employee"
-    description="Create a new employee"
-    actionButtonText="Create"
+    title={mode==NewEditEmployeeModalModes.NEW ? "New Employee" : "Edit Employee"}
+    description={mode==NewEditEmployeeModalModes.NEW ? "Create a new employee" : "Edit the selected employee"}
+    actionButtonText={mode==NewEditEmployeeModalModes.NEW ? "Create" : "Save"}
     {colorVariant}
     {dynamicColorTheme}
     onsubmit={handleSubmit}
@@ -114,6 +118,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         id="name_input_id"
         name="name_input_name"
         placeholder="John Stevens"
+        value={(mode==NewEditEmployeeModalModes.EDIT && employeeToEdit) ? employeeToEdit.name : undefined}
         schema = {zExtended.requiredString("Name")}
         {colorVariant}
         {dynamicColorTheme}
@@ -124,6 +129,7 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
         id="title_input_id"
         name="title_input_name"
         placeholder="Senior Member of Staff"
+        value={(mode==NewEditEmployeeModalModes.EDIT && employeeToEdit) ? employeeToEdit.title : undefined}
         schema = {zExtended.requiredString("Title")}
         {colorVariant}
         {dynamicColorTheme}
@@ -162,17 +168,20 @@ interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThem
             id="{propertyDescriptor.name}_input_id"
             name="{propertyDescriptor.name}_input_name"
             placeholder={propertyDescriptor.defaultValue}
+            value={(mode==NewEditEmployeeModalModes.EDIT && employeeToEdit) ? employeeToEdit.getPropertyValue(propertyDescriptor.name) : undefined}
             {colorVariant}
             {dynamicColorTheme}
         />
     {/each}
 
+    <!-- FIXME - Need to make readonly when editing employee-->
     <Label for="is_manager_option_id">Manager</Label>
     <RadioGroup id="is_manager_option_id" 
                 name="is_manager_option_name"         
                 {colorVariant}
                 {dynamicColorTheme}
-                value="true">
+                value={(mode==NewEditEmployeeModalModes.EDIT && employeeToEdit) ? employeeToEdit.isManager().toString() : "true"}
+                disabled={mode==NewEditEmployeeModalModes.EDIT}>
             <RadioGroupOption
                 id="is_manager_yes_option_id"
                 value="true"

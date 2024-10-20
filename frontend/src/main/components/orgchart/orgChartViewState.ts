@@ -1,7 +1,6 @@
 import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {BasePubSubEvent} from "orgplanner-common/jscore";
 import {type OrgEntityPropertyDescriptor, type OrgEntityType, OrgEntityTypes} from "orgplanner-common/model";
-
 import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
 
 type ViewToggableEntity = OrgEntityPropertyDescriptor|OrgEntityType;
@@ -63,7 +62,7 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 
     iterator(): IterableIterator<ViewToggableEntity>
     {
-        throw new Error('Method not implemented.');
+        throw new Error("Method not implemented.");
     }
 }
 
@@ -73,5 +72,5 @@ enum OrgChartMode {
     PRINT = "PRINT"
 }
 
-export type {OrgChartEntityVisibleState, ViewToggableEntity};
+export type{OrgChartEntityVisibleState, ViewToggableEntity};
 export {OrgChartEntityVisibleStateImpl, OrgChartMode, ViewToggableEntityToggledEvent};

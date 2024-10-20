@@ -10,7 +10,7 @@ import {
     InternalEvent,
     SelectionHandler
 } from "@maxgraph/core";
-import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
+import {OrgPlannerAppEvents} from "@src/components/page/orgPageEvents";
 import {type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import type {Employee, OrgStructure} from "orgplanner-common/model";
 
@@ -37,7 +37,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
         super(element, orgStructure, theme, viewState);
 
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN, this);
-        PubSubManager.instance.registerListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPlannerAppEvents.EMPLOYEE_EDITED, this);
 
         const addImage = new ImageBox("resources/images/symbols.svg#add", 18, 18);
@@ -56,7 +56,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
         super.disconnect();
 
         PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.DELETE_SELECTED_EMPLOYEES_FROM_PLAN, this);
-        PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.ADD_EMPLOYEE, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.EMPLOYEE_EDITED, this);
     }
 
@@ -234,7 +234,7 @@ class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListe
         {
             this.deleteSelectedEmployee();
         }
-        else if (eventName === OrgPlannerAppEvents.ADD_EMPLOYEE)
+        else if (eventName === OrgPageEvents.ADD_EMPLOYEE)
         {
 
             this.addEmployee((event as NewEmployeeEvent).newEmployee);

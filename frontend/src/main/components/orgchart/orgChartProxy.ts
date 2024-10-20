@@ -2,15 +2,11 @@
 import {BasePubSubEvent, type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import {
     type Employee,
-    type OrgEntity,
     type OrgEntityColorTheme,
     OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
-    OrgEntityTypes,
     type OrgStructure
 } from "orgplanner-common/model";
-
-import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
 
 import {OrgChartMaxGraph} from "./graph/orgChartMaxGraph";
 import {OrgChartMaxGraphThemeBase} from "./graph/themes/orgChartMaxGraphThemeBase";
@@ -19,7 +15,13 @@ import {
     OrgChartMode,
     ViewToggableEntityToggledEvent,
 } from "./orgChartViewState";
-import {OrgStructureChangedEventEntityAdded, OrgStructureChangedEvents} from "../page/orgViewMediator";
+import {
+    OrgStructureChangedEventEntitiesRemoved,
+    OrgStructureChangedEventEntityAdded,
+    OrgStructureChangedEventEntityEdited,
+    OrgStructureChangedEvents
+} from "../page/orgStructureEvents";
+import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
 
 interface OrgChartProps
 {
@@ -69,6 +71,8 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.registerListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.registerListener(OrgPlannerAppEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
+        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
+        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
     }
 
     onDismount(): void
@@ -79,6 +83,8 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.unregisterListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.unregisterListener(OrgPlannerAppEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
+        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
+        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
 
         this._currentGraph?.destroy();
     }
@@ -145,6 +151,16 @@ class OrgChartProxy implements PubSubListener
         {
             const orgEntityAddedEvent = event as OrgStructureChangedEventEntityAdded;
             this.currentGraph.addEmployee(orgEntityAddedEvent.entityAded as Employee);
+        }
+        else if (eventName === OrgStructureChangedEvents.ORG_ENTITY_EDITED)
+        {
+            const orgEntityEditedEvent = event as OrgStructureChangedEventEntityEdited;
+            this.currentGraph.employeeEdited(orgEntityEditedEvent.entityEdited as Employee);
+        }
+        else if (eventName === OrgStructureChangedEvents.ORG_ENTITIES_REMOVED)
+        {
+            const orgEntityDeletedEvent = event as OrgStructureChangedEventEntitiesRemoved;
+            this.currentGraph.employeesDeleted(orgEntityDeletedEvent.entitiesRemoved as Employee[]);
         }
     }
 }

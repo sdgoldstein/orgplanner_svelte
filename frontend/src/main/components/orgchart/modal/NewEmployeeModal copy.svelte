@@ -1,5 +1,5 @@
 <script module  lang="ts">
-    interface NewEmployeeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
+    interface NewEmployeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId:string;
@@ -69,7 +69,7 @@
         orgStructure,
         managerId,
         ...restProps
-    }: NewEmployeeeModalProps = $props();
+    }: NewEmployeeModalProps = $props();
 
 </script>
 

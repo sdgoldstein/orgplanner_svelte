@@ -1,9 +1,9 @@
 <svelte:options runes={true} />
 
 <script module  lang="ts">
-    import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
     import { DeleteEmployeeFromPlanEvent } from "../orgChartProxy";
     import { ButtonBar } from "@sphyrna/uicomponents";
+    import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
 
     interface OrgChartEditingToolbarProps
         extends OrgPlannerColorThemableComponentProps {
@@ -12,7 +12,13 @@
 
     class AddEmployeeToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION);
+            super(OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION);
+        }
+    }
+
+    class DeleteEmployeeToolbarEvent extends BasePubSubEvent {
+        constructor() {
+            super(OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION);
         }
     }
 
@@ -24,7 +30,7 @@
 
     class CreateSnapshotToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPlannerAppEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION);
+            super(OrgPageEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION);
         }
     }
 
@@ -36,7 +42,7 @@
 
     class ModifySettingsToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPlannerAppEvents.MODIFY_SETTINGS_TOOLBAR_ACTION);
+            super(OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION);
         }
     } 
 </script>
@@ -46,6 +52,7 @@
     import type { OrgPlannerColorThemableComponentProps } from "@src/components/theme";
     import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
     import type { OrgStructure } from "orgplanner-common/model";
+    import { OrgPageEvents } from "@src/components/page/orgPageEvents";
 
     let { orgStructure, appDynamicColorTheme }: OrgChartEditingToolbarProps =
         $props();
@@ -53,6 +60,7 @@
 
 <ButtonBar>
     <OrgChartEditingToolbarButton
+        id="new_employee_org_chart_toolbar_button"
         symbol="add"
         {appDynamicColorTheme}
         onclick={() => {
@@ -62,7 +70,7 @@
     ></OrgChartEditingToolbarButton>
     <OrgChartEditingToolbarButton symbol="delete" {appDynamicColorTheme}
     onclick={() => {
-      const eventToFire = new DeleteEmployeeFromPlanEvent();
+      const eventToFire = new DeleteEmployeeToolbarEvent();
       PubSubManager.instance.fireEvent(eventToFire);
     }}
     ></OrgChartEditingToolbarButton>

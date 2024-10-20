@@ -15,6 +15,7 @@
     }
 
     let {
+        id,
         symbol,
         onclick,
         appDynamicColorTheme,
@@ -23,6 +24,7 @@
 </script>
 
 <IconButton
+    {id}
     colorVariant={AppDynamicColorThemeColorSelector.SECONDARY.toString()}
     dynamicColorTheme={tempgetDynamicColorTheme(appDynamicColorTheme)}
     {onclick}

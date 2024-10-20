@@ -15,6 +15,7 @@ const config: PlaywrightTestConfig = {
                     // but in local need to install it manually: https://brave.com/download/
                     executablePath : process.env.CI ? "/usr/bin/brave-browser"
                                                     : "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+                    slowMo : 1000
                 }
             }
         },

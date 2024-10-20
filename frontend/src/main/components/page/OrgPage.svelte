@@ -2,65 +2,130 @@
     import { Pane, Splitpanes } from "svelte-splitpanes";
     import OrgChartPane from "@src/components/orgchart/OrgChartPane.svelte";
     import {
-        DefaultOrgViewMediator,
-        EditEmployeeActionEvent,
-        OrgViewEvents,
-        type OrgViewMediator,
-    } from "./orgViewMediator";
-    import {
         PubSubManager,
         type PubSubEvent,
         type PubSubListener,
     } from "orgplanner-common/jscore";
 
-    import { OrgPlannerAppEvents } from "../app/orgPlannerAppEvents";
-    import NewEmployeeModal from "../orgchart/modal/NewEmployeeModal.svelte";
+    import NewEditEmployeeModal, {
+        NewEditEmployeeModalModes,
+        type NewEditEmployeeModalMode,
+    } from "../orgchart/modal/NewEditEmployeeModal.svelte";
+    import type { Employee } from "orgplanner-common/model";
+    import {
+        OrgPageEvents,
+        EditEmployeeActionEvent,
+        DeleteEmployeeEvent,
+        DeleteEmployeeActionEvent,
+    } from "./orgPageEvents";
+    import {
+        DefaultOrgPageMediator,
+        type OrgPageMediator,
+    } from "./orgPageMediator";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
-    let orgViewMediator: OrgViewMediator | undefined;
+    /**
+     * Set up the Org Page Mediator
+     */
+    let orgPageMediator: OrgPageMediator | undefined;
     $effect(() => {
-        orgViewMediator = new DefaultOrgViewMediator(orgStructure);
-        orgViewMediator.init();
+        orgPageMediator = new DefaultOrgPageMediator(orgStructure);
+        orgPageMediator.init();
 
         return () => {
-            if (!orgViewMediator) {
-                throw new Error("orgViewMediator undefined in dismount");
+            if (!orgPageMediator) {
+                throw new Error("OrgPageMediator undefined in dismount");
             }
-            orgViewMediator.reset();
+            orgPageMediator.reset();
         };
     });
+    /**
+     * End Set up the Org Page Mediator
+     */
 
-    let newEmployeeModalOpen: boolean = $state(false);
+    /**
+     * NewEdit Employee Modal Logic
+     */
+    let newEditEmployeeModalOpen: boolean = $state(false);
+    let newEditEmployeeModalMode: NewEditEmployeeModalMode = $state(
+        NewEditEmployeeModalModes.NEW,
+    );
     let newEmployeeManagerId: string = $state("");
+    let employeeToEdit: Employee | undefined = $state(undefined);
 
-    class OrgViewListener implements PubSubListener {
+    class NewEditModalController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
-            if (eventName === OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION) {
-                if (!orgViewMediator) {
-                    throw new Error("orgViewMediator undefined");
+            if (eventName === OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION) {
+                if (!orgPageMediator) {
+                    throw new Error("OrgPageMediator undefined");
                 }
                 newEmployeeManagerId =
-                    orgViewMediator.getFirstSelectedManager().id;
-                newEmployeeModalOpen = true;
-            } else if ((eventName = OrgViewEvents.EDIT_EMPLOYEE_ACTION)) {
+                    orgPageMediator.getFirstSelectedManager().id;
+                employeeToEdit = undefined;
+                newEditEmployeeModalMode = NewEditEmployeeModalModes.NEW;
+                newEditEmployeeModalOpen = true;
+            } else if (eventName === OrgPageEvents.EDIT_EMPLOYEE_ACTION) {
                 const editEmployeeActionEvent =
                     eventToHandle as EditEmployeeActionEvent;
-                newEmployeeManagerId =
-                    editEmployeeActionEvent.employeeToEdit.managerId;
-                newEmployeeModalOpen = true;
+                employeeToEdit = editEmployeeActionEvent.employeeToEdit;
+                newEditEmployeeModalMode = NewEditEmployeeModalModes.EDIT;
+                newEditEmployeeModalOpen = true;
             }
         }
     }
-    const orgViewListener = new OrgViewListener();
+    const orgPageListener = new NewEditModalController();
     PubSubManager.instance.registerListener(
-        OrgPlannerAppEvents.ADD_EMPLOYEE_TOOLBAR_ACTION,
-        orgViewListener,
+        OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION,
+        orgPageListener,
     );
     PubSubManager.instance.registerListener(
-        OrgViewEvents.EDIT_EMPLOYEE_ACTION,
-        orgViewListener,
+        OrgPageEvents.EDIT_EMPLOYEE_ACTION,
+        orgPageListener,
     );
+    /**
+     * End NewEdit Employee Modal Logic
+     */
+
+    /**
+     * Delete Employee Modal Logic
+     */
+    class DeleteDialogController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            // NOT MODAL at the moment.  Need to add at some point
+            let employeeToDelete;
+            if (eventName === OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION) {
+                if (!orgPageMediator) {
+                    throw new Error("OrgPageMediator undefined");
+                }
+                employeeToDelete = orgPageMediator.getFirstSelectedEmployee();
+            } else if (eventName === OrgPageEvents.DELETE_EMPLOYEE_ACTION) {
+                const deleteEmployeeActionEvent =
+                    eventToHandle as DeleteEmployeeActionEvent;
+                employeeToDelete = deleteEmployeeActionEvent.employeeToDelete;
+            }
+
+            if (!employeeToDelete) {
+                throw new Error("Could not obtain employee to delete");
+            }
+            const deleteEmployeeEvent = new DeleteEmployeeEvent(
+                employeeToDelete,
+            );
+            PubSubManager.instance.fireEvent(deleteEmployeeEvent);
+        }
+    }
+    const deleteActionListener = new DeleteDialogController();
+    PubSubManager.instance.registerListener(
+        OrgPageEvents.DELETE_EMPLOYEE_ACTION,
+        deleteActionListener,
+    );
+    PubSubManager.instance.registerListener(
+        OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION,
+        deleteActionListener,
+    );
+    /**
+     * End Delete Employee Modal Logic
+     */
 </script>
 
 <div class="h-screen flex">
@@ -72,9 +137,11 @@
     </Splitpanes>
 </div>
 
-<NewEmployeeModal
-    bind:open={newEmployeeModalOpen}
+<NewEditEmployeeModal
+    bind:open={newEditEmployeeModalOpen}
+    bind:mode={newEditEmployeeModalMode}
     bind:managerId={newEmployeeManagerId}
+    bind:employeeToEdit
     {appDynamicColorTheme}
     {orgStructure}
 />

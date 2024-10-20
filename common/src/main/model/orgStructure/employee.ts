@@ -84,18 +84,12 @@ abstract class BasePerson implements Person
     abstract orgEntityType: OrgEntityType;
     abstract readonly id: string;
 
-    private readonly _name: string;
     private readonly _propertyHelper: PropertyCarrierHelper
 
-    constructor(name: string, propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
+    constructor(public name: string, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
+                properties: OrgEntityPropertyBag)
     {
-        this._name = name;
         this._propertyHelper = new PropertyCarrierHelper(propertyDescriptors, properties);
-    }
-
-    get name(): string
-    {
-        return this._name;
     }
 
     getPropertyValue(propertyName: string): string
@@ -116,29 +110,20 @@ abstract class BasePerson implements Person
 abstract class BaseEmployee extends BasePerson implements Employee
 {
     private readonly _id: string;
-    private readonly _title: string;
     private _managerId: string;
-    private readonly _team: Team;
 
-    protected constructor(id: string, name: string, title: string, managerId: string, team: Team,
+    protected constructor(id: string, name: string, public title: string, managerId: string, public team: Team,
                           propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
     {
         super(name, propertyDescriptors, properties);
 
         this._id = id;
-        this._title = title;
         this._managerId = managerId;
-        this._team = team;
     }
 
     get id(): string
     {
         return this._id;
-    }
-
-    get title(): string
-    {
-        return this._title;
     }
 
     get managerId(): string
@@ -149,11 +134,6 @@ abstract class BaseEmployee extends BasePerson implements Employee
     set managerId(managerId: string)
     {
         this._managerId = managerId;
-    }
-
-    get team(): Team
-    {
-        return this._team;
     }
 
     abstract isManager(): boolean;
@@ -326,4 +306,4 @@ class BaseIndividualContributor extends BaseEmployee implements IndividualContri
 }*/
 
 export {BaseIndividualContributor, BaseManager, EmployeeReservedPropertyDescriptors};
-export type {Person, Employee, Manager, IndividualContributor};
+export type{Person, Employee, Manager, IndividualContributor};

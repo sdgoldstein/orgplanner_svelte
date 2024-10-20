@@ -10,24 +10,24 @@ sequenceDiagram
     UIControl->>+PubSubManager: Fire Event
     
     %% Mediator recieves the event
-    PubSubManager--)+OrgViewMediator: Sends Event 
+    PubSubManager--)+OrgPageMediator: Sends Event 
     PubSubManager->>-UIControl: void   
     UIControl->>-User:void
 
     %% Org View Mediator updates the org structure, and fires org structure changed event
-    OrgViewMediator->>+OrgStructure: Updates
-    OrgStructure->>-OrgViewMediator: void
+    OrgPageMediator->>+OrgStructure: Updates
+    OrgStructure->>-OrgPageMediator: void
     create participant OrgStructureChangeEvent
-    OrgViewMediator->>OrgStructureChangeEvent: Create
-    OrgViewMediator->>+PubSubManager: Fire Event
+    OrgPageMediator->>OrgStructureChangeEvent: Create
+    OrgPageMediator->>+PubSubManager: Fire Event
     
     %% Any number of sub views handle the org structure changed event and updates
-    PubSubManager--)+OrgViewSubview: Sends Event
-    PubSubManager->>-OrgViewMediator: void
+    PubSubManager--)+OrgPageSubview: Sends Event
+    PubSubManager->>-OrgPageMediator: void
     
-    OrgViewMediator->>-PubSubManager: void
-    OrgViewSubview->>OrgViewSubview: Process and Update
-    OrgViewSubview->>-PubSubManager: void
+    OrgPageMediator->>-PubSubManager: void
+    OrgPageSubview->>OrgPageSubview: Process and Update
+    OrgPageSubview->>-PubSubManager: void
 
         
 

@@ -11,15 +11,15 @@ sequenceDiagram
     NewEmployeeToolbarButtonListener->>+PubSubManager: Fire AddEmployeeToolbarEvent Event
     
     %% Mediator recieves the event
-    PubSubManager--)+OrgViewMediatorSvelte: Sends AddEmployeeToolbarEvent Event 
+    PubSubManager--)+OrgPageMediatorSvelte: Sends AddEmployeeToolbarEvent Event 
     PubSubManager->>-NewEmployeeToolbarButtonListener: void   
     NewEmployeeToolbarButtonListener->>-User:void
 
     %% Org View Mediator Svelte Component Opens Modal
-    OrgViewMediatorSvelte->>+OrgViewMediator: getSelectedManager()
-    OrgViewMediator->>-OrgViewMediatorSvelte: Selected Manager
-    OrgViewMediatorSvelte->>+ShowAddEmployeeModal: Open with Selected Manager
-    OrgViewMediatorSvelte->>-PubSubManager: void
+    OrgPageMediatorSvelte->>+OrgPageMediator: getSelectedManager()
+    OrgPageMediator->>-OrgPageMediatorSvelte: Selected Manager
+    OrgPageMediatorSvelte->>+ShowAddEmployeeModal: Open with Selected Manager
+    OrgPageMediatorSvelte->>-PubSubManager: void
 
     %% User Submit Model
     User->>+ShowAddEmployeeModal:Submit
@@ -27,22 +27,22 @@ sequenceDiagram
     ShowAddEmployeeModal->>+NewEmployeeEvent: Create
 
     ShowAddEmployeeModal->>+PubSubManager: Fire NewEmployeeEven Event
-    PubSubManager--)+OrgViewMediator: Sends NewEmployeeEven Event
+    PubSubManager--)+OrgPageMediator: Sends NewEmployeeEven Event
     PubSubManager->>-ShowAddEmployeeModal: void
     ShowAddEmployeeModal-->-User:void
 
     %% Org View Mediator updates the org structure, and fires org structure changed event
-    OrgViewMediator->>+OrgStructure: Updates
-    OrgStructure->>-OrgViewMediator: void
+    OrgPageMediator->>+OrgStructure: Updates
+    OrgStructure->>-OrgPageMediator: void
     create participant OrgStructureChangeEvent
-    OrgViewMediator->>OrgStructureChangeEvent: Create
-    OrgViewMediator->>+PubSubManager: Fire Event
+    OrgPageMediator->>OrgStructureChangeEvent: Create
+    OrgPageMediator->>+PubSubManager: Fire Event
     
     %% Any number of sub views handle the org structure changed event and updates
     PubSubManager--)+OrgChartProxy: Sends Event
-    PubSubManager->>-OrgViewMediator: void
+    PubSubManager->>-OrgPageMediator: void
     
-    OrgViewMediator->>-PubSubManager: void
+    OrgPageMediator->>-PubSubManager: void
     OrgChartProxy->>OrgChartProxy: Process and Update
     OrgChartProxy->>-PubSubManager: void
 

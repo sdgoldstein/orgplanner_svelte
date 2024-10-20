@@ -1,8 +1,8 @@
 <script lang="ts">
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
-        OrgPlannerAppEvents,
         CreateNewOrgEvent,
+        OrgPlannerAppEvents,
     } from "@src/components/app/orgPlannerAppEvents";
     import "@src/app/app.css";
 

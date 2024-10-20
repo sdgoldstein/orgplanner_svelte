@@ -1,10 +1,10 @@
 import {expect, test} from "@playwright/test";
 
-test("Create New Employee using Toolbar Action", async ({page}) => {
+test("Edit Employee Using Pencil Icon", async ({page}) => {
     await page.goto("/");
 
-    await test.step("Press New Emplpyee Toolbar Action",
-                    async () => { await page.getByTestId("new_employee_org_chart_toolbar_button_testid").click(); });
+    // FIXME - This is super brittle.  Don't know how to fix selector though
+    await test.step("Press Pencil Icon", async () => { await page.locator("image").nth(1).click(); });
 
     await test.step("Enter Employee Information", async () => {
         await page.getByTestId("name_input_testid").fill("Aaron Johnson");

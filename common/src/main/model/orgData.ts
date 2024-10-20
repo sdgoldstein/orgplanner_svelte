@@ -1,8 +1,6 @@
 
 
 import {OrgStructure} from "./orgStructure/orgStructure";
-import {OrgStatistics} from "./stats/orgStatistics";
-import {StatsCollector} from "./stats/statsCollector";
 
 interface OrgPlan
 {
