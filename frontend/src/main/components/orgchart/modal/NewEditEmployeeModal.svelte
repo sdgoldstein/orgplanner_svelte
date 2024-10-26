@@ -21,7 +21,7 @@
     import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
     import type { Employee, OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
     import { PubSubManager } from "orgplanner-common/jscore";
-    import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
+    import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal, zExtended } from "@sphyrna/uicomponents";
     import { EditEmployeeEvent, NewEmployeeEvent } from "@src/components/page/orgPageEvents";
     
     function handleSubmit(formData:FormData): void 

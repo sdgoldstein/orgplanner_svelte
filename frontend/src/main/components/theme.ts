@@ -22,7 +22,7 @@ interface OrgPlannerColorThemableComponentProps
     colorSelector?: AppDynamicColorThemeColorSelector;
 }
 
-function tempgetDynamicColorTheme(colorTheme: AppDynamicColorTheme): DynamicColorTheme
+function tempgetDynamicColorTheme(colorTheme: AppDynamicColorTheme): {colorThemes: Map<string, DynamicColorTheme>}
 {
     return {
         colorThemes : new Map([

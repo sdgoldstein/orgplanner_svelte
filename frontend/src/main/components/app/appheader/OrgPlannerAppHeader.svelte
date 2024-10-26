@@ -7,7 +7,6 @@
     NavBarBrandLogo,
     NavBarBrandTitle,
   } from "@sphyrna/uicomponents";
-  import OrgPlannerAppHeaderLogo from "./OrgPlannerAppHeaderLogo.svelte";
   import OrgPlannerMainNav from "./OrgPlannerMainNav.svelte";
   import {
     AppDynamicColorThemeColorSelector,

@@ -21,16 +21,16 @@
         appDynamicColorTheme,
         ...restProps
     }: OrgChartEditingToolbarButtonProps = $props();
+
+    const dynamicColorThemeMap = tempgetDynamicColorTheme(appDynamicColorTheme);
+    const colorVariant = AppDynamicColorThemeColorSelector.SECONDARY.toString();
 </script>
 
-<IconButton
-    {id}
-    colorVariant={AppDynamicColorThemeColorSelector.SECONDARY.toString()}
-    dynamicColorTheme={tempgetDynamicColorTheme(appDynamicColorTheme)}
-    {onclick}
-    {...restProps}
->
-    <svg class="w-4 h-4 fill-white">
-        <use xlink:href="symbols.svg#{symbol}"> </use>
+<IconButton {id} {colorVariant} dynamicColorTheme={dynamicColorThemeMap} {onclick} {...restProps}>
+    <svg class="w-4 h-4">
+        <use
+            xlink:href="symbols.svg#{symbol}"
+            style="fill:{dynamicColorThemeMap.colorThemes.get(colorVariant)!.textColor}"
+        ></use>
     </svg>
 </IconButton>
