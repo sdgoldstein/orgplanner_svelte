@@ -1,29 +1,41 @@
 <svelte:options runes={true} />
 
 <script lang="ts">
-  import { Navbar } from "flowbite-svelte";
-
+  import {
+    NavBar,
+    NavBarBrand,
+    NavBarBrandLogo,
+    NavBarBrandTitle,
+  } from "@sphyrna/uicomponents";
   import OrgPlannerAppHeaderLogo from "./OrgPlannerAppHeaderLogo.svelte";
   import OrgPlannerMainNav from "./OrgPlannerMainNav.svelte";
-  import NavContainer from "flowbite-svelte/NavContainer.svelte";
-  import type { OrgPlannerColorThemableComponentProps } from "@src/components/theme";
+  import {
+    AppDynamicColorThemeColorSelector,
+    tempgetDynamicColorTheme,
+    type OrgPlannerColorThemableComponentProps,
+  } from "@src/components/theme";
 
   interface OrgPlannerAppHeaderProps
     extends OrgPlannerColorThemableComponentProps {}
 
   let { appDynamicColorTheme, ...restProps }: OrgPlannerAppHeaderProps =
     $props();
+
+  const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
+  const dynamicColorTheme = tempgetDynamicColorTheme(appDynamicColorTheme);
 </script>
 
 <header>
-  <Navbar
-    fluid={false}
-    class="px-4 lg:px-6 py-2.5 border-b-2"
-    style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-  >
-    <NavContainer class="flex flex-wrap justify-start items-center">
-      <OrgPlannerAppHeaderLogo {appDynamicColorTheme} {...restProps} />
-      <OrgPlannerMainNav {appDynamicColorTheme} {...restProps} />
-    </NavContainer>
-  </Navbar>
+  <NavBar {colorVariant} {dynamicColorTheme}>
+    <NavBarBrand {colorVariant} {dynamicColorTheme}>
+      <NavBarBrandLogo
+        {colorVariant}
+        {dynamicColorTheme}
+        src="organization-chart-icon.png"
+        alt="Org Chart Icon"
+      />
+      <NavBarBrandTitle>Organization Architect</NavBarBrandTitle>
+    </NavBarBrand>
+    <OrgPlannerMainNav {appDynamicColorTheme} {...restProps} />
+  </NavBar>
 </header>

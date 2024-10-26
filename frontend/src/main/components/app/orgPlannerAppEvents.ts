@@ -23,7 +23,6 @@ class OrgPlannerAppEvents
     public static readonly SHOW_NEW_ORG_MODAL: string = "SHOW_NEW_ORG_MODAL";
     public static readonly SETTINGS_CHANGED: string = "SETTINGS_CHANGED";
     public static readonly SHOW_SETTINGS_MODAL: string = "SHOW_SETTINGS_MODAL";
-    public static readonly SAVE_AS_IMAGE: string = "SAVE_AS_IMAGE";
     public static readonly SHOW_CREATE_SNAPSHOT_MODAL: string = "SHOW_CREATE_SNAPSHOT_MODAL";
     public static readonly SNAPSHOT_CREATED = "SNAPSHOT_CREATED";
     public static readonly VIEW_TOGGABLE_ENTITY_TOGGLED = "VIEW_TOGGABLE_ENTITY_TOGGLED";

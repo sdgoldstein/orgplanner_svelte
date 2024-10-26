@@ -11,6 +11,7 @@ class OrgPageEvents
     public static readonly DELETE_EMPLOYEE_TOOLBAR_ACTION: string = "DELETE_EMPLOYEE_TOOLBAR_ACTION";
     public static readonly CREATE_SNAPSHOT_TOOLBAR_ACTION: string = "CREATE_SNAPSHOT_TOOLBAR_ACTION";
     public static readonly MODIFY_SETTINGS_TOOLBAR_ACTION: string = "MODIFY_SETTINGS_TOOLBAR_ACTION";
+    public static readonly SAVE_AS_IMAGE_TOOLBAR_ACTION: string = "SAVE_AS_IMAGE_TOOLBAR_ACTION";
 
     /**
      * CRUD Events
@@ -25,6 +26,11 @@ class OrgPageEvents
      * App State Change Events
      */
     public static readonly SELECTION_CHANGED_EVENT: string = "SELECTION_CHANGED";
+
+    /**
+     * Other Events
+     */
+    public static readonly SAVE_AS_IMAGE: string = "SAVE_AS_IMAGE";
 }
 
 class OrgPageSelectionChangedEvent extends BasePubSubEvent
@@ -77,6 +83,14 @@ class DeleteEmployeeEvent extends BasePubSubEvent
     }
 }
 
+class SaveAsImageEvent extends BasePubSubEvent
+{
+    constructor()
+    {
+        super(OrgPageEvents.SAVE_AS_IMAGE);
+    }
+}
+
 export {
     OrgPageEvents,
     OrgPageSelectionChangedEvent,
@@ -84,5 +98,6 @@ export {
     EditEmployeeActionEvent,
     EditEmployeeEvent,
     DeleteEmployeeActionEvent,
-    DeleteEmployeeEvent
+    DeleteEmployeeEvent,
+    SaveAsImageEvent
 };

@@ -13,7 +13,6 @@ interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
     import { SubmitCancelModal, Input, Label } from '@sphyrna/uicomponents';
     import { CreateNewOrgEvent } from "@src/components/app/orgPlannerAppEvents";
     import { PubSubManager } from "orgplanner-common/jscore";
-    import { zExtended } from "@src/components/ui/forms/form";
 
     function handleSubmit(formData: FormData): void {
         const orgName: FormDataEntryValue | null = formData.get(

@@ -1,11 +1,11 @@
 <script module lang="ts">
 
-type NewEditEmployeeModalMode = "Edit" | "New";
-class NewEditEmployeeModalModes {
-    static readonly EDIT:NewEditEmployeeModalMode = "Edit"
-    static readonly NEW:NewEditEmployeeModalMode = "New"
-}
-interface NewEditEmployeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
+    type NewEditEmployeeModalMode = "Edit" | "New";
+    class NewEditEmployeeModalModes {
+        static readonly EDIT:NewEditEmployeeModalMode = "Edit"
+        static readonly NEW:NewEditEmployeeModalMode = "New"
+    }
+    interface NewEditEmployeeModalProps extends BaseComponentProps, OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId:string;
@@ -13,17 +13,15 @@ interface NewEditEmployeeModalProps extends BaseComponentProps, OrgPlannerColorT
         mode:NewEditEmployeeModalMode;
     }
 
-export {NewEditEmployeeModalModes};
-export type {NewEditEmployeeModalMode};
+    export {NewEditEmployeeModalModes};
+    export type {NewEditEmployeeModalMode};
 </script>
 
 <script lang="ts">
     import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
-    import { zExtended } from "@src/components/ui/forms/form";
     import type { Employee, OrgEntityPropertyBag, OrgEntityPropertyDescriptor, OrgStructure } from "orgplanner-common/model";
     import { PubSubManager } from "orgplanner-common/jscore";
     import { Input, Label, Select, SelectOption, RadioGroup, RadioGroupOption, SubmitCancelModal } from "@sphyrna/uicomponents";
-    import type { BaseComponentProps } from "@src/components/ui/uicomponents";
     import { EditEmployeeEvent, NewEmployeeEvent } from "@src/components/page/orgPageEvents";
     
     function handleSubmit(formData:FormData): void 

@@ -1,4 +1,3 @@
-import flowbitePlugin from "flowbite/plugin"
 import type {Config} from "tailwindcss";
 import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
@@ -6,13 +5,14 @@ import plugin from "tailwindcss/plugin";
 export default {
     content:
         [
-            "./src/main/**/*.{html,js,svelte,ts}", "../node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}",
-            "./node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}"
+            "./src/main/**/*.{html,js,svelte,ts}",
+            "./node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}",
+            "../node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}"
         ],
     safelist:
         [
-            {pattern : /bg.*/, variants : [ "hover" ]}, {pattern : /text.*/},
-            {pattern : /border.*/, variants : [ "hover", "focus" ]}
+            {pattern : /bg.*/, variants : [ "hover", "focus", "data_checked" ]}, {pattern : /text.*/},
+            {pattern : /border.*/, variants : [ "hover", "focus", "data_checked", "data_active" ]}
         ],
     theme: {
         fontFamily: {
@@ -48,10 +48,9 @@ export default {
         placeholderColor: {surface: "#BFBFBF"},
     },
 
-    plugins:
-        [
-            flowbitePlugin, plugin(function({addVariant}) {
-                addVariant("data_placeholder", "&[data-placeholder]");
-            })
-        ]
+    plugins: [ plugin(function({addVariant}) {
+        addVariant("data_checked", "&[data-state='checked']");
+        addVariant("data_active", "&[data-state='active']");
+        addVariant("data_placeholder", "&[data-placeholder]");
+    }) ],
 } as Config;

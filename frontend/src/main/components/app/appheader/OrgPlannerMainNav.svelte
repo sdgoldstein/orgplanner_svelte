@@ -1,7 +1,11 @@
 <script lang="ts">
+    import { NavMenu, NavMenuItem } from "@sphyrna/uicomponents";
     import NewOrgModal from "@src/components/orgchart/modal/NewOrgModal.svelte";
-    import type { OrgPlannerColorThemableComponentProps } from "@src/components/theme";
-    import { NavUl, NavLi } from "flowbite-svelte";
+    import {
+        AppDynamicColorThemeColorSelector,
+        tempgetDynamicColorTheme,
+        type OrgPlannerColorThemableComponentProps,
+    } from "@src/components/theme";
 
     interface OrgPlannerMainNavProps
         extends OrgPlannerColorThemableComponentProps {}
@@ -9,43 +13,27 @@
     let { appDynamicColorTheme, ...restProps }: OrgPlannerMainNavProps =
         $props();
     let open = $state(false);
+
+    const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
+    const dynamicColorTheme = tempgetDynamicColorTheme(appDynamicColorTheme);
 </script>
 
-<NavUl
-    divClass="flex justify-center items-center grow"
-    ulClass="flex font-medium space-x-8 border-0 bg-opacity-0"
-    style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-    {...restProps}
-    hidden={false}
->
-    <NavLi
-        data-testid="new_org_main_nav_item_testid"
+<NavMenu {colorVariant} {dynamicColorTheme}>
+    <NavMenuItem
+        id="new_org_main_nav_item_testid"
         onclick={() => {
             open = true;
         }}
-        style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-        >New</NavLi
+        {colorVariant}
+        {dynamicColorTheme}>New</NavMenuItem
     >
-    <NavLi
-        href="/"
-        style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-        >Import</NavLi
+    <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}>Import</NavMenuItem
     >
-    <NavLi
-        href="/"
-        style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-        >Export</NavLi
+    <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}>Export</NavMenuItem
     >
-    <NavLi
-        href="/"
-        style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-        >Org Design Theory</NavLi
+    <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}
+        >Org Design Theory</NavMenuItem
     >
-    <NavLi
-        href="/"
-        style="background-color:{appDynamicColorTheme.primary}; color:{appDynamicColorTheme.textOnPrimary};"
-        >Help</NavLi
-    >
-</NavUl>
-
+    <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}>Help</NavMenuItem>
+</NavMenu>
 <NewOrgModal {appDynamicColorTheme} bind:open />

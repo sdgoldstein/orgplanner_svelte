@@ -1,7 +1,6 @@
 <svelte:options runes={true} />
 
 <script module  lang="ts">
-    import { DeleteEmployeeFromPlanEvent } from "../orgChartProxy";
     import { ButtonBar } from "@sphyrna/uicomponents";
     import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
 
@@ -34,9 +33,9 @@
         }
     }
 
-    class SaveAsImageEvent extends BasePubSubEvent {
+    class SaveAsImageToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPlannerAppEvents.SAVE_AS_IMAGE);
+            super(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION);
         }
     }
 
@@ -76,7 +75,7 @@
     ></OrgChartEditingToolbarButton>
 
 
-    <OrgChartEditingToolbarButton symbol="undo" {appDynamicColorTheme}
+    <!--FIXME <OrgChartEditingToolbarButton symbol="undo" {appDynamicColorTheme}
     onclick={() => {
         const eventToFire = new DeleteEmployeeFromPlanEvent();
         PubSubManager.instance.fireEvent(eventToFire);
@@ -87,19 +86,20 @@
         const eventToFire = new ResetPlanEvent();
         PubSubManager.instance.fireEvent(eventToFire);
       }}
-    ></OrgChartEditingToolbarButton>
-    <OrgChartEditingToolbarButton symbol="image" {appDynamicColorTheme}
+    ></OrgChartEditingToolbarButton>-->
+    <OrgChartEditingToolbarButton   id="save_as_image_org_chart_toolbar_button"
+    symbol="image" {appDynamicColorTheme}
     onclick={() => {
-      const eventToFire = new CreateSnapshotToolbarEvent();
+      const eventToFire = new SaveAsImageToolbarEvent();
       PubSubManager.instance.fireEvent(eventToFire);
       }}
     ></OrgChartEditingToolbarButton>
-    <OrgChartEditingToolbarButton symbol="preview" {appDynamicColorTheme}
+    <!--FIXME<OrgChartEditingToolbarButton symbol="preview" {appDynamicColorTheme}
     onclick={() => {
-                const eventToFire = new SaveAsImageEvent();
+                const eventToFire = new CreateSnapshotToolbarEvent();
                 PubSubManager.instance.fireEvent(eventToFire);
       }}
-    ></OrgChartEditingToolbarButton>
+    ></OrgChartEditingToolbarButton>-->
     <OrgChartEditingToolbarButton symbol="settings" {appDynamicColorTheme}
     onclick={() => {
         const eventToFire = new ModifySettingsToolbarEvent();

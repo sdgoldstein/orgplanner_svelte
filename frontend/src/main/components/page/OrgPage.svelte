@@ -7,10 +7,6 @@
         type PubSubListener,
     } from "orgplanner-common/jscore";
 
-    import NewEditEmployeeModal, {
-        NewEditEmployeeModalModes,
-        type NewEditEmployeeModalMode,
-    } from "../orgchart/modal/NewEditEmployeeModal.svelte";
     import type { Employee } from "orgplanner-common/model";
     import {
         OrgPageEvents,
@@ -22,6 +18,11 @@
         DefaultOrgPageMediator,
         type OrgPageMediator,
     } from "./orgPageMediator";
+    import ModifySettingsModal from "../orgchart/modal/ModifySettingsModal.svelte";
+    import NewEditEmployeeModal, {
+        type NewEditEmployeeModalMode,
+        NewEditEmployeeModalModes,
+    } from "../orgchart/modal/NewEditEmployeeModal.svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -126,6 +127,26 @@
     /**
      * End Delete Employee Modal Logic
      */
+
+    /**
+     * ModifySettings Employee Modal Logic
+     */
+    let modifySettingsModalOpen: boolean = $state(false);
+    class ModifySettingsModalController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            if (eventName === OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION) {
+                modifySettingsModalOpen = true;
+            }
+        }
+    }
+    const modifySettingsListener = new ModifySettingsModalController();
+    PubSubManager.instance.registerListener(
+        OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION,
+        modifySettingsListener,
+    );
+    /**
+     * End ModifySettings Employee Modal Logic
+     */
 </script>
 
 <div class="h-screen flex">
@@ -142,6 +163,12 @@
     bind:mode={newEditEmployeeModalMode}
     bind:managerId={newEmployeeManagerId}
     bind:employeeToEdit
+    {appDynamicColorTheme}
+    {orgStructure}
+/>
+
+<ModifySettingsModal
+    bind:open={modifySettingsModalOpen}
     {appDynamicColorTheme}
     {orgStructure}
 />

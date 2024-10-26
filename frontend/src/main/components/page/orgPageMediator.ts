@@ -5,7 +5,8 @@ import {
     EditEmployeeEvent,
     NewEmployeeEvent,
     OrgPageEvents,
-    OrgPageSelectionChangedEvent
+    OrgPageSelectionChangedEvent,
+    SaveAsImageEvent
 } from "./orgPageEvents";
 import {
     OrgStructureChangedEventEntityAdded,
@@ -33,6 +34,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgPageEvents.EDIT_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
     reset()
@@ -41,6 +43,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgPageEvents.EDIT_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
     getFirstSelectedManager(): Manager
@@ -99,12 +102,17 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             const selectionChangedEvent = eventToHandle as OrgPageSelectionChangedEvent;
             this._currentSelection = selectionChangedEvent.newSelectedEntities;
         }
-        if (eventName === OrgPageEvents.DELETE_EMPLOYEE)
+        else if (eventName === OrgPageEvents.DELETE_EMPLOYEE)
         {
             const deleteEmployeeEvent = eventToHandle as DeleteEmployeeEvent;
             const employeesToDelete: Employee[] = [ deleteEmployeeEvent.employeeToDelete ];
             this._orgStructure.removeEmployees(employeesToDelete);
             const orgStructureChangedEvent = new OrgStructureChangedEventEntitiesRemoved(employeesToDelete);
+            PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION)
+        {
+            const orgStructureChangedEvent = new SaveAsImageEvent();
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
     }

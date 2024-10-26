@@ -22,6 +22,7 @@ import {
     OrgStructureChangedEvents
 } from "../page/orgStructureEvents";
 import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
+import {OrgPageEvents} from "../page/orgPageEvents";
 
 interface OrgChartProps
 {
@@ -73,6 +74,7 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
+        pubSubManager.registerListener(OrgPageEvents.SAVE_AS_IMAGE, this);
     }
 
     onDismount(): void
@@ -85,6 +87,7 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
+        pubSubManager.registerListener(OrgPageEvents.SAVE_AS_IMAGE, this);
 
         this._currentGraph?.destroy();
     }
@@ -161,6 +164,10 @@ class OrgChartProxy implements PubSubListener
         {
             const orgEntityDeletedEvent = event as OrgStructureChangedEventEntitiesRemoved;
             this.currentGraph.employeesDeleted(orgEntityDeletedEvent.entitiesRemoved as Employee[]);
+        }
+        else if (eventName === OrgPageEvents.SAVE_AS_IMAGE)
+        {
+            this.currentGraph.saveAsImage();
         }
     }
 }

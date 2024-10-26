@@ -38,6 +38,7 @@ import {OrgChartMaxGraphThemeBase} from "./themes/orgChartMaxGraphThemeBase";
 import {
     DeleteEmployeeActionEvent,
     EditEmployeeActionEvent,
+    OrgPageEvents,
     OrgPageSelectionChangedEvent
 } from "@src/components/page/orgPageEvents";
 import {OrgPlannerAppEvents} from "@src/components/app/orgPlannerAppEvents";
@@ -187,14 +188,7 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
             PubSubManager.instance.fireEvent(eventToFire);
         });
 
-        PubSubManager.instance.registerListener(OrgPlannerAppEvents.SAVE_AS_IMAGE, this);
-
         this.initializemxGraph(); // This is doing nothing in the base graph
-    }
-
-    disconnect(): void
-    {
-        PubSubManager.instance.unregisterListener(OrgPlannerAppEvents.SAVE_AS_IMAGE, this);
     }
 
     batchUpdate(fn: () => void): void
@@ -211,7 +205,7 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
     }
     onEvent(eventName: string, event: PubSubEvent): void
     {
-        if (eventName === OrgPlannerAppEvents.SAVE_AS_IMAGE)
+        if (eventName === OrgPageEvents.SAVE_AS_IMAGE)
         {
             this.saveAsImage();
         }
@@ -609,7 +603,7 @@ class OrgChartMaxGraph extends Graph implements PubSubListener
         this.rehydrate();
     }
 
-    private saveAsImage(): void
+    public saveAsImage(): void
     {
         const a = document.createElement("a");
         const file = new Blob([ this.container.innerHTML ], {type : "image/svg+xml"});
