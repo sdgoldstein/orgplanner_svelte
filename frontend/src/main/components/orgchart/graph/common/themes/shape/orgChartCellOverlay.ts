@@ -1,14 +1,5 @@
-import {
-    CellOverlay,
-    ImageBox,
-    Point,
-    type AlignValue,
-    type VAlignValue,
-    constants,
-    CellState,
-    Rectangle
-} from "@maxgraph/core";
-import type {OrgChartNodeShape} from "./orgChartNodeShape";
+import {CellOverlay, ImageBox, Point, type AlignValue, type VAlignValue, CellState, Rectangle} from "@maxgraph/core";
+import type {OrgChartNodeShape} from "./orgChartNodeShapeDefault";
 
 interface OrgChartCellOverlay
 {

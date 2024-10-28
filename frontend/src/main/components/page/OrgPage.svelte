@@ -23,6 +23,7 @@
         type NewEditEmployeeModalMode,
         NewEditEmployeeModalModes,
     } from "../orgchart/modal/NewEditEmployeeModal.svelte";
+    import { PrintableOrgChartProxy } from "../orgchart/graph/printable/printableOrgChartProxy";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -147,6 +148,39 @@
     /**
      * End ModifySettings Employee Modal Logic
      */
+
+    /**
+     * Save As Image Logic
+     */
+    let saveAsImageChartContainer: HTMLElement | undefined;
+    class SaveAsImageController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            if (!saveAsImageChartContainer) {
+                throw new Error("saveAsImageChartContainer undefined in mount");
+            }
+            const printableOrgChart = new PrintableOrgChartProxy(
+                saveAsImageChartContainer,
+                orgStructure,
+                settings.colorTheme,
+                settings.employeePropertyDescriptors,
+            );
+            const a = document.createElement("a");
+            const file = new Blob([saveAsImageChartContainer.innerHTML], {
+                type: "image/svg+xml",
+            });
+            a.href = URL.createObjectURL(file);
+            a.download = "orgPlan.svg";
+            a.click();
+        }
+    }
+    const saveAsImageListener = new SaveAsImageController();
+    PubSubManager.instance.registerListener(
+        OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION,
+        saveAsImageListener,
+    );
+    /**
+     * End Save As Image Logic
+     */
 </script>
 
 <div class="h-screen flex">
@@ -157,6 +191,12 @@
         <!--    <Pane size="0" class="p-2">dlfjsdlf</Pane>  -->
     </Splitpanes>
 </div>
+
+<div
+    id="save-as-image-chart-container"
+    class="invisible"
+    bind:this={saveAsImageChartContainer}
+></div>
 
 <NewEditEmployeeModal
     bind:open={newEditEmployeeModalOpen}

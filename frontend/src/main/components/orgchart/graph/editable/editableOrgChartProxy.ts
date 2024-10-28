@@ -8,29 +8,22 @@ import {
     type OrgStructure
 } from "orgplanner-common/model";
 
-import {OrgChartMaxGraph} from "./graph/orgChartMaxGraph";
-import {OrgChartMaxGraphThemeBase} from "./graph/themes/orgChartMaxGraphThemeBase";
+import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
+import {OrgChartMaxGraphThemeDefault} from "../common/themes/orgChartMaxGraphThemeDefault";
 import {
     OrgChartEntityVisibleStateImpl,
     OrgChartMode,
     ViewToggableEntityToggledEvent,
-} from "./orgChartViewState";
+} from "../../orgChartViewState";
 import {
     OrgStructureChangedEventEntitiesRemoved,
     OrgStructureChangedEventEntityAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEvents
-} from "../page/orgStructureEvents";
-import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
-import {OrgPageEvents} from "../page/orgPageEvents";
-
-interface OrgChartProps
-{
-    orgStructure: OrgStructure;
-    mode: OrgChartMode;
-    colorTheme: OrgEntityColorTheme;
-    propertyDescriptors: Set<OrgEntityPropertyDescriptor>;
-}
+} from "../../../page/orgStructureEvents";
+import {OrgPlannerAppEvents} from "../../../app/orgPlannerAppEvents";
+import type {OrgChartProps, OrgChartProxy} from "../model/orgChartProxy";
+import type {OrgChartMaxGraph} from "../model/orgChartMaxGraph";
 
 class ShowAddEmployeeModalEvent extends BasePubSubEvent
 {
@@ -54,12 +47,12 @@ class DeleteEmployeeFromPlanEvent extends BasePubSubEvent
  *
  * If the graph needs to communicate in the other direction, it will use events
  */
-class OrgChartProxy implements PubSubListener
+class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
 {
     private _colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
     private _orgStructure?: OrgStructure;
     private _mode: OrgChartMode = OrgChartMode.READ_ONLY;
-    private _currentGraph?: OrgChartMaxGraph;
+    private _currentGraph?: EditableOrgChartMaxGraph;
     private _propertyDescriptors: Set<OrgEntityPropertyDescriptor> = new Set();
 
     constructor(private _chartContainer: HTMLElement) {};
@@ -74,7 +67,6 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
-        pubSubManager.registerListener(OrgPageEvents.SAVE_AS_IMAGE, this);
     }
 
     onDismount(): void
@@ -87,12 +79,11 @@ class OrgChartProxy implements PubSubListener
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
-        pubSubManager.registerListener(OrgPageEvents.SAVE_AS_IMAGE, this);
 
         this._currentGraph?.destroy();
     }
 
-    private get currentGraph(): OrgChartMaxGraph
+    private get currentGraph(): EditableOrgChartMaxGraph
     {
         if (!this._currentGraph)
         {
@@ -102,7 +93,7 @@ class OrgChartProxy implements PubSubListener
         return this._currentGraph;
     }
 
-    updated(orgChartProps: OrgChartProps): void
+    onUpdate(orgChartProps: OrgChartProps): void
     {
         if (!this._currentGraph)
         {
@@ -111,16 +102,16 @@ class OrgChartProxy implements PubSubListener
             this._colorTheme = orgChartProps.colorTheme;
             this._mode = orgChartProps.mode;
 
-            const orgChartTheme = new OrgChartMaxGraphThemeBase(this._colorTheme);
+            const orgChartTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
             const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
             this._currentGraph =
-                new OrgChartMaxGraph(this._chartContainer, this._orgStructure, orgChartTheme, visibiltyState);
+                new EditableOrgChartMaxGraph(this._chartContainer, this._orgStructure, orgChartTheme, visibiltyState);
 
             this._currentGraph.renderGraph();
         }
         else
         {
-            const savedCurrentGraph = this._currentGraph;
+            /*const savedCurrentGraph = this._currentGraph;
             this._currentGraph.batchUpdate(() => {
                 if (orgChartProps.orgStructure != this._orgStructure)
                 {
@@ -135,9 +126,9 @@ class OrgChartProxy implements PubSubListener
                 if (orgChartProps.colorTheme != this._colorTheme)
                 {
                     this._colorTheme = orgChartProps.colorTheme;
-                    savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeBase(this._colorTheme);
+                    savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
                 }
-            })
+            })*/
         }
     }
 
@@ -165,12 +156,8 @@ class OrgChartProxy implements PubSubListener
             const orgEntityDeletedEvent = event as OrgStructureChangedEventEntitiesRemoved;
             this.currentGraph.employeesDeleted(orgEntityDeletedEvent.entitiesRemoved as Employee[]);
         }
-        else if (eventName === OrgPageEvents.SAVE_AS_IMAGE)
-        {
-            this.currentGraph.saveAsImage();
-        }
     }
 }
 
 export type{OrgChartProps};
-export {OrgChartProxy, ShowAddEmployeeModalEvent, DeleteEmployeeFromPlanEvent};
+export {EditableOrgChartProxy, ShowAddEmployeeModalEvent, DeleteEmployeeFromPlanEvent};

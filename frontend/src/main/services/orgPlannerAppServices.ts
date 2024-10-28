@@ -4,9 +4,7 @@ import {
     ServiceManager,
     type ServiceManagerStrategy
 } from "@sphyrna/service-manager-ts";
-import {
-    OrgChartMaxGraphAssemblyServiceImpl
-} from "@src/components/orgchart/graph/assembly/orgChartMaxGraphAssemblyService";
+
 import {OrgPlannerManager} from "@src/model/orgPlanner";
 import {BrowserBasedFileService} from "orgplanner-common/jscore";
 
@@ -16,6 +14,9 @@ import {LocalStorageDataService} from "./data/localStorageDataService";
 import {OrgPlannerExportServiceDefaultImpl} from "./import/orgPlannerExportService";
 import {TreeBasedOrgPlannerImportService} from "./import/orgPlannerImportService";
 import {OrgPlannerAppServicesConstants} from "./orgPlannerAppServicesConstants";
+import {
+    OrgChartMaxGraphAssemblyServiceImpl
+} from "@src/components/orgchart/graph/common/assembly/orgChartMaxGraphAssemblyServiceImpl";
 
 class OrgPlannerAppServices
 {

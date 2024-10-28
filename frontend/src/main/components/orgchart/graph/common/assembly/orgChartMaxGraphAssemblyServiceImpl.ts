@@ -6,11 +6,10 @@ import {
     EventObject,
     Graph,
     ImageBox,
-    InternalEvent,
-    Point
+    InternalEvent
 } from "@maxgraph/core";
-import {BaseService, type Service, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
-import type {Employee, IndividualContributor, Manager, Team} from "orgplanner-common/model";
+import {BaseService, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
+import type {Employee, IndividualContributor, Manager} from "orgplanner-common/model";
 
 import {
     OrgPlannerChartEmployeeVertex,
@@ -18,30 +17,14 @@ import {
     OrgPlannerChartManagerVertex,
     type OrgPlannerChartVertex,
     VertexType
-} from "../orgPlannerChartModel";
+} from "../core/orgPlannerChartModel";
 import type {MaxGraphTheme} from "../themes/maxGraphTheme";
 import {
     DefaultOrgChartCellOverlay,
     DeleteButtonCellOverlay,
     EditButtonCellOverlay
-} from "../themes/orgChartCellOverlay";
-
-interface OrgChartMaxGraphAssemblyService extends Service
-{
-    insertGraph(graph: Graph): void;
-    configureBaseOptions(): void;
-    applyTheme(theme: MaxGraphTheme): void;
-    updateStyle(vertex: Cell): void;
-    createToggleSubtreeOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    addToggleSubtreeOverlay(cell: Cell): void;
-    addEditButtonOverlay(cell: Cell): void;
-    addManagerNode(manager: Manager): Cell;
-    addICNode(ic: IndividualContributor): Cell;
-    addTeamNode(team: Team): Cell;
-    deleteOrgEntities(cellsToDelete: Cell[]): unknown;
-}
+} from "../themes/shape/orgChartCellOverlay";
+import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
 
 class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChartMaxGraphAssemblyService
 {
@@ -292,4 +275,3 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 }
 
 export {OrgChartMaxGraphAssemblyServiceImpl};
-export type{OrgChartMaxGraphAssemblyService};

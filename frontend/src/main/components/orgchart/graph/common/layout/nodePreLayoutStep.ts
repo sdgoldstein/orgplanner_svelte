@@ -1,6 +1,6 @@
 import {Point} from "@maxgraph/core";
 
-import type {OrgChartMaxGraph} from "../orgChartMaxGraph";
+import type {EditableOrgChartMaxGraph} from "../../editable/editbleOrgChartMaxGraph";
 
 import {LeafWrapperNodeMetadata, type NodeLayoutMetadata} from "./nodeLayoutMetadata";
 import {OrgPlannerChartLayout} from "./orgPlannerChartLayout";
@@ -67,7 +67,7 @@ class NodePreLayoutStep
     private layoutLeafWrapperNode(nodeMetadata: LeafWrapperNodeMetadata,
                                   currentPosition: [ number, number ]): [ number, number ]
     {
-        const graph = this.layout.graph as OrgChartMaxGraph;
+        const graph = this.layout.graph as EditableOrgChartMaxGraph;
         const graphTheme = graph.graphTheme;
         const leafEdgeStyle = graphTheme.getEdgeStyleForLeafNode();
 

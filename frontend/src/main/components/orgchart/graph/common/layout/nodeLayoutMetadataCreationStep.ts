@@ -1,6 +1,6 @@
 import {Cell} from "@maxgraph/core";
 
-import type {OrgPlannerChartModel} from "../orgPlannerChartModel";
+import type {OrgPlannerChartModel} from "../core/orgPlannerChartModel";
 
 import {DefaultNodeLayoutMetadata, LeafWrapperNodeMetadata, type NodeLayoutMetadata} from "./nodeLayoutMetadata";
 import {OrgPlannerChartLayout} from "./orgPlannerChartLayout";

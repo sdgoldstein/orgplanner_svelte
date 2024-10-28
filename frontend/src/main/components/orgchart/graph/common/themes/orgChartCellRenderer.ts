@@ -1,11 +1,11 @@
 import {Cell, CellRenderer, CellState} from "@maxgraph/core";
 
-import type {OrgChartEntityVisibleState} from "../../orgChartViewState";
+import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex,
     type OrgPlannerChartVertex
-} from "../orgPlannerChartModel";
+} from "../core/orgPlannerChartModel";
 
 class OrgChartCellRenderer extends CellRenderer
 {

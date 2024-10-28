@@ -14,24 +14,24 @@ import {OrgPlannerAppEvents} from "@src/components/page/orgPageEvents";
 import {type PubSubEvent, type PubSubListener, PubSubManager} from "orgplanner-common/jscore";
 import type {Employee, OrgStructure} from "orgplanner-common/model";
 
-import type {OrgChartEntityVisibleState} from "../orgChartViewState";
+import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
 import {OrgChartEditorEdgeVerifier} from "./orgChartEditorEdgeVerifier";
-import {OrgChartMaxGraph} from "./orgChartMaxGraph";
+import {EditableOrgChartMaxGraph} from "../../editable/editbleOrgChartMaxGraph";
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex,
     type OrgPlannerChartVertex,
     VertexType
 } from "./orgPlannerChartModel";
-import type {OrgChartMaxGraphThemeBase} from "./themes/orgChartMaxGraphThemeBase";
+import type {OrgChartMaxGraphThemeDefault} from "../themes/orgChartMaxGraphThemeDefault";
 
-class ModifiableOrgChartMaxGraph extends OrgChartMaxGraph implements PubSubListener
+class ModifiableOrgChartMaxGraph extends EditableOrgChartMaxGraph implements PubSubListener
 {
     private _addOverlay: CellOverlay;
     private _editOverlay: CellOverlay;
 
-    constructor(element: HTMLElement, orgStructure: OrgStructure, theme: OrgChartMaxGraphThemeBase,
+    constructor(element: HTMLElement, orgStructure: OrgStructure, theme: OrgChartMaxGraphThemeDefault,
                 viewState: OrgChartEntityVisibleState)
     {
         super(element, orgStructure, theme, viewState);

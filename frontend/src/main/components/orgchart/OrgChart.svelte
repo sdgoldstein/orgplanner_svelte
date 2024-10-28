@@ -7,8 +7,12 @@
     } from "orgplanner-common/model";
 
     import { OrgChartMode } from "./orgChartViewState";
-    import { OrgChartProxy, type OrgChartProps } from "./orgChartProxy";
     import { onMount } from "svelte";
+    import type {
+        OrgChartProxy,
+        OrgChartProps,
+    } from "./graph/model/orgChartProxy";
+    import { EditableOrgChartProxy } from "./graph/editable/editableOrgChartProxy";
 
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;
@@ -26,7 +30,7 @@
         if (!chartContainer) {
             throw new Error("chartContainer undefined in mount");
         }
-        orgChartHelper = new OrgChartProxy(chartContainer);
+        orgChartHelper = new EditableOrgChartProxy(chartContainer);
         orgChartHelper.onMount();
 
         return () => {
@@ -42,7 +46,7 @@
             throw new Error("orgChartHelper undefined in $effect");
         }
         if (width > 0) {
-            orgChartHelper.updated({
+            orgChartHelper.onUpdate({
                 orgStructure,
                 mode,
                 colorTheme,
