@@ -111,9 +111,9 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
         }
         else
         {
-            /*const savedCurrentGraph = this._currentGraph;
+            const savedCurrentGraph = this._currentGraph;
             this._currentGraph.batchUpdate(() => {
-                if (orgChartProps.orgStructure != this._orgStructure)
+                /*if (orgChartProps.orgStructure != this._orgStructure)
                 {
                     this._orgStructure = orgChartProps.orgStructure;
                     savedCurrentGraph.orgStructure = this._orgStructure;
@@ -122,13 +122,13 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
                 {
                     this._propertyDescriptors = orgChartProps.propertyDescriptors;
                     savedCurrentGraph.visibilityState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
-                }
+                }*/
                 if (orgChartProps.colorTheme != this._colorTheme)
                 {
                     this._colorTheme = orgChartProps.colorTheme;
                     savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
                 }
-            })*/
+            })
         }
     }
 

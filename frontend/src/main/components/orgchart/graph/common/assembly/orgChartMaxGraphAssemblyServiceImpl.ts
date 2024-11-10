@@ -178,17 +178,21 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         if (cellState)
         {
             const cellValue: OrgPlannerChartVertex = vertex.value;
+
             if (cellValue.getVertexType() === VertexType.MANAGER)
             {
+                vertex.style = newManagerStyle;
                 cellState.style = newManagerStyle;
             }
             else if (cellValue.getVertexType() === VertexType.IC)
             {
+                vertex.style = newICStyle;
                 cellState.style = newICStyle;
             }
             else
             {
-                cellState.style = newTeamStyle
+                vertex.style = newTeamStyle;
+                cellState.style = newTeamStyle;
             }
 
             cellState.shape?.apply(cellState);

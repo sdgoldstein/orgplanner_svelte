@@ -13,6 +13,8 @@
 
     let { orgStructure, settings, appDynamicColorTheme }: OrgChartPaneProps =
         $props();
+    let colorTheme = $derived(settings.colorTheme);
+    let propertyDescriptors = $derived(settings.employeePropertyDescriptors);
 </script>
 
 <OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
@@ -21,6 +23,6 @@
     data-id="org_chart"
     {orgStructure}
     mode={OrgChartMode.PLANNING}
-    colorTheme={settings.colorTheme}
-    propertyDescriptors={settings.employeePropertyDescriptors}
+    {colorTheme}
+    {propertyDescriptors}
 />
