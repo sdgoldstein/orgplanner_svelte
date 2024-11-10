@@ -35,8 +35,11 @@ interface OrgPlannerSettings
 
 class OrgPlannerSettingsDefaultImpl implements OrgPlannerSettings
 {
-    employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor> = DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS;
-    colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
+    constructor(public employeePropertyDescriptors:
+                    Set<OrgEntityPropertyDescriptor> = DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS,
+                public colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME)
+    {
+    }
 }
 
 /**
@@ -217,5 +220,5 @@ class OrgPlannerManager extends BaseService implements Service
     }
 }
 
-export {OrgPlannerManager, OrgPlannerDefaultImpl, DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS};
+export {OrgPlannerManager, OrgPlannerDefaultImpl, OrgPlannerSettingsDefaultImpl, DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS};
 export type{OrgPlanner, OrgPlannerSettings};

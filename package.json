@@ -8,8 +8,7 @@
     "frontend",
     "backend"
   ],
-  "devDependencies": {},
   "overrides": {
-    "svelte": "5.1.3"
+    "svelte": "5.1.13"
   }
 }

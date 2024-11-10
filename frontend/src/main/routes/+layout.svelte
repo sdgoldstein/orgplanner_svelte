@@ -1,8 +1,10 @@
 <script lang="ts">
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
+    ChangeSettingsActionEvent,
         CreateNewOrgEvent,
         OrgPlannerAppEvents,
+        SettingsChangedEvent,
     } from "@src/components/app/orgPlannerAppEvents";
     import "@src/app/app.css";
 
@@ -12,13 +14,13 @@
     import type { OrgPlannerManager } from "@src/model/orgPlanner";
     import { OrgPlannerAppServicesConstants } from "@src/services/orgPlannerAppServicesConstants";
     import { PubSubManager } from "orgplanner-common/jscore";
-    import type { PubSubEvent } from "orgplanner-common/jscore";
+    import type { PubSubEvent, PubSubListener } from "orgplanner-common/jscore";
+    import type { Snippet } from "svelte";
+    import type { LayoutData } from "./$types";
+    
+    let { data, children } : { data: LayoutData, children: Snippet } = $props();
 
-    export let data;
-
-    let appDynamicColorTheme = getAppDynamicColorTheme(
-        data.orgPlanner.settings.colorTheme,
-    );
+    let appDynamicColorTheme = $state(getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme));
 
     // Is this the best place for this?  Not sure.  And, does it work?  Not Sure
     const pubSubManager = PubSubManager.instance;
@@ -38,9 +40,28 @@
             data.orgPlanner = orgPlanner;
         },
     });
+
+    class ChangeSettingsController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            if (eventName === OrgPlannerAppEvents.CHANGE_SETTINGS_ACTION) {
+                data.orgPlanner.settings = (eventToHandle as ChangeSettingsActionEvent).newSettings;
+
+                // We need to set the color theme directive because objects aren't deeply reactive
+                appDynamicColorTheme = getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme);
+
+                PubSubManager.instance.fireEvent(new SettingsChangedEvent())
+            }
+        }
+    }
+
+    const changeSettingsController = new ChangeSettingsController();
+    PubSubManager.instance.registerListener(
+        OrgPlannerAppEvents.CHANGE_SETTINGS_ACTION,
+        changeSettingsController,
+    );
 </script>
 
 <OrgPlannerAppHeader {appDynamicColorTheme}></OrgPlannerAppHeader>
 <PageHeader></PageHeader>
 
-<slot></slot>
+{@render children()}

@@ -1,3 +1,4 @@
+import type {OrgPlannerSettings} from "@src/model/orgPlanner";
 import {BasePubSubEvent} from "orgplanner-common/jscore";
 
 class OrgPlannerAppEvents
@@ -21,6 +22,7 @@ class OrgPlannerAppEvents
     public static readonly EMPLOYEE_EDITED: string = "EMPLOYEE_EDITED";
     public static readonly SHOW_EDIT_EMPLOYEE_MODAL: string = "SHOW_EDIT_EMPLOYEE_MODAL";
     public static readonly SHOW_NEW_ORG_MODAL: string = "SHOW_NEW_ORG_MODAL";
+    public static readonly CHANGE_SETTINGS_ACTION: string = "CHANGE_SETTINGS_ACTION";
     public static readonly SETTINGS_CHANGED: string = "SETTINGS_CHANGED";
     public static readonly SHOW_SETTINGS_MODAL: string = "SHOW_SETTINGS_MODAL";
     public static readonly SHOW_CREATE_SNAPSHOT_MODAL: string = "SHOW_CREATE_SNAPSHOT_MODAL";
@@ -44,4 +46,20 @@ class CreateNewOrgEvent extends BasePubSubEvent
     }
 }
 
-export {OrgPlannerAppEvents, CreateNewOrgEvent};
+class ChangeSettingsActionEvent extends BasePubSubEvent
+{
+    constructor(public newSettings: OrgPlannerSettings)
+    {
+        super(OrgPlannerAppEvents.CHANGE_SETTINGS_ACTION);
+    }
+}
+
+class SettingsChangedEvent extends BasePubSubEvent
+{
+    constructor()
+    {
+        super(OrgPlannerAppEvents.SETTINGS_CHANGED);
+    }
+}
+
+export {OrgPlannerAppEvents, CreateNewOrgEvent, ChangeSettingsActionEvent, SettingsChangedEvent};

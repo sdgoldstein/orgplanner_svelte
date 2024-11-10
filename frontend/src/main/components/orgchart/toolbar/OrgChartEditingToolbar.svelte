@@ -1,4 +1,4 @@
-<svelte:options runes={true} />
+
 
 <script module  lang="ts">
     import { ButtonBar } from "@sphyrna/uicomponents";

@@ -15,7 +15,9 @@
     let open = $state(false);
 
     const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
-    const dynamicColorTheme = tempgetDynamicColorTheme(appDynamicColorTheme);
+    const dynamicColorTheme = $derived(
+        tempgetDynamicColorTheme(appDynamicColorTheme),
+    );
 </script>
 
 <NavMenu {colorVariant} {dynamicColorTheme}>

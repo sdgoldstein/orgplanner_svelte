@@ -1,4 +1,4 @@
-<svelte:options runes={true} />
+
 
 <script lang="ts">
     import {
@@ -22,7 +22,7 @@
         ...restProps
     }: OrgChartEditingToolbarButtonProps = $props();
 
-    const dynamicColorThemeMap = tempgetDynamicColorTheme(appDynamicColorTheme);
+    const dynamicColorThemeMap = $derived(tempgetDynamicColorTheme(appDynamicColorTheme));
     const colorVariant = AppDynamicColorThemeColorSelector.SECONDARY.toString();
 </script>
 

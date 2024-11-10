@@ -210,7 +210,7 @@
 <ModifySettingsModal
     bind:open={modifySettingsModalOpen}
     {appDynamicColorTheme}
-    {orgStructure}
+    orgPlannerSettings={settings}
 />
 
 <style>

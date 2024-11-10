@@ -105,11 +105,11 @@ interface OrgPlannerImportService extends Service
 
 class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlannerImportService
 {
-/**
- * Populate the org structure from a json string.  This can be generated with a call to toJSON
- *
- * @param {string} json the json string contained the org structure data
- */
+    /**
+     * Populate the org structure from a json string.  This can be generated with a call to toJSON
+     *
+     * @param {string} json the json string contained the org structure data
+     */
     import(json: string):
         Promise<OrgPlanner> {
             return new Promise((resolve, reject) => {

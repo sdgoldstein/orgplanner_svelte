@@ -1,5 +1,3 @@
-<svelte:options runes={true} />
-
 <script lang="ts">
   import {
     NavBar,
@@ -21,7 +19,9 @@
     $props();
 
   const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
-  const dynamicColorTheme = tempgetDynamicColorTheme(appDynamicColorTheme);
+  const dynamicColorTheme = $derived(
+    tempgetDynamicColorTheme(appDynamicColorTheme),
+  );
 </script>
 
 <header>
