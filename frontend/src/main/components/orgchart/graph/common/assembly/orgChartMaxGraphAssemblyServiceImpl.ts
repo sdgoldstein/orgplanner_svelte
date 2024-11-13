@@ -179,6 +179,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         {
             const cellValue: OrgPlannerChartVertex = vertex.value;
 
+            // Why vertex.style and cellState.style both need to be set is unclear
             if (cellValue.getVertexType() === VertexType.MANAGER)
             {
                 vertex.style = newManagerStyle;
