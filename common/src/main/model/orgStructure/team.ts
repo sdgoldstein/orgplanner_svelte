@@ -1,4 +1,4 @@
-import {OrgEntity, OrgEntityType, OrgEntityTypes} from "./orgEntity";
+import {type OrgEntity, type OrgEntityType, OrgEntityTypes} from "./orgEntity";
 
 // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
 class TeamConstants

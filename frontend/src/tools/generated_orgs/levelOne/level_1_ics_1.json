@@ -1,0 +1,102 @@
+{
+	"orgPlanner": {
+		"orgTitle": "",
+		"settings": {
+			"employeePropertyDescriptors": [
+				{
+					"name": "PHONE_PROPERTY_DESCRIPTOR",
+					"title": "Phone",
+					"defaultValue": "999-999-9999",
+					"enabled": "true"
+				},
+				{
+					"name": "LOCATION_PROPERTY_DESCRIPTOR",
+					"title": "Location",
+					"defaultValue": "San Francisco",
+					"enabled": "true"
+				}
+			],
+			"colorTheme": {
+				"name": "DEEP_BLUE_THEME",
+				"label": "Deep Blue",
+				"_typeToAssignmentMap": "[object Map]"
+			}
+		},
+		"orgSnapshots": [
+			{
+				"title": "xLoOXezQg93POlATOSpNZ",
+				"orgStructure": {
+					"employees": [
+						{
+							"id": "6943b022-38f4-4cf4-9736-0e3979b5dd93",
+							"name": "First Last",
+							"title": "Senior Vice President",
+							"managerId": "ROOT",
+							"isManager": true,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "K8pZz",
+							"name": "HyJVJ7 qMxkVB",
+							"title": "fSHbMclkr9",
+							"managerId": "6943b022-38f4-4cf4-9736-0e3979b5dd93",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						}
+					],
+					"teams": [
+						{
+							"id": "NO_TEAM_ID",
+							"title": "-- No Team --",
+							"managerId": "ROOT"
+						}
+					]
+				}
+			}
+		],
+		"planningProjects": [
+			{
+				"orgPlans": [
+					{
+						"title": "xLoOXezQg93POlATOSpNZ",
+						"orgStructure": {
+							"employees": [
+								{
+									"id": "6943b022-38f4-4cf4-9736-0e3979b5dd93",
+									"name": "First Last",
+									"title": "Senior Vice President",
+									"managerId": "ROOT",
+									"isManager": true,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "K8pZz",
+									"name": "HyJVJ7 qMxkVB",
+									"title": "fSHbMclkr9",
+									"managerId": "6943b022-38f4-4cf4-9736-0e3979b5dd93",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								}
+							],
+							"teams": [
+								{
+									"id": "NO_TEAM_ID",
+									"title": "-- No Team --",
+									"managerId": "ROOT"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	}
+}

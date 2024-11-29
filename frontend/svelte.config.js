@@ -21,9 +21,8 @@ const config = {
         adapter : adapter()
     },
 
-    compilerOptions : {
-        /*runes: true*/ /* Need to turn this off for Flowbite */
-    }
+    compilerOptions : {},
+    vitePlugin : {inspector : true}
 };
 
 export default config;

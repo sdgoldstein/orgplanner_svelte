@@ -1,9 +1,9 @@
-import {OrgStructure} from "../orgStructure/orgStructure";
+import type {OrgStructure} from "../orgStructure/orgStructure";
 
-import {OrgStatistics} from "./orgStatistics";
-import {OrgSummaryStatistics} from "./orgSummaryStatistics";
+import type {OrgStatistics} from "./orgStatistics";
+import type {OrgSummaryStatistics} from "./orgSummaryStatistics";
 import {PlanningManagerStatistics} from "./planningManagerStatistics";
-import {TeamStatistics} from "./teamStatistics";
+import type {TeamStatistics} from "./teamStatistics";
 
 /**
  * A version of org statistics that is associated with an org in planning state

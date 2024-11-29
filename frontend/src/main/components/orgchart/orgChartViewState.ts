@@ -1,4 +1,3 @@
-import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {BasePubSubEvent} from "orgplanner-common/jscore";
 import {type OrgEntityPropertyDescriptor, type OrgEntityType, OrgEntityTypes} from "orgplanner-common/model";
 import {OrgPlannerAppEvents} from "../app/orgPlannerAppEvents";
@@ -32,7 +31,7 @@ interface OrgChartEntityVisibleState
 
 class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 {
-    private _viewState: GuardedMap<ViewToggableEntity, boolean> = new Map();
+    private _viewState: Map<ViewToggableEntity, boolean> = new Map();
 
     constructor(propertyDescriptors: Set<OrgEntityPropertyDescriptor>)
     {
@@ -48,11 +47,12 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 
     isVisible(entity: ViewToggableEntity): boolean
     {
-        if (!this._viewState.has(entity))
+        const valueToReturn = this._viewState.get(entity);
+        if (valueToReturn === undefined)
         {
             throw new Error("Invalid parameter, " + entity);
         }
-        return this._viewState.get(entity);
+        return valueToReturn;
     }
 
     setVisible(entity: ViewToggableEntity, visible: boolean): void

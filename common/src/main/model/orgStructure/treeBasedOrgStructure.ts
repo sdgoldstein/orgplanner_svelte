@@ -1,14 +1,13 @@
-import {GuardedMap} from "@sphyrna/tscore";
 import {v4 as uuidv4} from "uuid";
 
-import {Node, Tree, TreeVisitor} from "../../jscore/tree";
-import {OrgStatistics} from "../stats/orgStatistics";
+import {type Node, Tree, TreeVisitor} from "../../jscore/tree";
+import type {OrgStatistics} from "../stats/orgStatistics";
 import {StatsCollector} from "../stats/statsCollector";
 
-import {BaseIndividualContributor, BaseManager, Employee, Manager} from "./employee";
-import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
-import {OrgStructure, OrgStructureVisitor} from "./orgStructure";
-import {BaseTeam, Team, TeamConstants} from "./team";
+import {BaseIndividualContributor, BaseManager, type Employee, type Manager} from "./employee";
+import type {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
+import type {OrgStructure, OrgStructureVisitor} from "./orgStructure";
+import {BaseTeam, type Team, TeamConstants} from "./team";
 
 class OrgStructureVisitorWrappingTreeVisitor extends TreeVisitor<string, Employee>
 {
@@ -81,9 +80,9 @@ class TreeBasesOrgStructure implements OrgStructure
 
     // All 4 variables are initialized in "initOrReset function
     private _orgTree!: Tree<string, Employee>;
-    private _managerIdToTeamsMap!: GuardedMap<string, Team[]>;
-    private _teamsIdToTeamsMap!: GuardedMap<string, Team>;
-    private _employeeIdToEmployeeMap!: GuardedMap<string, Employee>;
+    private _managerIdToTeamsMap!: Map<string, Team[]>;
+    private _teamsIdToTeamsMap!: Map<string, Team>;
+    private _employeeIdToEmployeeMap!: Map<string, Employee>;
 
     /**
      * Create an instance of a TreeBasedOrgStructure
@@ -150,12 +149,13 @@ class TreeBasesOrgStructure implements OrgStructure
 
     getTeam(id: string): Team
     {
-        if (!this.teamIdToTeamsMap.has(id))
+        const valueToReturn = this.teamIdToTeamsMap.get(id);
+        if (valueToReturn === undefined)
         {
             throw new Error(`Team with ID, ${id}, does not exist.`);
         }
 
-        return this.teamIdToTeamsMap.get(id);
+        return valueToReturn;
     }
 
     getTeamsForManager(manager: Manager): Team[]
@@ -236,12 +236,13 @@ class TreeBasesOrgStructure implements OrgStructure
 
     getEmployee(id: string): Employee
     {
-        if (!this.employeeIdToEmployeesMap.has(id))
+        const valueToReturn = this.employeeIdToEmployeesMap.get(id);
+        if (valueToReturn === undefined)
         {
             throw new Error(`Employee with ID, ${id}, does not exist.`);
         }
 
-        return this.employeeIdToEmployeesMap.get(id);
+        return valueToReturn;
     }
 
     createOrgLeader(name: string, title: string, teamId: string, properties: OrgEntityPropertyBag): Employee
@@ -324,11 +325,11 @@ class TreeBasesOrgStructure implements OrgStructure
     private _createEmployeeImpl(id: string, name: string, title: string, managerId: string, teamId: string,
                                 isManager: boolean, properties: OrgEntityPropertyBag): Employee
     {
-        if (!this.teamIdToTeamsMap.has(teamId))
+        const team: Team|undefined = this.teamIdToTeamsMap.get(teamId);
+        if (team === undefined)
         {
             throw new Error(`Couldn't find team with id, ${teamId}`);
         }
-        const team: Team = this.teamIdToTeamsMap.get(teamId);
 
         let employeeToAdd: Employee;
         if (isManager)
@@ -351,15 +352,15 @@ class TreeBasesOrgStructure implements OrgStructure
     private _createTeamImpl(id: string, title: string, managerId: string): Team
     {
         const teamToAdd = new BaseTeam(id, title, managerId);
-        if (this.managerIdToTeamsMap.has(managerId))
+
+        const ownedTeams: Team[]|undefined = this.managerIdToTeamsMap.get(managerId);
+        if (ownedTeams !== undefined)
         {
-            const ownedTeams: Team[] = this.managerIdToTeamsMap.get(managerId);
             ownedTeams.push(teamToAdd);
         }
         else
         {
-            const ownedTeams = [ teamToAdd ];
-            this._managerIdToTeamsMap.set(managerId, ownedTeams);
+            this._managerIdToTeamsMap.set(managerId, [ teamToAdd ]);
         }
 
         this._teamsIdToTeamsMap.set(id, teamToAdd);
@@ -393,17 +394,17 @@ class TreeBasesOrgStructure implements OrgStructure
      *     teams that the manager managers
      * @protected
      */
-    private get managerIdToTeamsMap(): GuardedMap<string, Team[]>
+    private get managerIdToTeamsMap(): Map<string, Team[]>
     {
         return this._managerIdToTeamsMap;
     }
 
-    private get employeeIdToEmployeesMap(): GuardedMap<string, Employee>
+    private get employeeIdToEmployeesMap(): Map<string, Employee>
     {
         return this._employeeIdToEmployeeMap;
     }
 
-    private get teamIdToTeamsMap(): GuardedMap<string, Team>
+    private get teamIdToTeamsMap(): Map<string, Team>
     {
         return this._teamsIdToTeamsMap;
     }

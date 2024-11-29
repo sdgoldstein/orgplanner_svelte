@@ -1,8 +1,8 @@
-import {OrgStatistics} from "../stats/orgStatistics";
+import type {OrgStatistics} from "../stats/orgStatistics";
 
-import {Employee, Manager} from "./employee";
-import {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
-import {Team} from "./team";
+import type {Employee, Manager} from "./employee";
+import type {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
+import type {Team} from "./team";
 
 /**
  * OrgStructure represent the organizational structure of a particular employee organization

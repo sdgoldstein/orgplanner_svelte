@@ -1,7 +1,7 @@
-import {ICStatistics} from "./icStatistics";
-import {ManagerStatistics} from "./managerStatistics";
-import {OrgSummaryStatistics} from "./orgSummaryStatistics";
-import {TeamStatistics} from "./teamStatistics";
+import type {ICStatistics} from "./icStatistics";
+import type {ManagerStatistics} from "./managerStatistics";
+import type {OrgSummaryStatistics} from "./orgSummaryStatistics";
+import type {TeamStatistics} from "./teamStatistics";
 
 /**
  * OrgStatistics hold all statistics associated with an Organization
@@ -29,4 +29,4 @@ interface OrgStatistics
     readonly orgSummaryStatistics: OrgSummaryStatistics;
 }
 
-export type {OrgStatistics};
+export type{OrgStatistics};

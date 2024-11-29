@@ -1,6 +1,6 @@
-import {SimpleStack, Stack} from "../../jscore/stack";
-import {Employee, Manager} from "../orgStructure/employee";
-import {OrgStructureVisitor} from "../orgStructure/orgStructure";
+import {SimpleStack, type Stack} from "../../jscore/stack";
+import type {Employee, Manager} from "../orgStructure/employee";
+import type {OrgStructureVisitor} from "../orgStructure/orgStructure";
 
 /**
  * An individual manager statistics
@@ -23,7 +23,7 @@ class ManagerStatistic
     {
         if (!manager)
         {
-            throw new Error('manager must be defined');
+            throw new Error("manager must be defined");
         }
 
         this._manager = manager;
@@ -161,7 +161,7 @@ class DefaultManagerStatistics implements ManagerStatistics
     {
         if (!statisticToAdd)
         {
-            throw new Error('statisticToAdd must be defined');
+            throw new Error("statisticToAdd must be defined");
         }
 
         this._statistics.push(statisticToAdd);
@@ -353,4 +353,4 @@ class ManagerStatisticsCollector implements OrgStructureVisitor
  }
  }*/
 export {DefaultManagerStatistics, ManagerStatistic, ManagerStatisticsCollector};
-export type {ManagerStatistics};
+export type{ManagerStatistics};

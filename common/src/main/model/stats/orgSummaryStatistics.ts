@@ -1,5 +1,5 @@
-import {Employee} from "../orgStructure/employee";
-import {OrgStructureVisitor} from "../orgStructure/orgStructure";
+import type {Employee} from "../orgStructure/employee";
+import type {OrgStructureVisitor} from "../orgStructure/orgStructure";
 
 /**
  * An individual org summary statistic
@@ -170,7 +170,7 @@ class OrgSummaryStatisticsCollector implements OrgStructureVisitor
     // like "endTraversal()"
     finalizeStats(): void
     {
-        this._orgStatistics.addStatistic('SFA', this._numEmployees, this._numManagers, this._numICs);
+        this._orgStatistics.addStatistic("SFA", this._numEmployees, this._numManagers, this._numICs);
     }
 
     /**
@@ -185,4 +185,4 @@ class OrgSummaryStatisticsCollector implements OrgStructureVisitor
 }
 
 export {OrgSummaryStatisticsCollector, DefaultOrgSummaryStatistics, OrgSummaryStatistic};
-export type {OrgSummaryStatistics};
+export type{OrgSummaryStatistics};

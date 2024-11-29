@@ -1,5 +1,5 @@
-import {Employee} from "../orgStructure/employee";
-import {OrgStructureVisitor} from "../orgStructure/orgStructure";
+import type {Employee} from "../orgStructure/employee";
+import type {OrgStructureVisitor} from "../orgStructure/orgStructure";
 
 /**
  * A TeamStatistic is an individual team statistic
@@ -189,4 +189,4 @@ class TeamStatisticsCollector implements OrgStructureVisitor
 }
 
 export {TeamStatisticsCollector, DefaultTeamStatistics, TeamStatistic};
-export type {TeamStatistics};
+export type{TeamStatistics};

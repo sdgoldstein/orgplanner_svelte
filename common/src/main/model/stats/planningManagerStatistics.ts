@@ -1,8 +1,8 @@
-import {SimpleStack, Stack} from "../../jscore/stack";
-import {Employee} from "../orgStructure/employee";
-import {OrgStructure, OrgStructureVisitor} from "../orgStructure/orgStructure";
+import {SimpleStack, type Stack} from "../../jscore/stack";
+import type {Employee} from "../orgStructure/employee";
+import type {OrgStructure, OrgStructureVisitor} from "../orgStructure/orgStructure";
 
-import {ManagerStatistic, ManagerStatistics} from "./managerStatistics";
+import {ManagerStatistic, type ManagerStatistics} from "./managerStatistics";
 
 /**
  * ManagerStatisticUpdated is used to finishEdit planning manager statistics when an planning org structure changes

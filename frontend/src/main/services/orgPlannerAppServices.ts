@@ -1,9 +1,7 @@
 
 import {
     DefaultServiceManagerStrategyImpl,
-    ServiceManager,
-    type ServiceManagerStrategy
-} from "@sphyrna/service-manager-ts";
+    ServiceManager} from "@sphyrna/service-manager-ts";
 
 import {OrgPlannerManager} from "@src/model/orgPlanner";
 import {BrowserBasedFileService} from "orgplanner-common/jscore";

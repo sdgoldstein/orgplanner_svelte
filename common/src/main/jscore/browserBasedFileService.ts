@@ -1,7 +1,7 @@
 
 import {BaseService} from "@sphyrna/service-manager-ts";
 
-import {FileService} from "./fileService";
+import type {FileService} from "./fileService";
 
 class BrowserBasedFileService extends BaseService implements FileService
 {

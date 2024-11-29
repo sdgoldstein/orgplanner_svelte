@@ -1,6 +1,5 @@
-import {GuardedMap} from '@sphyrna/tscore';
 
-import {OrgEntityType, OrgEntityTypes} from "../orgStructure/orgEntity";
+import {type OrgEntityType, OrgEntityTypes} from "../orgStructure/orgEntity";
 
 type ColorHex = `#${string}`;
 
@@ -19,20 +18,20 @@ interface OrgEntityColorTheme
 
 class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
 {
-    private readonly _typeToAssignmentMap: GuardedMap<OrgEntityType, OrgEntityTypeColorAssignment> =
+    private readonly _typeToAssignmentMap: Map<OrgEntityType, OrgEntityTypeColorAssignment> =
         new Map<OrgEntityType, OrgEntityTypeColorAssignment>();
 
     constructor(public name: string, public label: string) {}
 
     getColorAssignment(orgEntityType: OrgEntityType): OrgEntityTypeColorAssignment
     {
-        if (!this._typeToAssignmentMap.has(orgEntityType))
+        const valueToReturn = this._typeToAssignmentMap.get(orgEntityType);
+        if (valueToReturn === undefined)
         {
-
             throw new Error(`Color assignment not found for org entity type, ${orgEntityType.name}`);
         }
 
-        return this._typeToAssignmentMap.get(orgEntityType);
+        return valueToReturn;
     }
 
     setColorAssignment(orgEntityType: OrgEntityType, colorAssignment: OrgEntityTypeColorAssignment)
@@ -43,7 +42,7 @@ class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
 
 class OrgEntityColorThemes
 {
-    private static readonly NAME_TO_THEME_MAP: GuardedMap<string, OrgEntityColorTheme> =
+    private static readonly NAME_TO_THEME_MAP: Map<string, OrgEntityColorTheme> =
         new Map<string, OrgEntityColorTheme>();
 
     static readonly DEEP_BLUE_THEME: OrgEntityColorTheme =
@@ -82,12 +81,13 @@ class OrgEntityColorThemes
 
     static getColorThemeByName(name: string): OrgEntityColorTheme
     {
-        if (!this.NAME_TO_THEME_MAP.has(name))
+        const valueToReturn = this.NAME_TO_THEME_MAP.get(name);
+        if (valueToReturn === undefined)
         {
-            throw new Error('Color theme by name not found, ' + name);
+            throw new Error(`Color theme by name not found, ${name}`);
         }
 
-        return this.NAME_TO_THEME_MAP.get(name);
+        return valueToReturn;
     }
 
     static themeIterator(): IterableIterator<OrgEntityColorTheme>
@@ -96,5 +96,5 @@ class OrgEntityColorThemes
     }
 }
 
-export {OrgEntityColorThemes};
-export type {OrgEntityColorTheme, ColorHex};
+export {OrgEntityColorThemes, DefaultOrgEntityColorThemeImpl};
+export type{OrgEntityColorTheme, ColorHex};

@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "../../tsconfig.json"
+    ],
+    "compilerOptions": {
+        "paths": {
+            "baseUrl": [
+                "./../.."
+            ],
+            "@src/*": [
+                "../main/*"
+            ],
+        },
+        "outDir": "./../../build/javascript/tools",
+        "noEmit": false,
+        "listEmittedFiles": true
+    },
+    "include": [
+        "./typescript/*.ts"
+    ],
+}

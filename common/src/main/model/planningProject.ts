@@ -1,4 +1,4 @@
-import {OrgPlan, OrgPlanDefaultImpl, OrgSnapshot} from "./orgData";
+import {type OrgPlan, OrgPlanDefaultImpl, type OrgSnapshot} from "./orgData";
 
 interface PlanningProject
 {
@@ -36,4 +36,4 @@ class PlanningProjectDefaultImpl implements PlanningProject
 }
 
 export {PlanningProjectDefaultImpl};
-export type {PlanningProject};
+export type{PlanningProject};

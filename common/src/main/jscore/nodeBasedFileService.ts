@@ -1,9 +1,9 @@
-import * as em from 'events';
-import * as fs from 'fs';
-import * as util from 'util';
+import * as em from "events";
+import * as fs from "fs";
+import * as util from "util";
 
-import {FileService} from "./fileService";
-import { BaseService } from "@sphyrna/service-manager-ts";
+import type {FileService} from "./fileService";
+import {BaseService} from "@sphyrna/service-manager-ts";
 
 class NodeBasedFileService extends BaseService implements FileService
 {
@@ -24,7 +24,7 @@ class NodeBasedFileService extends BaseService implements FileService
                                         encoding: BufferEncoding;
                                         flag?: string|undefined;
                                     }&em.Abortable)|BufferEncoding) => Promise<string> = util.promisify(fs.readFile);
-        return readFileWithPromise(filename, 'utf-8');
+        return readFileWithPromise(filename, "utf-8");
     }
 }
 

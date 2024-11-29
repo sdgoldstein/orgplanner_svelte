@@ -2,10 +2,11 @@ import {BaseService, type Service} from "@sphyrna/service-manager-ts";
 import {type OrgPlanner, OrgPlannerDefaultImpl} from "@src/model/orgPlanner";
 import {
     type ColorHex,
+    DefaultOrgEntityColorThemeImpl,
     type OrgDataCore,
     OrgDataCoreDefaultImpl,
-    type OrgEntityColorTheme,
     type OrgEntityPropertyDescriptor,
+    OrgEntityTypes,
     type OrgPlan,
     OrgPlanDefaultImpl,
     type OrgSnapshot,
@@ -47,9 +48,14 @@ interface JSONColorTheme
 {
     name: string;
     label: string;
-    managerColor: ColorHex;
-    icColor: ColorHex;
-    teamColor: ColorHex;
+    orgEntityTypeColorAssignments: JSONOrgEntityTypeColorAssignment[]
+}
+
+interface JSONOrgEntityTypeColorAssignment
+{
+    name: string;
+    primary: ColorHex;
+    textOnPrimary: ColorHex;
 }
 
 interface JSONPlanningProject
@@ -129,13 +135,18 @@ class TreeBasedOrgPlannerImportService extends BaseService implements OrgPlanner
 
         const jsonColorTheme = orgPlanner.settings.colorTheme;
         const
-        colorTheme : OrgEntityColorTheme = {
-            name : jsonColorTheme.name,
-                 label: jsonColorTheme.label,
-                 managerColor: jsonColorTheme.managerColor,
-                 icColor: jsonColorTheme.icColor,
-                 teamColor: jsonColorTheme.teamColor
-        };
+        colorTheme : DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(jsonColorTheme.name,
+                                                                                         jsonColorTheme.label);
+        if(jsonColorTheme.orgEntityTypeColorAssignments) {
+            for (const nextJSONOrgEntityTypeColorAssignment of jsonColorTheme.orgEntityTypeColorAssignments)
+            {
+                const nextOrgEntityType = OrgEntityTypes.getTypeByName(nextJSONOrgEntityTypeColorAssignment.name);
+                colorTheme.setColorAssignment(nextOrgEntityType, {
+                    primary : nextJSONOrgEntityTypeColorAssignment.primary,
+                    textOnPrimary : nextJSONOrgEntityTypeColorAssignment.textOnPrimary
+                });
+            }
+        }
 
         const
         employeePropertyDescriptors : Set<OrgEntityPropertyDescriptor> = new Set<OrgEntityPropertyDescriptor>();

@@ -151,6 +151,7 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase
         });
     }
 
+    // @ts-ignore FIXME = not used
     private insertTeamNode(team: Team, orgChartTeam: OrgPlannerChartTeamVertex, cellStyleOverride: CellStateStyle): Cell
     {
         const parent = this.getDefaultParent();
@@ -180,7 +181,6 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase
     {
         this.batchUpdate(() => {
             const cells: Cell[] = [];
-            const savedGraph = this;
 
             this.traverse({
                 visitEnter(cellToVisit: Cell) {

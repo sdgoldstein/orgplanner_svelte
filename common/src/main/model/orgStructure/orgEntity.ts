@@ -1,4 +1,3 @@
-import {GuardedMap} from "@sphyrna/tscore";
 
 interface OrgEntityType
 {
@@ -8,7 +7,7 @@ interface OrgEntityType
 
 class OrgEntityTypes
 {
-    private static readonly NAME_TO_TYPE_MAP: GuardedMap<string, OrgEntityType> = new Map<string, OrgEntityType>();
+    private static readonly NAME_TO_TYPE_MAP: Map<string, OrgEntityType> = new Map<string, OrgEntityType>();
 
     static readonly MANAGER: OrgEntityType = {
         name : "Manager",
@@ -33,12 +32,13 @@ class OrgEntityTypes
     }
     static getTypeByName(name: string): OrgEntityType
     {
-        if (!this.NAME_TO_TYPE_MAP.has(name))
+        const valueToReturn = this.NAME_TO_TYPE_MAP.get(name);
+        if (valueToReturn === undefined)
         {
-            throw new Error("Type by name not found, " + name);
+            throw new Error(`Type by name not found, ${name}`);
         }
 
-        return this.NAME_TO_TYPE_MAP.get(name);
+        return valueToReturn;
     }
 
     static typeIterator(): IterableIterator<OrgEntityType>
@@ -59,7 +59,7 @@ interface OrgEntityPropertyCarrier
     setPropertyValue(propertyName: string, value: string): void;
     propertyIterator(): IterableIterator<[ OrgEntityPropertyDescriptor, string ]>;
 }
-type OrgEntityPropertyBag = GuardedMap<OrgEntityPropertyDescriptor, string>;
+type OrgEntityPropertyBag = Map<OrgEntityPropertyDescriptor, string>;
 const EMPTY_PROPERTY_BAG: OrgEntityPropertyBag = new Map();
 
 /**
@@ -68,9 +68,9 @@ const EMPTY_PROPERTY_BAG: OrgEntityPropertyBag = new Map();
  */
 class PropertyCarrierHelper implements OrgEntityPropertyCarrier
 {
-    private readonly _properties: GuardedMap<OrgEntityPropertyDescriptor, string> =
+    private readonly _properties: Map<OrgEntityPropertyDescriptor, string> =
         new Map<OrgEntityPropertyDescriptor, string>();
-    private readonly _propertyDescriptors: GuardedMap<string, OrgEntityPropertyDescriptor> =
+    private readonly _propertyDescriptors: Map<string, OrgEntityPropertyDescriptor> =
         new Map<string, OrgEntityPropertyDescriptor>();
 
     constructor(propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
@@ -91,28 +91,28 @@ class PropertyCarrierHelper implements OrgEntityPropertyCarrier
 
     getPropertyValue(propertyName: string): string
     {
-        if (!this._propertyDescriptors.has(propertyName))
+        const propertyDescriptor = this._propertyDescriptors.get(propertyName);
+        if (propertyDescriptor === undefined)
         {
             throw new Error("Property does not exist: " + propertyName);
         }
 
-        const propertyDescriptor: OrgEntityPropertyDescriptor = this._propertyDescriptors.get(propertyName);
-        if (!this._properties.has(propertyDescriptor))
+        const valueToReturn = this._properties.get(propertyDescriptor);
+        if (valueToReturn === undefined)
         {
             throw new Error("Unepxecged condition:  Property value does not exist for property: " + propertyName);
         }
 
-        return this._properties.get(propertyDescriptor);
+        return valueToReturn;
     }
 
     setPropertyValue(propertyName: string, value: string): void
     {
-        if (!this._propertyDescriptors.has(propertyName))
+        const propertyDescriptor: OrgEntityPropertyDescriptor|undefined = this._propertyDescriptors.get(propertyName);
+        if (propertyDescriptor === undefined)
         {
             throw new Error("Property does not exist: " + propertyName);
         }
-
-        const propertyDescriptor: OrgEntityPropertyDescriptor = this._propertyDescriptors.get(propertyName);
         this._properties.set(propertyDescriptor, value);
     }
 
@@ -130,13 +130,6 @@ interface OrgEntityPropertyDescriptor
     enabled: boolean;
 }
 
-export {
-    OrgEntity,
-    OrgEntityType,
-    OrgEntityTypes,
-    OrgEntityPropertyDescriptor,
-    OrgEntityPropertyCarrier,
-    PropertyCarrierHelper,
-    EMPTY_PROPERTY_BAG
-};
-export type {OrgEntityPropertyBag};
+export {OrgEntityTypes, PropertyCarrierHelper, EMPTY_PROPERTY_BAG};
+
+export type{OrgEntityPropertyBag, OrgEntity, OrgEntityType, OrgEntityPropertyDescriptor, OrgEntityPropertyCarrier};

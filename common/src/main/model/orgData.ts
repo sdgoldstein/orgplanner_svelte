@@ -1,6 +1,6 @@
 
 
-import {OrgStructure} from "./orgStructure/orgStructure";
+import type {OrgStructure} from "./orgStructure/orgStructure";
 
 interface OrgPlan
 {

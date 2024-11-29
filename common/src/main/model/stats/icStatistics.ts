@@ -1,5 +1,5 @@
-import {Employee, Manager} from "../orgStructure/employee";
-import {OrgStructureVisitor} from "../orgStructure/orgStructure";
+import type {Employee, Manager} from "../orgStructure/employee";
+import type {OrgStructureVisitor} from "../orgStructure/orgStructure";
 
 /**
  * An individual instance of an individual contributor statistic
@@ -170,4 +170,4 @@ class ICStatisticsCollector implements OrgStructureVisitor
 }
 
 export {ICStatisticsCollector};
-export type {ICStatistic, ICStatistics};
+export type{ICStatistic, ICStatistics};

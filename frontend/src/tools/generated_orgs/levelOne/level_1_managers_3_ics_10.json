@@ -1,0 +1,342 @@
+{
+	"orgPlanner": {
+		"orgTitle": "OKXxGkUSDWcdij2H4xPz",
+		"settings": {
+			"employeePropertyDescriptors": [
+				{
+					"name": "PHONE_PROPERTY_DESCRIPTOR",
+					"title": "Phone",
+					"defaultValue": "999-999-9999",
+					"enabled": "true"
+				},
+				{
+					"name": "LOCATION_PROPERTY_DESCRIPTOR",
+					"title": "Location",
+					"defaultValue": "San Francisco",
+					"enabled": "true"
+				}
+			],
+			"colorTheme": {
+				"name": "DEEP_BLUE_THEME",
+				"label": "Deep Blue",
+				"_typeToAssignmentMap": "[object Map]"
+			}
+		},
+		"orgSnapshots": [
+			{
+				"title": "7JtbVFHQxf",
+				"orgStructure": {
+					"employees": [
+						{
+							"id": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"name": "First Last",
+							"title": "Senior Vice President",
+							"managerId": "ROOT",
+							"isManager": true,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "iH1wR",
+							"name": "4DQmIi In1g2i",
+							"title": "UPikW2nx3V",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "icRAt",
+							"name": "uDCicK cu4VjZ",
+							"title": "EIvlvhQt4K",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "5YPxz",
+							"name": "xl60uB ogvq74",
+							"title": "R6h3R8gpna",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "BszeP",
+							"name": "RCDi8f t8bek2",
+							"title": "vN7GY20b9z",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "aF5lT",
+							"name": "gr02OE JYso2M",
+							"title": "EpQKWecTTu",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "JXZFY",
+							"name": "DL18OC VgpiZJ",
+							"title": "2TcWqFyZlu",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "I9hxS",
+							"name": "uYEKCi hOQNSe",
+							"title": "0lPE5tSIEW",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "U3PqW",
+							"name": "z5O5CL Bgy90n",
+							"title": "HzVLFLABRC",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "4oApG",
+							"name": "xPl1WI FxGF94",
+							"title": "anwNtWp53g",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "ZSt5r",
+							"name": "pNRvsa Pl4vrH",
+							"title": "HuTySWE4zd",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": false,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "wO4xq",
+							"name": "YJDuQF hnvh3j",
+							"title": "QdbTvUzGOP",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": true,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "rLbsO",
+							"name": "uDf81q 7jRKOH",
+							"title": "qkEBtl6omD",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": true,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						},
+						{
+							"id": "pew7w",
+							"name": "NQhIcR 31f8WR",
+							"title": "9smjsVIu7T",
+							"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+							"isManager": true,
+							"teamId": "NO_TEAM_ID",
+							"properties": [
+							]
+						}
+					],
+					"teams": [
+						{
+							"id": "NO_TEAM_ID",
+							"title": "-- No Team --",
+							"managerId": "ROOT"
+						}
+					]
+				}
+			}
+		],
+		"planningProjects": [
+			{
+				"orgPlans": [
+					{
+						"title": "7JtbVFHQxf",
+						"orgStructure": {
+							"employees": [
+								{
+									"id": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"name": "First Last",
+									"title": "Senior Vice President",
+									"managerId": "ROOT",
+									"isManager": true,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "iH1wR",
+									"name": "4DQmIi In1g2i",
+									"title": "UPikW2nx3V",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "icRAt",
+									"name": "uDCicK cu4VjZ",
+									"title": "EIvlvhQt4K",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "5YPxz",
+									"name": "xl60uB ogvq74",
+									"title": "R6h3R8gpna",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "BszeP",
+									"name": "RCDi8f t8bek2",
+									"title": "vN7GY20b9z",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "aF5lT",
+									"name": "gr02OE JYso2M",
+									"title": "EpQKWecTTu",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "JXZFY",
+									"name": "DL18OC VgpiZJ",
+									"title": "2TcWqFyZlu",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "I9hxS",
+									"name": "uYEKCi hOQNSe",
+									"title": "0lPE5tSIEW",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "U3PqW",
+									"name": "z5O5CL Bgy90n",
+									"title": "HzVLFLABRC",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "4oApG",
+									"name": "xPl1WI FxGF94",
+									"title": "anwNtWp53g",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "ZSt5r",
+									"name": "pNRvsa Pl4vrH",
+									"title": "HuTySWE4zd",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": false,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "wO4xq",
+									"name": "YJDuQF hnvh3j",
+									"title": "QdbTvUzGOP",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": true,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "rLbsO",
+									"name": "uDf81q 7jRKOH",
+									"title": "qkEBtl6omD",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": true,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								},
+								{
+									"id": "pew7w",
+									"name": "NQhIcR 31f8WR",
+									"title": "9smjsVIu7T",
+									"managerId": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
+									"isManager": true,
+									"teamId": "NO_TEAM_ID",
+									"properties": [
+									]
+								}
+							],
+							"teams": [
+								{
+									"id": "NO_TEAM_ID",
+									"title": "-- No Team --",
+									"managerId": "ROOT"
+								}
+							]
+						}
+					}
+				]
+			}
+		]
+	}
+}

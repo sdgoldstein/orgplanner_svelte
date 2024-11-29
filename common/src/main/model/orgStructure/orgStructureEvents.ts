@@ -1,5 +1,5 @@
-import {type PubSubEvent, BasePubSubEvent} from "orgplanner-common/jscore";
-import type {OrgEntity} from "orgplanner-common/model";
+import {BasePubSubEvent, type PubSubEvent} from "@src/jscore/pubSubManager";
+import type {OrgEntity} from "./orgEntity";
 
 class OrgStructureChangedEvents
 {

@@ -1,11 +1,11 @@
-import {Employee} from "../orgStructure/employee";
-import {OrgStructure, OrgStructureVisitor} from "../orgStructure/orgStructure";
+import type {Employee} from "../orgStructure/employee";
+import type {OrgStructure, OrgStructureVisitor} from "../orgStructure/orgStructure";
 
-import {ICStatistics, ICStatisticsCollector} from "./icStatistics";
-import {ManagerStatistics, ManagerStatisticsCollector} from "./managerStatistics";
-import {OrgStatistics} from "./orgStatistics";
-import {OrgSummaryStatistics, OrgSummaryStatisticsCollector} from "./orgSummaryStatistics";
-import {TeamStatistics, TeamStatisticsCollector} from "./teamStatistics";
+import {type ICStatistics, ICStatisticsCollector} from "./icStatistics";
+import {type ManagerStatistics, ManagerStatisticsCollector} from "./managerStatistics";
+import type {OrgStatistics} from "./orgStatistics";
+import {type OrgSummaryStatistics, OrgSummaryStatisticsCollector} from "./orgSummaryStatistics";
+import {type TeamStatistics, TeamStatisticsCollector} from "./teamStatistics";
 
 /**
  * An org structure visitor that traversing an org structure to collect stats

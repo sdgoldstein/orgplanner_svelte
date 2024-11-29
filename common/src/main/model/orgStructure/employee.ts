@@ -1,19 +1,18 @@
-import {GuardedMap} from "@sphyrna/tscore";
 
 import {
-    OrgEntity,
-    OrgEntityPropertyBag,
-    OrgEntityPropertyCarrier,
-    OrgEntityPropertyDescriptor,
-    OrgEntityType,
+    type OrgEntity,
+    type OrgEntityPropertyBag,
+    type OrgEntityPropertyCarrier,
+    type OrgEntityPropertyDescriptor,
+    type OrgEntityType,
     OrgEntityTypes,
     PropertyCarrierHelper
 } from "./orgEntity";
-import {Team} from "./team";
+import type {Team} from "./team";
 
 class EmployeeReservedPropertyDescriptors
 {
-    private static readonly NAME_TO_DESCRIPTOR_MAP: GuardedMap<string, OrgEntityPropertyDescriptor> =
+    private static readonly NAME_TO_DESCRIPTOR_MAP: Map<string, OrgEntityPropertyDescriptor> =
         new Map<string, OrgEntityPropertyDescriptor>();
 
     static readonly PHONE: OrgEntityPropertyDescriptor =
@@ -30,12 +29,13 @@ class EmployeeReservedPropertyDescriptors
 
     static getPropertyDescriptorByName(name: string): OrgEntityPropertyDescriptor
     {
-        if (!this.NAME_TO_DESCRIPTOR_MAP.has(name))
+        const valueToReturn = this.NAME_TO_DESCRIPTOR_MAP.get(name);
+        if (valueToReturn === undefined)
         {
             throw new Error("Property Descriptor by name not found, " + name);
         }
 
-        return this.NAME_TO_DESCRIPTOR_MAP.get(name);
+        return valueToReturn;
     }
 
     static themeIterator(): IterableIterator<OrgEntityPropertyDescriptor>

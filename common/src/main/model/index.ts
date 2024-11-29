@@ -1,4 +1,4 @@
-export * from './orgData'
+export * from "./orgData"
 export * from "./orgTemplate"
 export * from "./planningProject"
 export * from "./orgStructure/employee"
@@ -6,4 +6,5 @@ export * from "./orgStructure/orgEntity"
 export * from "./orgStructure/orgStructure"
 export * from "./orgStructure/team"
 export * from "./orgStructure/treeBasedOrgStructure"
+export * from "./orgStructure/orgStructureEvents"
 export * from "./theme/orgPlannerTheme"

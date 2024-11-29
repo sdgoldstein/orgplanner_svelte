@@ -115,13 +115,15 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
  */
 abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, PubSubListener
 {
+    // @ts-ignore: _isUpdating is declared but its value is never read - FIXME
     private _isUpdating: boolean = false;
+
     private _rootCell?: Cell;
     private _layout?: OrgPlannerChartLayout;
 
     protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService;
 
-    constructor(private _element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
+    constructor(_element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
                 private _visibilityState: OrgChartEntityVisibleState)
     {
         super(_element, new OrgPlannerChartModel());

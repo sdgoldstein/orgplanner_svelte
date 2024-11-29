@@ -20,7 +20,7 @@ import {
     OrgStructureChangedEventEntityAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEvents
-} from "../../../page/orgStructureEvents";
+} from "../../../../../../../common/src/main/model/orgStructure/orgStructureEvents";
 import {OrgPlannerAppEvents} from "../../../app/orgPlannerAppEvents";
 import type {OrgChartProps, OrgChartProxy} from "../model/orgChartProxy";
 import type {OrgChartMaxGraph} from "../model/orgChartMaxGraph";

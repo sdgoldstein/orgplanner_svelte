@@ -1,7 +1,7 @@
 # Build Output
 **/node_modules
 **/build
-frontend/.svelte-kit
+**/.svelte-kit
 
 # Vite
 vite.config.js.timestamp-*
