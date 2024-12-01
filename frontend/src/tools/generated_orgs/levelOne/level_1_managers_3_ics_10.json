@@ -1,8 +1,11 @@
 {
-	"orgPlanner": {
+	"orgPlanner": 
+	{
 		"orgTitle": "OKXxGkUSDWcdij2H4xPz",
-		"settings": {
-			"employeePropertyDescriptors": [
+		"settings": 
+		{
+			"employeePropertyDescriptors": 
+			[
 				{
 					"name": "PHONE_PROPERTY_DESCRIPTOR",
 					"title": "Phone",
@@ -16,17 +19,21 @@
 					"enabled": "true"
 				}
 			],
-			"colorTheme": {
+			"colorTheme": 
+			{
 				"name": "DEEP_BLUE_THEME",
 				"label": "Deep Blue",
 				"_typeToAssignmentMap": "[object Map]"
 			}
 		},
-		"orgSnapshots": [
+		"orgSnapshots": 
+		[
 			{
 				"title": "7JtbVFHQxf",
-				"orgStructure": {
-					"employees": [
+				"orgStructure": 
+				{
+					"employees": 
+					[
 						{
 							"id": "52eb6db4-ede3-42f3-a8c4-e6e0c8e51900",
 							"name": "First Last",

@@ -8,6 +8,14 @@ import {BaseIndividualContributor, BaseManager, type Employee, type Manager} fro
 import type {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntity";
 import type {OrgStructure, OrgStructureVisitor} from "./orgStructure";
 import {BaseTeam, type Team, TeamConstants} from "./team";
+import {
+    SerializationFormat,
+    type Serializable,
+    type SerializableDescriptor,
+    type SerializationHelper,
+    type Serializer
+} from "@src/jscore/serialization/serializationService";
+import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
 
 class OrgStructureVisitorWrappingTreeVisitor extends TreeVisitor<string, Employee>
 {
@@ -67,8 +75,11 @@ class TeamMoveOrgStructureVisitor implements OrgStructureVisitor
 /**
  * A Tree based implementation of an OrgStructure
  */
-class TreeBasesOrgStructure implements OrgStructure
+class TreeBasedOrgStructure implements OrgStructure, Serializable
 {
+    static readonly SERIALIZATION_DESCRIPTOR:
+        SerializableDescriptor<TreeBasedOrgStructure> = {name : "TreeBasedOrgStructure", objectVersion: 1};
+
     private static readonly ROOT_MANAGER_ID: string = "ROOT";
 
     locked: boolean = false;
@@ -128,7 +139,7 @@ class TreeBasesOrgStructure implements OrgStructure
                    properties: OrgEntityPropertyBag): Employee
     {
         const createdEmployee = this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, properties);
-        if (managerId === TreeBasesOrgStructure.ROOT_MANAGER_ID)
+        if (managerId === TreeBasedOrgStructure.ROOT_MANAGER_ID)
         {
             this.orgLeader = createdEmployee;
         }
@@ -248,7 +259,7 @@ class TreeBasesOrgStructure implements OrgStructure
     createOrgLeader(name: string, title: string, teamId: string, properties: OrgEntityPropertyBag): Employee
     {
         this.orgLeader =
-            this.createEmployee(name, title, TreeBasesOrgStructure.ROOT_MANAGER_ID, teamId, true, properties);
+            this.createEmployee(name, title, TreeBasedOrgStructure.ROOT_MANAGER_ID, teamId, true, properties);
         return this.orgLeader;
     }
 
@@ -418,11 +429,72 @@ class TreeBasesOrgStructure implements OrgStructure
 
         // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
         this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE,
-                             TreeBasesOrgStructure.ROOT_MANAGER_ID);
+                             TreeBasedOrgStructure.ROOT_MANAGER_ID);
     }
 }
 
-export {TreeBasesOrgStructure as TreeBasedOrgStructure};
+class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<TreeBasedOrgStructure> implements
+    Serializer<TreeBasedOrgStructure, SerializationFormat.JSON>
+{
+    static readonly KEY: string = "orgStructure";
+
+    getKey(): string
+    {
+        return TreeBasedOrgStructureSerializer.KEY;
+    }
+
+    getValue(serializableObject: TreeBasedOrgStructure,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = {};
+
+        const serializationTreeVisitor: SerializationTreeVisitor = new SerializationTreeVisitor(serializationHelper);
+        serializableObject.traverseBF(serializationTreeVisitor);
+
+        valueToReturn["employees"] = serializationTreeVisitor.getResult();
+
+        const teamIterator: IterableIterator<Team> = serializableObject.getTeams();
+        valueToReturn["teams"] = this.serializeIterable(teamIterator, serializationHelper);
+
+        return valueToReturn;
+    }
+}
+
+class SerializationTreeVisitor implements OrgStructureVisitor
+{
+    private _json: string = "[";
+    private _commaNeeded = false;
+
+    constructor(private _serializationHelper: SerializationHelper<SerializationFormat.JSON>) {}
+
+    visitEnter(employee: Employee): void
+    {
+        if (this._commaNeeded)
+        {
+            this._json += ",\n";
+            for (let i = 0; i < this._serializationHelper.depth; i++)
+            {
+                this._json += "\t";
+            }
+        }
+
+        this._json += this._serializationHelper.serialize(employee);
+
+        this._commaNeeded = true;
+    }
+
+    visitLeave(employee: Employee): void
+    {
+        // Empty
+    }
+
+    getResult(): string
+    {
+        return this._json + "]";
+    }
+}
+
+export {TreeBasedOrgStructure, TreeBasedOrgStructureSerializer};
 
 /*----------------------
 Copied from previous PlanningOrgStructure.  Do we need these?

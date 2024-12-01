@@ -1,4 +1,8 @@
+import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
 import {type OrgEntity, type OrgEntityType, OrgEntityTypes} from "./orgEntity";
+import type {
+    SerializableDescriptor, SerializationFormat, SerializationHelper, Serializer} from
+    "@src/jscore/serialization/serializationService";
 
 // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
 class TeamConstants
@@ -19,6 +23,8 @@ interface Team extends OrgEntity
 
 class BaseTeam implements Team
 {
+    static readonly SERIALIZATION_DESCRIPTOR: SerializableDescriptor<BaseTeam> = {name : "BaseTeam", objectVersion: 1};
+
     orgEntityType: OrgEntityType = OrgEntityTypes.TEAM;
 
     private readonly _id: string;
@@ -63,5 +69,20 @@ class BaseTeam implements Team
     }
 }
 
-export {BaseTeam, TeamConstants};
+class BaseTeamSerializer extends BaseJSONSerializer<BaseTeam> implements Serializer<BaseTeam, SerializationFormat.JSON>
+{
+    getValue(serializableObject: BaseTeam,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = {};
+
+        valueToReturn["id"] = serializableObject.id;
+        valueToReturn["title"] = serializableObject.title;
+        valueToReturn["managerId"] = serializableObject.managerId;
+
+        return valueToReturn;
+    }
+}
+
+export {BaseTeam, TeamConstants, BaseTeamSerializer};
 export type{Team};

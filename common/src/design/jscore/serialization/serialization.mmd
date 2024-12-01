@@ -1,0 +1,20 @@
+sequenceDiagram
+    actor User
+
+    % User Retrieves Serialization Service and Serializes Object
+    User ->>+ SerializationService: serialize(serializableObject, format)
+    SerializationService -->>- User: serializedObject:string (or UInt8Array)
+
+    % retrieve the serialization descriptor
+    SerializationService ->>+ Serializable: getSeralizationDescriptor():SerializationDescriptor
+    Serializable -->>- SerializationService: serializationDescriptor
+    SerializationService ->>+ SerializationDescriptor: getName():string
+    SerializationDescriptor -->>- SerializationService: name
+    SerializationService ->>+ SerializationDescriptor: getObjectVersion():string
+    SerializationDescriptor -->>- SerializationService: number
+
+    
+
+
+
+

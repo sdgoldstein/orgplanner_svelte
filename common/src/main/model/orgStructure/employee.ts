@@ -1,4 +1,7 @@
 
+import type {
+    SerializableDescriptor, SerializationFormat, SerializationHelper, Serializer} from
+    "@src/jscore/serialization/serializationService";
 import {
     type OrgEntity,
     type OrgEntityPropertyBag,
@@ -9,6 +12,7 @@ import {
     PropertyCarrierHelper
 } from "./orgEntity";
 import type {Team} from "./team";
+import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
 
 class EmployeeReservedPropertyDescriptors
 {
@@ -143,6 +147,9 @@ abstract class BaseEmployee extends BasePerson implements Employee
 
 class BaseManager extends BaseEmployee implements Manager
 {
+    static readonly SERIALIZATION_DESCRIPTOR:
+        SerializableDescriptor<BaseManager> = {name : "BaseManager", objectVersion: 1};
+
     orgEntityType: OrgEntityType = OrgEntityTypes.MANAGER;
 
     constructor(id: string, name: string, title: string, managerId: string, team: Team,
@@ -164,6 +171,9 @@ class BaseManager extends BaseEmployee implements Manager
 
 class BaseIndividualContributor extends BaseEmployee implements IndividualContributor
 {
+    static readonly SERIALIZATION_DESCRIPTOR:
+        SerializableDescriptor<BaseIndividualContributor> = {name : "BaseIndividualContributor", objectVersion: 1};
+
     orgEntityType: OrgEntityType = OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR;
 
     constructor(id: string, name: string, title: string, managerId: string, team: Team,
@@ -181,6 +191,70 @@ class BaseIndividualContributor extends BaseEmployee implements IndividualContri
     {
         return new BaseIndividualContributor(this.id, this.name, this.title, this.managerId, this.team);
     }*/
+}
+
+class BasePersonSerializer extends BaseJSONSerializer<BasePerson> implements
+    Serializer<BasePerson, SerializationFormat.JSON>
+{
+    getValue(serializableObject: BasePerson,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = {};
+
+        valueToReturn["id"] = serializableObject.id;
+        valueToReturn["name"] = serializableObject.name;
+
+        // valueToReturn["properties"] =
+        //   super.serializeIterable(serializableObject.propertyIterator(), serializationHelper);
+
+        return valueToReturn;
+    }
+}
+
+class BaseEmployeeSerializer extends BasePersonSerializer implements Serializer<BaseEmployee, SerializationFormat.JSON>
+{
+    getValue(serializableObject: BaseEmployee,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = super.getValue(serializableObject, serializationHelper);
+
+        valueToReturn["title"] = serializableObject.title;
+        valueToReturn["managerId"] = serializableObject.managerId;
+        valueToReturn["teamId"] = serializableObject.team.id;
+
+        return valueToReturn;
+    }
+
+    deserialize(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): BaseEmployee
+    {
+        throw new Error("Method not implemented.");
+    }
+}
+
+class BaseManagerSerializer extends BaseEmployeeSerializer implements Serializer<BaseManager, SerializationFormat.JSON>
+{
+    getValue(serializableObject: BaseEmployee,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = super.getValue(serializableObject, serializationHelper);
+
+        valueToReturn["isManager"] = serializableObject.isManager().toString();
+
+        return valueToReturn;
+    }
+}
+class BaseIndividualContributorSerializer extends BaseEmployeeSerializer implements
+    Serializer<BaseIndividualContributor, SerializationFormat.JSON>
+{
+    getValue(serializableObject: BaseEmployee,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = super.getValue(serializableObject, serializationHelper);
+
+        valueToReturn["isManager"] = serializableObject.isManager().toString();
+
+        return valueToReturn;
+    }
 }
 
 /*class UnmodifiablePerson implements Person
@@ -305,5 +379,11 @@ class BaseIndividualContributor extends BaseEmployee implements IndividualContri
     }
 }*/
 
-export {BaseIndividualContributor, BaseManager, EmployeeReservedPropertyDescriptors};
+export {
+    BaseIndividualContributor,
+    BaseManager,
+    EmployeeReservedPropertyDescriptors,
+    BaseManagerSerializer,
+    BaseIndividualContributorSerializer,
+};
 export type{Person, Employee, Manager, IndividualContributor};
