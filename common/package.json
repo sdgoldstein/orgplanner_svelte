@@ -16,7 +16,7 @@
   },
   "scripts": {
     "build": "tsc --project tsconfig.json",
-    "generateOrgs": "npx tsx src/tools/typescript/runGenerateOrgTree.ts"
+    "generateOrgs": "npx tsx src/tools/typescript/runGenerateOrgTree.ts ./build/generated_orgs"
   },
   "devDependencies": {
     "typescript": "5.7.2",

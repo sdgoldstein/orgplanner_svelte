@@ -72,7 +72,7 @@ initServices();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const generatedDir = path.join(__dirname, "generated_orgs");
+const generatedDir = process.argv[2] || path.join(__dirname, "generated_orgs");
 if (!fs.existsSync(generatedDir))
 {
     fs.mkdirSync(generatedDir);
