@@ -1,14 +1,12 @@
-
-
+import type {OrgStructure} from "./orgStructure/orgStructure";
 import {
+    BaseJSONSerializer,
+    RegisterSerializer,
+    RegisterSerializable,
     SerializationFormat,
-    type Serializable,
-    type SerializableDescriptor,
     type SerializationHelper,
     type Serializer
-} from "@src/jscore/serialization/serializationService";
-import type {OrgStructure} from "./orgStructure/orgStructure";
-import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
+} from "orgplanner-common/jscore";
 
 interface OrgPlan
 {
@@ -21,18 +19,16 @@ interface OrgSnapshot
 }
 
 // Should this be a Mixin rather than an interface?
-interface OrgDataCore extends Serializable
+interface OrgDataCore
 {
     title: string;
     orgStructure: OrgStructure;
     clone(): OrgDataCore;
 }
 
+@RegisterSerializable("OrgDataCore", 1)
 class OrgDataCoreDefaultImpl implements OrgDataCore
 {
-    static readonly SERIALIZATION_DESCRIPTOR:
-        SerializableDescriptor<OrgDataCoreDefaultImpl> = {name : "OrgDataCoreDefaultImpl", objectVersion: 1};
-
     title: string;
     orgStructure: OrgStructure;
 
@@ -48,8 +44,8 @@ class OrgDataCoreDefaultImpl implements OrgDataCore
     }
 }
 
-class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer<OrgDataCoreDefaultImpl> implements
-    Serializer<OrgDataCoreDefaultImpl, SerializationFormat.JSON>
+@RegisterSerializer("OrgDataCore", SerializationFormat.JSON)
+class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
 {
     static readonly KEY: string = "organization";
 
@@ -69,9 +65,15 @@ class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer<OrgDataCoreDef
         return valueToReturn;
     }
 
-    deserialize(data: string): OrgDataCoreDefaultImpl
+    deserialize<T>(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
     {
-        throw new Error("Method not implemented.");
+        // tmp
+        let parsedObject: any = JSON.parse(data);
+
+        const title: string = parsedObject.title;
+        const orgStructure: OrgStructure = serializationHelper.deserialize(parsedObject.orgStructure);
+
+        return new OrgDataCoreDefaultImpl(title, orgStructure);
     }
 }
 

@@ -1,0 +1,26 @@
+{
+	"title": "6MSgxZHFHPKbu1cnKyVlK",
+	"orgStructure": {
+		"employees": [{
+			"id": "5c89059c-946b-4176-8338-1ac757c27531",
+			"name": "First Last",
+			"title": "Senior Vice President",
+			"managerId": "ROOT",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "true"
+		},
+		{
+			"id": "pMyw0",
+			"name": "0bZIGY XSq0Oi",
+			"title": "NuHYjP0L4m",
+			"managerId": "5c89059c-946b-4176-8338-1ac757c27531",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		}],
+		"teams": [{
+			"id": "NO_TEAM_ID",
+			"title": "-- No Team --",
+			"managerId": "ROOT"
+		}]
+	}
+}

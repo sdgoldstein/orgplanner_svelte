@@ -9,13 +9,13 @@ import type {OrgEntityPropertyBag, OrgEntityPropertyDescriptor} from "./orgEntit
 import type {OrgStructure, OrgStructureVisitor} from "./orgStructure";
 import {BaseTeam, type Team, TeamConstants} from "./team";
 import {
+    RegisterSerializable,
     SerializationFormat,
-    type Serializable,
-    type SerializableDescriptor,
     type SerializationHelper,
-    type Serializer
-} from "@src/jscore/serialization/serializationService";
-import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
+    type Serializer,
+    BaseJSONSerializer,
+    RegisterSerializer
+} from "orgplanner-common/jscore";
 
 class OrgStructureVisitorWrappingTreeVisitor extends TreeVisitor<string, Employee>
 {
@@ -75,11 +75,9 @@ class TeamMoveOrgStructureVisitor implements OrgStructureVisitor
 /**
  * A Tree based implementation of an OrgStructure
  */
-class TreeBasedOrgStructure implements OrgStructure, Serializable
+@RegisterSerializable("OrgStructure", 1)
+class TreeBasedOrgStructure implements OrgStructure
 {
-    static readonly SERIALIZATION_DESCRIPTOR:
-        SerializableDescriptor<TreeBasedOrgStructure> = {name : "TreeBasedOrgStructure", objectVersion: 1};
-
     private static readonly ROOT_MANAGER_ID: string = "ROOT";
 
     locked: boolean = false;
@@ -433,8 +431,8 @@ class TreeBasedOrgStructure implements OrgStructure, Serializable
     }
 }
 
-class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<TreeBasedOrgStructure> implements
-    Serializer<TreeBasedOrgStructure, SerializationFormat.JSON>
+@RegisterSerializer("OrgStructure", SerializationFormat.JSON)
+class TreeBasedOrgStructureSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
 {
     static readonly KEY: string = "orgStructure";
 

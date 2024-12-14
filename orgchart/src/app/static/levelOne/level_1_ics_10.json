@@ -1,0 +1,98 @@
+{
+	"title": "e5wlasO8S",
+	"orgStructure": {
+		"employees": [{
+			"id": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"name": "First Last",
+			"title": "Senior Vice President",
+			"managerId": "ROOT",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "true"
+		},
+		{
+			"id": "CT3qX",
+			"name": "Be8S4q VoWEzN",
+			"title": "FDaQ2xFctG",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "UGemj",
+			"name": "9IL0uN MoS0he",
+			"title": "OuBnk4FOcx",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "DmAUd",
+			"name": "gcdeds S56t3Y",
+			"title": "q407z52BCG",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "U3sw1",
+			"name": "m07HsE NuDa97",
+			"title": "12DWkfveP4",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "nwnke",
+			"name": "SPZbOR rBoaXn",
+			"title": "JfDKKK7GMK",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "SQ8gZ",
+			"name": "e7dXu7 jjMPYd",
+			"title": "bTK8HbeORm",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "MAfXK",
+			"name": "N0xF4w cDGVUe",
+			"title": "NiElz2O1ex",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "jEX4P",
+			"name": "vcjiyW mR9H2g",
+			"title": "QkyQmc9Fsx",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "pIE7B",
+			"name": "rd40QU QHTHIy",
+			"title": "wFvsRVKueH",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		},
+		{
+			"id": "DoXLH",
+			"name": "bPidF1 6uCToj",
+			"title": "vWwvCh94Yj",
+			"managerId": "5b222ea3-4868-4802-9f0c-94aee65523e5",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		}],
+		"teams": [{
+			"id": "NO_TEAM_ID",
+			"title": "-- No Team --",
+			"managerId": "ROOT"
+		}]
+	}
+}

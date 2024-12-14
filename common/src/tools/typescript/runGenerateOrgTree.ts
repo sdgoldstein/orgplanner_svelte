@@ -4,11 +4,13 @@ import {fileURLToPath} from "url";
 import {type OrgTreeDescriptor, OrgTreeGenerator} from "./OrgTreeGenerator";
 import {DefaultServiceManagerStrategyImpl, ServiceManager} from "@sphyrna/service-manager-ts";
 import {
-    SERIALIZATION_DICTIONARY_SERVICE_NAME,
     SERIALIZATION_SERVICE_NAME,
     SerializationServiceImpl,
-    SerializerDictionaryServiceImpl
 } from "@src/jscore/serialization/serializationService";
+import {
+    SERIALIZATION_DICTIONARY_SERVICE_NAME,
+    SerializerDictionaryServiceImpl
+} from "@src/jscore/serialization/serializationDictionary";
 
 interface MockOrgConfig
 {

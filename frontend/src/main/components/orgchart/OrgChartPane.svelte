@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Hello } from "orgplanner-orgchart";
     import OrgChart from "@src/components/orgchart/OrgChart.svelte";
     import OrgChartEditingToolbar from "@src/components/orgchart/toolbar/OrgChartEditingToolbar.svelte";
     import { OrgChartMode } from "@src/components/orgchart/orgChartViewState";
@@ -27,4 +26,3 @@
     {colorTheme}
     {propertyDescriptors}
 />
-<Hello />

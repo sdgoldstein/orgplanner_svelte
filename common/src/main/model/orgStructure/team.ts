@@ -1,8 +1,12 @@
-import {BaseJSONSerializer} from "@src/jscore/serialization/jsonSerializer";
 import {type OrgEntity, type OrgEntityType, OrgEntityTypes} from "./orgEntity";
-import type {
-    SerializableDescriptor, SerializationFormat, SerializationHelper, Serializer} from
-    "@src/jscore/serialization/serializationService";
+import {
+    BaseJSONSerializer,
+    RegisterSerializable,
+    RegisterSerializer,
+    SerializationFormat,
+    type SerializationHelper,
+    type Serializer
+} from "orgplanner-common/jscore";
 
 // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
 class TeamConstants
@@ -21,10 +25,9 @@ interface Team extends OrgEntity
     managerId: string; // FIXME - Should be Manager, but hard to do with TreeStructure and import/export
 }
 
+@RegisterSerializable("Team", 1)
 class BaseTeam implements Team
 {
-    static readonly SERIALIZATION_DESCRIPTOR: SerializableDescriptor<BaseTeam> = {name : "BaseTeam", objectVersion: 1};
-
     orgEntityType: OrgEntityType = OrgEntityTypes.TEAM;
 
     private readonly _id: string;
@@ -69,7 +72,8 @@ class BaseTeam implements Team
     }
 }
 
-class BaseTeamSerializer extends BaseJSONSerializer<BaseTeam> implements Serializer<BaseTeam, SerializationFormat.JSON>
+@RegisterSerializer("Team", SerializationFormat.JSON)
+class BaseTeamSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
 {
     getValue(serializableObject: BaseTeam,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>

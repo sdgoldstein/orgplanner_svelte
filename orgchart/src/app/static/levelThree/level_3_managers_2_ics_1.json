@@ -1,0 +1,42 @@
+{
+	"title": "dKb9SDjAVmCdgm3FAX",
+	"orgStructure": {
+		"employees": [{
+			"id": "7a825e65-d0a2-44b9-b4a4-52186538c946",
+			"name": "First Last",
+			"title": "Senior Vice President",
+			"managerId": "ROOT",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "true"
+		},
+		{
+			"id": "pbhsT",
+			"name": "fjuJJ7 xfPWH4",
+			"title": "4jwMPCmYzM",
+			"managerId": "7a825e65-d0a2-44b9-b4a4-52186538c946",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "true"
+		},
+		{
+			"id": "pUjJh",
+			"name": "TqgFxv odgEee",
+			"title": "qrhyIy7WiW",
+			"managerId": "pbhsT",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "true"
+		},
+		{
+			"id": "mf5eo",
+			"name": "5gVxOy iScx7l",
+			"title": "NAn4kjaTuo",
+			"managerId": "pUjJh",
+			"teamId": "NO_TEAM_ID",
+			"isManager": "false"
+		}],
+		"teams": [{
+			"id": "NO_TEAM_ID",
+			"title": "-- No Team --",
+			"managerId": "ROOT"
+		}]
+	}
+}

@@ -1,3 +1,4 @@
-import Hello from "@src/components/Hello.svelte";
+import OrgChart from "./components/orgchart/OrgChart.svelte"
+import {OrgChartMode} from "./components/orgchart/orgChartViewState"
 
-export {Hello};
+export {OrgChart, OrgChartMode}

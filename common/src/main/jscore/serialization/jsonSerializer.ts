@@ -1,14 +1,9 @@
 
-import {
-    SerializationFormat,
-    type Serializable,
-    type SerializationHelper,
-    type Serializer
-} from "./serializationService";
+import {SerializationFormat, type SerializationHelper, type Serializer} from "./serializationService";
 
-abstract class BaseJSONSerializer<T extends Serializable> implements Serializer<T, SerializationFormat.JSON>
+abstract class BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
 {
-    serialize(serializableObject: T, serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
+    serialize(serializableObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
     {
         let json = "{";
 
@@ -34,7 +29,7 @@ abstract class BaseJSONSerializer<T extends Serializable> implements Serializer<
 
         return json;
     }
-    protected serializeIterable(serializableIterator: IterableIterator<Serializable>,
+    protected serializeIterable(serializableIterator: IterableIterator<any>,
                                 serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
     {
         let json = "[";
@@ -58,12 +53,12 @@ abstract class BaseJSONSerializer<T extends Serializable> implements Serializer<
         return json;
     }
 
-    deserialize(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
+    deserialize<T>(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
     {
         throw new Error("Method not implemented.");
     }
 
-    abstract getValue(serializableObject: T,
+    abstract getValue(serializableObject: any,
                       serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>;
 
     private _serializeKey(key: string, value: string): string
