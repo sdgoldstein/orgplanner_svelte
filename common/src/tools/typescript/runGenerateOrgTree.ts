@@ -3,14 +3,8 @@ import * as path from "path";
 import {fileURLToPath} from "url";
 import {type OrgTreeDescriptor, OrgTreeGenerator} from "./OrgTreeGenerator";
 import {DefaultServiceManagerStrategyImpl, ServiceManager} from "@sphyrna/service-manager-ts";
-import {
-    SERIALIZATION_SERVICE_NAME,
-    SerializationServiceImpl,
-} from "@src/jscore/serialization/serializationService";
-import {
-    SERIALIZATION_DICTIONARY_SERVICE_NAME,
-    SerializerDictionaryServiceImpl
-} from "@src/jscore/serialization/serializationDictionary";
+import {SERIALIZATION_SERVICE_NAME} from "orgplanner-common/jscore";
+import {SerializationServiceImpl} from "orgplanner-common/jscore";
 
 interface MockOrgConfig
 {
@@ -23,8 +17,8 @@ function initServices()
     ServiceManager.setDefaultStrategy(serviceManagerStrategy);
 
     serviceManagerStrategy.registerSingletonService(SERIALIZATION_SERVICE_NAME, SerializationServiceImpl);
-    serviceManagerStrategy.registerSingletonService(SERIALIZATION_DICTIONARY_SERVICE_NAME,
-                                                    SerializerDictionaryServiceImpl);
+    // serviceManagerStrategy.registerSingletonService(SERIALIZATION_DICTIONARY_SERVICE_NAME,
+    //                                                 SerializerDictionaryServiceImpl);
 }
 
 function generateOrgsRecursive(currentInputDir: string, currentOutputDir: string): string[]

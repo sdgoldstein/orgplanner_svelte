@@ -1,11 +1,78 @@
 
-import {SerializationFormat, type SerializationHelper, type Serializer} from "./serializationService";
+import {BaseRootSerializer, SerializationHelperDefault} from "./rootSerializer";
+import {type SerializerDictionaryService, SerializerDictionaryServiceImpl} from "./serializationDictionary";
+import {
+    SerializationFormat,
+    type Serializable,
+    type SerializableDescriptor,
+    type SerializationHelper,
+    type SerializedTypeForSerializableFormat,
+    type Serializer
+} from "./serializationService";
 
-abstract class BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
+/****
+ * FIXME - This should be in jsonSerializer module, but the SerialializationServiceImpl references the root json
+ * serializer
+ */
+class JSONSerializationHelper extends SerializationHelperDefault<SerializationFormat.JSON> implements
+    SerializationHelper<SerializationFormat.JSON>
 {
-    serialize(serializableObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
+    constructor()
+    {
+        super(SerializationFormat.JSON);
+    }
+
+    deserialize<T>(data: SerializedTypeForSerializableFormat<SerializationFormat.JSON>): T
+    {
+        const parsedObject: any = JSON.parse(data);
+
+        return this.deserializeObject(parsedObject);
+    }
+
+    deserializeObject<T>(dataObject: any): T
+    {
+        const serializationDescriptor: SerializableDescriptor = dataObject.serializationDescriptor;
+
+        const dictionaryService: SerializerDictionaryService = SerializerDictionaryServiceImpl.getInstance();
+
+        // FIXME - is there a better way than casting here
+        const serializer: BaseJSONSerializer<T> =
+            dictionaryService.getSerializer(serializationDescriptor, SerializationFormat.JSON) as BaseJSONSerializer<T>;
+
+        return serializer.deserializeObject(dataObject, this);
+    }
+}
+
+class RootJSONSerializer extends BaseRootSerializer<SerializationFormat.JSON>
+{
+    createHelper(): SerializationHelper<SerializationFormat.JSON>
+    {
+        return new JSONSerializationHelper();
+    }
+}
+
+abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationFormat.JSON>
+{
+    serialize(serializableObject: Serializable,
+              serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
     {
         let json = "{";
+
+        const serializationDescriptor = serializableObject.getSerializableDescriptor();
+        json = this._addLineAndIndent(json, serializationHelper.depth);
+        let serializationDescriptorJSON = "{"
+        serializationDescriptorJSON =
+            this._addLineAndIndent(serializationDescriptorJSON, serializationHelper.depth + 1);
+        serializationDescriptorJSON += this._serializeKey("name", serializationDescriptor.name);
+        serializationDescriptorJSON += ","
+        serializationDescriptorJSON =
+            this._addLineAndIndent(serializationDescriptorJSON, serializationHelper.depth + 1);
+        serializationDescriptorJSON +=
+            this._serializeKey("objectVersion", serializationDescriptor.objectVersion.toString());
+        serializationDescriptorJSON = this._addLineAndIndent(serializationDescriptorJSON, serializationHelper.depth);
+        serializationDescriptorJSON += "},"
+
+        json += this._serializeKey("serializationDescriptor", serializationDescriptorJSON);
 
         const objectValue: Record<string, string> = this.getValue(serializableObject, serializationHelper);
 
@@ -53,10 +120,12 @@ abstract class BaseJSONSerializer implements Serializer<SerializationFormat.JSON
         return json;
     }
 
-    deserialize<T>(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
+    deserialize(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
     {
         throw new Error("Method not implemented.");
     }
+
+    abstract deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): T;
 
     abstract getValue(serializableObject: any,
                       serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>;
@@ -185,4 +254,4 @@ class JSONStringBuilder
     }
 }
 
-export {BaseJSONSerializer, JSONStringBuilder};
+export {BaseJSONSerializer, JSONStringBuilder, RootJSONSerializer, JSONSerializationHelper};

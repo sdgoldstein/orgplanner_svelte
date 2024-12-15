@@ -1,106 +1,312 @@
 {
-	"title": "WP6wVCt1S8dXUgfXYl",
+	"serializationDescriptor": {
+		"name": "OrgDataCore",
+		"objectVersion": "1"
+	},
+	"title": "ZWaaSCMY2tjM88DC7xxAmMI",
 	"orgStructure": {
-		"employees": [{
-			"id": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"name": "First Last",
-			"title": "Senior Vice President",
-			"managerId": "ROOT",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "true"
+		"serializationDescriptor": {
+			"name": "OrgStructure",
+			"objectVersion": "1"
 		},
-		{
-			"id": "uKKQp",
-			"name": "akUowS ATv2T8",
-			"title": "sGODPxv1S5",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "QU27d",
-			"name": "IrOzKI nA3Yz3",
-			"title": "Jm91jqFcZd",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "hfLH6",
-			"name": "PamS3K v29UEX",
-			"title": "1nIeclEH8d",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "WWRnj",
-			"name": "LkUOLa ig2vky",
-			"title": "9hdUJl0BXo",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "CStum",
-			"name": "9z3exX h42PZp",
-			"title": "SoNcz0vjgf",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "uPPsL",
-			"name": "bcdYcG fzydgz",
-			"title": "Prz9SFCfdv",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "tkqgu",
-			"name": "yayeiK aCdasX",
-			"title": "sO93gc6RpC",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "mCFjK",
-			"name": "tuGRsm 2QNxH0",
-			"title": "IgIjEQ4JVu",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "HAEcc",
-			"name": "ghjqIl Zrj6DY",
-			"title": "wCUM8T7kUg",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "7zqTh",
-			"name": "Z539VS 93mFel",
-			"title": "oOzozkdZ07",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "false"
-		},
-		{
-			"id": "Of7qL",
-			"name": "1k6lA3 Sq1ZK0",
-			"title": "6y3YQoyUIy",
-			"managerId": "48f98532-d0ed-49da-bc2b-c48eab0a0a79",
-			"teamId": "NO_TEAM_ID",
-			"isManager": "true"
-		}],
-		"teams": [{
-			"id": "NO_TEAM_ID",
-			"title": "-- No Team --",
-			"managerId": "ROOT"
-		}]
+		"employeePropertyDescriptors": [
+			{
+				"serializationDescriptor": {
+					"name": "OrgEntityPropertyDescriptor",
+					"objectVersion": "1"
+				},
+				"name": "PHONE_PROPERTY_DESCRIPTOR",
+				"title": "Phone",
+				"defaultValue": "999-999-9999",
+				"enabled": "true"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "OrgEntityPropertyDescriptor",
+					"objectVersion": "1"
+				},
+				"name": "LOCATION_PROPERTY_DESCRIPTOR",
+				"title": "Location",
+				"defaultValue": "San Francisco",
+				"enabled": "true"
+			}
+		],
+		"employees": [
+			{
+				"serializationDescriptor": {
+					"name": "Manager",
+					"objectVersion": "1"
+				},
+				"id": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"name": "First Last",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "San Francisco"
+					}
+				],
+				"title": "Senior Vice President",
+				"managerId": "ROOT",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "true"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "ixci0",
+				"name": "mxRb5O y5Z4h3",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "New York, NY"
+					}
+				],
+				"title": "Sct2YZ2yzR",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "gL5ow",
+				"name": "Z3k4gL lSXzZH",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "Austin, TX"
+					}
+				],
+				"title": "3a6W7rG2oJ",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "x8Lbh",
+				"name": "4N2NZf w63Se6",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "Austin, TX"
+					}
+				],
+				"title": "dr3EXwh248",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "k52QO",
+				"name": "xBQBv8 KIJkQ9",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "San Francisco, CA"
+					}
+				],
+				"title": "yq2moogrcW",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "NbP93",
+				"name": "PJ0rBb yTDgLP",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "New York, NY"
+					}
+				],
+				"title": "Ec86yjs9hn",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "Eccin",
+				"name": "WNiKUv Og4aec",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "New York, NY"
+					}
+				],
+				"title": "eCQbbmhyLm",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "SJiOG",
+				"name": "3uqzHi TIqsqd",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "New York, NY"
+					}
+				],
+				"title": "kyDdcnTQk8",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "DVdOk",
+				"name": "9bx8xw 9zduba",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "New York, NY"
+					}
+				],
+				"title": "ID8LoqdfkA",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "iTdYv",
+				"name": "meXrJ6 mp9IJd",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "San Francisco, CA"
+					}
+				],
+				"title": "LReGIyeO8a",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "IndividualContributor",
+					"objectVersion": "1"
+				},
+				"id": "3ZFiI",
+				"name": "dqtjAE SlrZPd",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "San Francisco, CA"
+					}
+				],
+				"title": "yUnk2KGOt9",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "false"
+			},
+			{
+				"serializationDescriptor": {
+					"name": "Manager",
+					"objectVersion": "1"
+				},
+				"id": "xfw4e",
+				"name": "0yUosa V7KAw3",
+				"properties": [
+					{
+						"name": "PHONE_PROPERTY_DESCRIPTOR",
+						"value": "999-999-9999"
+					},
+					{
+						"name": "LOCATION_PROPERTY_DESCRIPTOR",
+						"value": "Austin, TX"
+					}
+				],
+				"title": "tf93u0q8zk",
+				"managerId": "67020c8e-1eda-4ee4-b208-dd3f75ac9890",
+				"teamId": "NO_TEAM_ID",
+				"isManager": "true"
+			}
+		],
+		"teams": [
+			{
+				"serializationDescriptor": {
+					"name": "Team",
+					"objectVersion": "1"
+				},
+				"id": "NO_TEAM_ID",
+				"title": "-- No Team --",
+				"managerId": "ROOT"
+			}
+		]
 	}
 }

@@ -1,31 +1,90 @@
 {
-	"title": "dTuNUJw6TE6GveZ0Eg5YzL9m",
+	"serializationDescriptor": {
+		"name": "OrgDataCore",
+		"objectVersion": "1"
+	},
+	"title": "zmIPsQGwJAx9kJjF810",
 	"orgStructure": {
+		"serializationDescriptor": {
+			"name": "OrgStructure",
+			"objectVersion": "1"
+		},
+		"employeePropertyDescriptors": [{
+			"serializationDescriptor": {
+				"name": "OrgEntityPropertyDescriptor",
+				"objectVersion": "1"
+			},
+			"name": "PHONE_PROPERTY_DESCRIPTOR",
+			"title": "Phone",
+			"defaultValue": "999-999-9999",
+			"enabled": "true"
+		},
+		{
+			"serializationDescriptor": {
+				"name": "OrgEntityPropertyDescriptor",
+				"objectVersion": "1"
+			},
+			"name": "LOCATION_PROPERTY_DESCRIPTOR",
+			"title": "Location",
+			"defaultValue": "San Francisco",
+			"enabled": "true"
+		}],
 		"employees": [{
-			"id": "1872bfca-d30c-4e1e-9037-703146e6885a",
+			"serializationDescriptor": {
+				"name": "Manager",
+				"objectVersion": "1"
+			},
+			"id": "b6a9d411-6c63-4923-a9f9-84fd3bda6b5a",
 			"name": "First Last",
+			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
+"value":"999-999-9999"}
+,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
+"value":"San Francisco"}
+],
 			"title": "Senior Vice President",
 			"managerId": "ROOT",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "true"
 		},
 		{
-			"id": "dx3ly",
-			"name": "yRMFcn 2jCo9q",
-			"title": "fXR11SCbG8",
-			"managerId": "1872bfca-d30c-4e1e-9037-703146e6885a",
+			"serializationDescriptor": {
+				"name": "Manager",
+				"objectVersion": "1"
+			},
+			"id": "YCmQ5",
+			"name": "PYwPPj pNt2mz",
+			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
+"value":"999-999-9999"}
+,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
+"value":"New York, NY"}
+],
+			"title": "U0C89MP4cc",
+			"managerId": "b6a9d411-6c63-4923-a9f9-84fd3bda6b5a",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "true"
 		},
 		{
-			"id": "jk2LJ",
-			"name": "mu5dG9 3YYwqy",
-			"title": "oZ0VItymWz",
-			"managerId": "dx3ly",
+			"serializationDescriptor": {
+				"name": "IndividualContributor",
+				"objectVersion": "1"
+			},
+			"id": "JIRKk",
+			"name": "0FsaYd IfoLzO",
+			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
+"value":"999-999-9999"}
+,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
+"value":"New York, NY"}
+],
+			"title": "G2tu4WayYq",
+			"managerId": "YCmQ5",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "false"
 		}],
 		"teams": [{
+			"serializationDescriptor": {
+				"name": "Team",
+				"objectVersion": "1"
+			},
 			"id": "NO_TEAM_ID",
 			"title": "-- No Team --",
 			"managerId": "ROOT"

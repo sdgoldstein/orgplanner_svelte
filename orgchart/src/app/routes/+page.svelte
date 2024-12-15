@@ -31,7 +31,7 @@
         value: string;
     }): void {
         fetch(selected.value)
-            .then((response) => response.json())
+            .then((response) => response.text())
             .then((orgJSON) => {
                 const serializationService =
                     ServiceManager.getService<SerializationService>(

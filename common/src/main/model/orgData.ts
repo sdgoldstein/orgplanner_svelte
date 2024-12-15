@@ -5,7 +5,8 @@ import {
     RegisterSerializable,
     SerializationFormat,
     type SerializationHelper,
-    type Serializer
+    type Serializer,
+    JSONSerializationHelper
 } from "orgplanner-common/jscore";
 
 interface OrgPlan
@@ -45,7 +46,8 @@ class OrgDataCoreDefaultImpl implements OrgDataCore
 }
 
 @RegisterSerializer("OrgDataCore", SerializationFormat.JSON)
-class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
+class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer<OrgDataCore> implements
+    Serializer<OrgDataCore, SerializationFormat.JSON>
 {
     static readonly KEY: string = "organization";
 
@@ -65,13 +67,10 @@ class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer implements Ser
         return valueToReturn;
     }
 
-    deserialize<T>(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgDataCore
     {
-        // tmp
-        let parsedObject: any = JSON.parse(data);
-
-        const title: string = parsedObject.title;
-        const orgStructure: OrgStructure = serializationHelper.deserialize(parsedObject.orgStructure);
+        const title: string = dataObject.title;
+        const orgStructure: OrgStructure = serializationHelper.deserializeObject(dataObject.orgStructure);
 
         return new OrgDataCoreDefaultImpl(title, orgStructure);
     }

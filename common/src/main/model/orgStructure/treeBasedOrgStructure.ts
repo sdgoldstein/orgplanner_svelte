@@ -14,7 +14,8 @@ import {
     type SerializationHelper,
     type Serializer,
     BaseJSONSerializer,
-    RegisterSerializer
+    RegisterSerializer,
+    JSONSerializationHelper
 } from "orgplanner-common/jscore";
 
 class OrgStructureVisitorWrappingTreeVisitor extends TreeVisitor<string, Employee>
@@ -432,7 +433,8 @@ class TreeBasedOrgStructure implements OrgStructure
 }
 
 @RegisterSerializer("OrgStructure", SerializationFormat.JSON)
-class TreeBasedOrgStructureSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
+class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<OrgStructure> implements
+    Serializer<OrgStructure, SerializationFormat.JSON>
 {
     static readonly KEY: string = "orgStructure";
 
@@ -446,6 +448,9 @@ class TreeBasedOrgStructureSerializer extends BaseJSONSerializer implements Seri
     {
         const valueToReturn: Record<string, string> = {};
 
+        valueToReturn["employeePropertyDescriptors"] =
+            this.serializeIterable(serializableObject.employeePropertyIterator(), serializationHelper);
+
         const serializationTreeVisitor: SerializationTreeVisitor = new SerializationTreeVisitor(serializationHelper);
         serializableObject.traverseBF(serializationTreeVisitor);
 
@@ -455,6 +460,45 @@ class TreeBasedOrgStructureSerializer extends BaseJSONSerializer implements Seri
         valueToReturn["teams"] = this.serializeIterable(teamIterator, serializationHelper);
 
         return valueToReturn;
+    }
+
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgStructure
+    {
+        const propertyDescriptorsSet: Set < OrgEntityPropertyDescriptor >= new Set();
+        const propertyDescriptorMap: Map<string, OrgEntityPropertyDescriptor> = new Map();
+
+        for (let nextSerializedPropertyDescriptor of dataObject.employeePropertyDescriptors)
+        {
+            const nextPropertyDescriptor: OrgEntityPropertyDescriptor =
+                serializationHelper.deserializeObject(nextSerializedPropertyDescriptor);
+            propertyDescriptorsSet.add(nextPropertyDescriptor);
+            propertyDescriptorMap.set(nextPropertyDescriptor.name, nextPropertyDescriptor);
+        }
+
+        const orgStructureToReturn: TreeBasedOrgStructure = new TreeBasedOrgStructure(propertyDescriptorsSet);
+
+        // FIXME - This was the old way to import.  Consider recurive serialization using helper instead
+
+        // Add teams first.
+        const teams: any[] = dataObject.teams;
+        teams.forEach(
+            (nextTeam: any) => { orgStructureToReturn.importTeam(nextTeam.id, nextTeam.title, nextTeam.managerId); });
+
+        // Add Employees second
+        const employees: any[] = dataObject.employees;
+        employees.forEach((nextEmployee: any) => {
+            const properties = new Map();
+            for (const nextProperty of nextEmployee.properties)
+            {
+                properties.set(propertyDescriptorMap.get(nextProperty.name), nextProperty.value);
+            }
+
+            orgStructureToReturn.importEmployee(nextEmployee.id, nextEmployee.name, nextEmployee.jobTitle,
+                                                nextEmployee.managerId, nextEmployee.teamId, nextEmployee.isManager,
+                                                properties);
+        });
+
+        return orgStructureToReturn;
     }
 }
 

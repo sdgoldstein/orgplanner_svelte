@@ -1,3 +1,13 @@
+import {
+    BaseJSONSerializer,
+    RegisterSerializer,
+    RegisterSerializable,
+    SerializationFormat,
+    type SerializationHelper,
+    type Serializer,
+    JSONSerializationHelper
+} from "orgplanner-common/jscore";
+import {OrgDataCoreDefaultImplSerializer} from "../orgData";
 
 interface OrgEntityType
 {
@@ -130,6 +140,50 @@ interface OrgEntityPropertyDescriptor
     enabled: boolean;
 }
 
-export {OrgEntityTypes, PropertyCarrierHelper, EMPTY_PROPERTY_BAG};
+@RegisterSerializable("OrgEntityPropertyDescriptor", 1)
+class OrgEntityPropertyDescriptorImpl implements OrgEntityPropertyDescriptor
+{
+    constructor(public name: string, public title: string, public defaultValue: string, public enabled: boolean) {};
+}
+
+@RegisterSerializer("OrgEntityPropertyDescriptor", SerializationFormat.JSON)
+class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEntityPropertyDescriptor> implements
+    Serializer<OrgEntityPropertyDescriptor, SerializationFormat.JSON>
+{
+    static readonly KEY: string = "entityPropertyDescriptor";
+
+    getKey(): string
+    {
+        return OrgDataCoreDefaultImplSerializer.KEY;
+    }
+
+    getValue(serializableObject: OrgEntityPropertyDescriptorImpl,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const valueToReturn: Record<string, string> = {};
+
+        valueToReturn["name"] = serializableObject.name;
+        valueToReturn["title"] = serializableObject.title;
+        valueToReturn["defaultValue"] = serializableObject.defaultValue;
+        valueToReturn["enabled"] = serializableObject.enabled.toString();
+
+        return valueToReturn;
+    }
+
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgEntityPropertyDescriptor
+    {
+
+        return new OrgEntityPropertyDescriptorImpl(dataObject.name, dataObject.title, dataObject.defaultValue,
+                                                   dataObject.enabled);
+    }
+}
+
+export {
+    OrgEntityTypes,
+    PropertyCarrierHelper,
+    EMPTY_PROPERTY_BAG,
+    OrgEntityPropertyDescriptorImpl,
+    OrgEntityPropertyDescriptorImplSerializer
+};
 
 export type{OrgEntityPropertyBag, OrgEntity, OrgEntityType, OrgEntityPropertyDescriptor, OrgEntityPropertyCarrier};

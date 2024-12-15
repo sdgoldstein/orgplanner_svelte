@@ -11,11 +11,7 @@ import {
     TeamConstants,
     type OrgEntityPropertyDescriptor
 } from "orgplanner-common/model";
-import {
-    SerializationFormat,
-    SERIALIZATION_SERVICE_NAME,
-    type SerializationService
-} from "@src/jscore/serialization/serializationService";
+import {SerializationFormat, SERIALIZATION_SERVICE_NAME, type SerializationService} from "orgplanner-common/jscore";
 
 const DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS: Set<OrgEntityPropertyDescriptor> = new Set<OrgEntityPropertyDescriptor>(
     [ EmployeeReservedPropertyDescriptors.PHONE, EmployeeReservedPropertyDescriptors.LOCATION ]);

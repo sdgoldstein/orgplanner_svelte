@@ -4,6 +4,7 @@ import {
     type OrgEntityPropertyBag,
     type OrgEntityPropertyCarrier,
     type OrgEntityPropertyDescriptor,
+    OrgEntityPropertyDescriptorImpl,
     type OrgEntityType,
     OrgEntityTypes,
     PropertyCarrierHelper
@@ -24,10 +25,10 @@ class EmployeeReservedPropertyDescriptors
         new Map<string, OrgEntityPropertyDescriptor>();
 
     static readonly PHONE: OrgEntityPropertyDescriptor =
-        {name : "PHONE_PROPERTY_DESCRIPTOR", title: "Phone", defaultValue: "999-999-9999", enabled: true};
+        new OrgEntityPropertyDescriptorImpl("PHONE_PROPERTY_DESCRIPTOR", "Phone", "999-999-9999", true);
 
     static readonly LOCATION: OrgEntityPropertyDescriptor =
-        {name : "LOCATION_PROPERTY_DESCRIPTOR", title: "Location", defaultValue: "San Francisco", enabled: true};
+        new OrgEntityPropertyDescriptorImpl("LOCATION_PROPERTY_DESCRIPTOR", "Location", "San Francisco", true);
 
     static
     {
@@ -196,8 +197,12 @@ class BaseIndividualContributor extends BaseEmployee implements IndividualContri
 }
 
 @RegisterSerializer("Person", SerializationFormat.JSON)
-class BasePersonSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
+class BasePersonSerializer extends BaseJSONSerializer<Person> implements Serializer<Person, SerializationFormat.JSON>
 {
+    deserializeObject(dataObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): Person
+    {
+        throw new Error("Method not implemented.");
+    }
     getValue(serializableObject: BasePerson,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
     {
@@ -206,15 +211,34 @@ class BasePersonSerializer extends BaseJSONSerializer implements Serializer<Seri
         valueToReturn["id"] = serializableObject.id;
         valueToReturn["name"] = serializableObject.name;
 
-        // valueToReturn["properties"] =
-        //   super.serializeIterable(serializableObject.propertyIterator(), serializationHelper);
+        // FIXME - This is SO BAD.  Copying from iterable because I don't know what else to do at this point
+        let json = "[";
+
+        const serializableIterator = serializableObject.propertyIterator();
+        let nextSerializable = serializableIterator.next();
+        while (!nextSerializable.done)
+        {
+            json += `{"name":"${nextSerializable.value[0].name}",\n`;
+            json += `"value":"${nextSerializable.value[1]}"}\n`;
+
+            nextSerializable = serializableIterator.next();
+
+            if (!nextSerializable.done)
+            {
+                json += ",";
+            }
+        }
+
+        json += "]";
+
+        valueToReturn["properties"] = json;
 
         return valueToReturn;
     }
 }
 
 @RegisterSerializer("Employee", SerializationFormat.JSON)
-class BaseEmployeeSerializer extends BasePersonSerializer implements Serializer<SerializationFormat.JSON>
+class BaseEmployeeSerializer extends BasePersonSerializer implements Serializer<Employee, SerializationFormat.JSON>
 {
     getValue(serializableObject: BaseEmployee,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
@@ -227,10 +251,15 @@ class BaseEmployeeSerializer extends BasePersonSerializer implements Serializer<
 
         return valueToReturn;
     }
+
+    deserialize(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): Employee
+    {
+        throw new Error("Method not implememtned");
+    }
 }
 
 @RegisterSerializer("Manager", SerializationFormat.JSON)
-class BaseManagerSerializer extends BaseEmployeeSerializer implements Serializer<SerializationFormat.JSON>
+class BaseManagerSerializer extends BaseEmployeeSerializer implements Serializer<Manager, SerializationFormat.JSON>
 {
     getValue(serializableObject: BaseEmployee,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
@@ -241,10 +270,16 @@ class BaseManagerSerializer extends BaseEmployeeSerializer implements Serializer
 
         return valueToReturn;
     }
+
+    deserializeObject(dataObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): Person
+    {
+        throw new Error("Method not implemented.");
+    }
 }
 
 @RegisterSerializer("IndividualContributor", SerializationFormat.JSON)
-class BaseIndividualContributorSerializer extends BaseEmployeeSerializer implements Serializer<SerializationFormat.JSON>
+class BaseIndividualContributorSerializer extends BaseEmployeeSerializer implements
+    Serializer<IndividualContributor, SerializationFormat.JSON>
 {
     getValue(serializableObject: BaseEmployee,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
@@ -254,6 +289,11 @@ class BaseIndividualContributorSerializer extends BaseEmployeeSerializer impleme
         valueToReturn["isManager"] = serializableObject.isManager().toString();
 
         return valueToReturn;
+    }
+
+    deserializeObject(dataObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): Person
+    {
+        throw new Error("Method not implemented.");
     }
 }
 

@@ -73,8 +73,12 @@ class BaseTeam implements Team
 }
 
 @RegisterSerializer("Team", SerializationFormat.JSON)
-class BaseTeamSerializer extends BaseJSONSerializer implements Serializer<SerializationFormat.JSON>
+class BaseTeamSerializer extends BaseJSONSerializer<Team> implements Serializer<Team, SerializationFormat.JSON>
 {
+    deserializeObject(dataObject: any, serializationHelper: SerializationHelper<SerializationFormat.JSON>): Team
+    {
+        throw new Error("Method not implemented.");
+    }
     getValue(serializableObject: BaseTeam,
              serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
     {
