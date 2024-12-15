@@ -4,6 +4,7 @@
         type OrgStructure,
         type OrgEntityPropertyDescriptor,
         type OrgDataCore,
+        EmployeeReservedPropertyDescriptors,
     } from "orgplanner-common/model";
 
     import type { PageData } from "./$types";
@@ -19,11 +20,17 @@
 
     let { data }: { data: PageData } = $props();
 
-    let selectedOrg = $state();
-    let orgStructure: OrgStructure = $state();
+    let selectedOrg = $state({
+        value: data.orgList[0],
+        label: data.orgList[0],
+    });
+    let orgStructure: OrgStructure | undefined = $state();
     let mode: OrgChartMode = $state(OrgChartMode.PLANNING);
     let colorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
-    let propertyDescriptors = new Set<OrgEntityPropertyDescriptor>();
+    let propertyDescriptors = new Set<OrgEntityPropertyDescriptor>([
+        EmployeeReservedPropertyDescriptors.PHONE,
+        EmployeeReservedPropertyDescriptors.LOCATION,
+    ]);
 
     function loadSelectedOrg(selected: {
         disabled: boolean;
@@ -47,6 +54,10 @@
                 orgStructure = orgDataCore.orgStructure;
             });
     }
+
+    $effect(() => {
+        loadSelectedOrg({ ...selectedOrg, disabled: false });
+    });
 </script>
 
 <Form id="orglist_form">
@@ -64,4 +75,6 @@
     </Select>
 </Form>
 
-<OrgChart {orgStructure} {mode} {colorTheme} {propertyDescriptors} />
+{#if orgStructure}
+    <OrgChart {orgStructure} {mode} {colorTheme} {propertyDescriptors} />
+{/if}

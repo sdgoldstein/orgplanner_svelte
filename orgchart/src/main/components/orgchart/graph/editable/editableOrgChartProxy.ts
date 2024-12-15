@@ -77,39 +77,55 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
     {
         if (!this._currentGraph)
         {
-            this._propertyDescriptors = orgChartProps.propertyDescriptors;
-            this._orgStructure = orgChartProps.orgStructure;
-            this._colorTheme = orgChartProps.colorTheme;
-            this._mode = orgChartProps.mode;
-
-            const orgChartTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
-            const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
-            this._currentGraph =
-                new EditableOrgChartMaxGraph(this._chartContainer, this._orgStructure, orgChartTheme, visibiltyState);
-
-            this._currentGraph.renderGraph();
+            this._createGraphAndRender(orgChartProps);
         }
         else
         {
-            const savedCurrentGraph = this._currentGraph;
-            this._currentGraph.batchUpdate(() => {
-                /*if (orgChartProps.orgStructure != this._orgStructure)
-                {
-                    this._orgStructure = orgChartProps.orgStructure;
-                    savedCurrentGraph.orgStructure = this._orgStructure;
-                }
-                if (orgChartProps.propertyDescriptors != this._propertyDescriptors)
-                {
-                    this._propertyDescriptors = orgChartProps.propertyDescriptors;
-                    savedCurrentGraph.visibilityState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
-                }*/
-                if (orgChartProps.colorTheme != this._colorTheme)
-                {
-                    this._colorTheme = orgChartProps.colorTheme;
-                    savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
-                }
-            })
+            if (orgChartProps.orgStructure != this._orgStructure)
+            {
+                this._createGraphAndRender(orgChartProps);
+            }
+            else
+            {
+                const savedCurrentGraph = this._currentGraph;
+                this._currentGraph.batchUpdate(() => {
+                    /* if (orgChartProps.orgStructure != this._orgStructure)
+                     {
+                         this._orgStructure = orgChartProps.orgStructure;
+                         savedCurrentGraph.orgStructure = this._orgStructure;
+                     }
+                     if (orgChartProps.propertyDescriptors != this._propertyDescriptors)
+                     {
+                         this._propertyDescriptors = orgChartProps.propertyDescriptors;
+                         savedCurrentGraph.visibilityState =
+                             new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
+                     }*/
+                    if (orgChartProps.colorTheme != this._colorTheme)
+                    {
+                        this._colorTheme = orgChartProps.colorTheme;
+                        savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
+                    }
+                })
+            }
         }
+    }
+
+    private _createGraphAndRender(orgChartProps: OrgChartProps)
+    {
+        // Clear our container
+        this._chartContainer.innerHTML = "";
+
+        this._propertyDescriptors = orgChartProps.propertyDescriptors;
+        this._orgStructure = orgChartProps.orgStructure;
+        this._colorTheme = orgChartProps.colorTheme;
+        this._mode = orgChartProps.mode;
+
+        const orgChartTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
+        const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
+        this._currentGraph =
+            new EditableOrgChartMaxGraph(this._chartContainer, this._orgStructure, orgChartTheme, visibiltyState);
+
+        this._currentGraph.renderGraph();
     }
 
     onEvent(eventName: string, event: PubSubEvent): void

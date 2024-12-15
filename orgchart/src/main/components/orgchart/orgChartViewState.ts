@@ -31,23 +31,23 @@ interface OrgChartEntityVisibleState
 
 class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 {
-    private _viewState: Map<ViewToggableEntity, boolean> = new Map();
+    private _viewState: Map<string, boolean> = new Map();
 
     constructor(propertyDescriptors: Set<OrgEntityPropertyDescriptor>)
     {
-        this._viewState.set(OrgEntityTypes.MANAGER, true);
-        this._viewState.set(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR, true);
-        this._viewState.set(OrgEntityTypes.TEAM, true);
+        this._viewState.set(OrgEntityTypes.MANAGER.name, true);
+        this._viewState.set(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR.name, true);
+        this._viewState.set(OrgEntityTypes.TEAM.name, true);
 
         for (const nextPropertyDescriptor of propertyDescriptors)
         {
-            this._viewState.set(nextPropertyDescriptor, true)
+            this._viewState.set(nextPropertyDescriptor.name, true)
         }
     }
 
     isVisible(entity: ViewToggableEntity): boolean
     {
-        const valueToReturn = this._viewState.get(entity);
+        const valueToReturn = this._viewState.get(entity.name);
         if (valueToReturn === undefined)
         {
             throw new Error("Invalid parameter, " + entity);
@@ -57,7 +57,7 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 
     setVisible(entity: ViewToggableEntity, visible: boolean): void
     {
-        this._viewState.set(entity, visible);
+        this._viewState.set(entity.name, visible);
     }
 
     iterator(): IterableIterator<ViewToggableEntity>
