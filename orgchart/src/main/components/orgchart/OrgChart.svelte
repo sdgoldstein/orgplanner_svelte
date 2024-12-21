@@ -19,7 +19,7 @@
 
     let {
         orgStructure,
-        mode = OrgChartMode.PLANNING,
+        mode = OrgChartMode.EDIT,
         colorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME,
         propertyDescriptors = new Set<OrgEntityPropertyDescriptor>(),
     }: OrgChartProps = $props();
@@ -44,6 +44,7 @@
             throw new Error("orgChartHelper undefined in $effect");
         }
         if (width > 0) {
+            // FIXME - Mode change requires swap of proxy?
             orgChartHelper.onUpdate({
                 orgStructure,
                 mode,

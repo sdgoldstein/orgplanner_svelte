@@ -68,7 +68,7 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
 
 enum OrgChartMode {
     READ_ONLY = "READ_ONLY",
-    PLANNING = "PLANNING",
+    EDIT = "EDIT",
     PRINT = "PRINT"
 }
 

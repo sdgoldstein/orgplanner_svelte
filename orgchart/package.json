@@ -37,7 +37,8 @@
 		"svelte": "^5.0.0"
 	},
 	"dependencies": {
-		"@maxgraph/core": "0.14.0"
+		"@maxgraph/core": "0.14.0",
+		"lucide-svelte": "0.468.0"
 	},
 	"devDependencies": {
 		"@sphyrna/service-manager-ts": "0.3.7",

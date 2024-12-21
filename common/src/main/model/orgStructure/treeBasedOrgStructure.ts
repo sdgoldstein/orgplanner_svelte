@@ -494,8 +494,8 @@ class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<OrgStructure> i
             }
 
             orgStructureToReturn.importEmployee(nextEmployee.id, nextEmployee.name, nextEmployee.jobTitle,
-                                                nextEmployee.managerId, nextEmployee.teamId, nextEmployee.isManager,
-                                                properties);
+                                                nextEmployee.managerId, nextEmployee.teamId,
+                                                nextEmployee.isManager == "true", properties);
         });
 
         return orgStructureToReturn;
