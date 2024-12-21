@@ -1,8 +1,5 @@
 
-import {
-    DefaultServiceManagerStrategyImpl,
-    ServiceManager} from "@sphyrna/service-manager-ts";
-
+import {DefaultServiceManagerStrategyImpl, ServiceManager} from "@sphyrna/service-manager-ts";
 import {OrgPlannerManager} from "@src/model/orgPlanner";
 import {BrowserBasedFileService} from "orgplanner-common/jscore";
 
@@ -12,9 +9,6 @@ import {LocalStorageDataService} from "./data/localStorageDataService";
 import {OrgPlannerExportServiceDefaultImpl} from "./import/orgPlannerExportService";
 import {TreeBasedOrgPlannerImportService} from "./import/orgPlannerImportService";
 import {OrgPlannerAppServicesConstants} from "./orgPlannerAppServicesConstants";
-import {
-    OrgChartMaxGraphAssemblyServiceImpl
-} from "@src/components/orgchart/graph/common/assembly/orgChartMaxGraphAssemblyServiceImpl";
 
 class OrgPlannerAppServices
 {
@@ -59,8 +53,10 @@ class OrgPlannerAppServices
                                                         TreeBasedOrgPlannerImportService);
         serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_PLANNER_EXPORT_SERVICE,
                                                         OrgPlannerExportServiceDefaultImpl);
-        serviceManagerStrategy.registerSingletonService(
-            OrgPlannerAppServicesConstants.ORG_CHART_MAX_GRAPH_ASSEMBLY_SERVICE, OrgChartMaxGraphAssemblyServiceImpl);
+
+        // serviceManagerStrategy.registerSingletonService(
+        //      OrgPlannerAppServicesConstants.ORG_CHART_MAX_GRAPH_ASSEMBLY_SERVICE,
+        //      OrgChartMaxGraphAssemblyServiceImpl);
     }
 }
 

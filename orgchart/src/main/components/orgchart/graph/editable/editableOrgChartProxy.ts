@@ -20,7 +20,6 @@ import {
     ViewToggableEntityToggledEvent,
 } from "../../orgChartViewState";
 import type {OrgChartProps, OrgChartProxy} from "../model/orgChartProxy";
-import type {OrgChartMaxGraph} from "../model/orgChartMaxGraph";
 import {OrgChartEvents} from "../../OrgChartEvents";
 
 /**

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import OrgChart from "@src/components/orgchart/OrgChart.svelte";
     import OrgChartEditingToolbar from "@src/components/orgchart/toolbar/OrgChartEditingToolbar.svelte";
-    import { OrgChartMode } from "@src/components/orgchart/orgChartViewState";
+
     import { type OrgPlannerColorThemableComponentProps } from "@src/components/theme.js";
     import type { OrgStructure } from "orgplanner-common/model";
     import type { OrgPlannerSettings } from "@src/model/orgPlanner";
+    import { OrgChart, OrgChartMode } from "orgplanner-orgchart";
 
     interface OrgChartPaneProps extends OrgPlannerColorThemableComponentProps {
         orgStructure: OrgStructure;
@@ -22,7 +22,7 @@
 <OrgChart
     data-id="org_chart"
     {orgStructure}
-    mode={OrgChartMode.PLANNING}
+    mode={OrgChartMode.EDIT}
     {colorTheme}
     {propertyDescriptors}
 />

@@ -23,7 +23,7 @@
         type NewEditEmployeeModalMode,
         NewEditEmployeeModalModes,
     } from "../orgchart/modal/NewEditEmployeeModal.svelte";
-    import { PrintableOrgChartProxy } from "../orgchart/graph/printable/printableOrgChartProxy";
+    import { PrintableOrgChartProxy } from "orgplanner-orgchart";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -158,6 +158,7 @@
             if (!saveAsImageChartContainer) {
                 throw new Error("saveAsImageChartContainer undefined in mount");
             }
+            // FIXME - Could we avoid accessing tghe proxy directly and intead create a component here?
             const printableOrgChart = new PrintableOrgChartProxy(
                 saveAsImageChartContainer,
                 orgStructure,
