@@ -9,7 +9,7 @@ import {
     InternalEvent
 } from "@maxgraph/core";
 import {BaseService, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
-import type {Employee, IndividualContributor, Manager} from "orgplanner-common/model";
+import {OrgEntityTypes, type Employee, type IndividualContributor, type Manager} from "orgplanner-common/model";
 
 import {
     OrgPlannerChartEmployeeVertex,
@@ -258,11 +258,22 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         cell.isVisibleOriginal = isVisibleOriginal;
 
         cell.isVisible = () => {
-            const cellValue = cell.getValue();
-            const visiblityToReturn =
-                cellValue && visibilityState.isVisible(cellValue.orgEntity.orgEntityType) && cell.isVisibleOriginal();
+            let visibilityToReturn = false;
 
-            return visiblityToReturn;
+            const cellValue = cell.getValue();
+            if (cellValue)
+            {
+                const cellOrgEntityType = cellValue.orgEntity.orgEntityType
+                visibilityToReturn = visibilityState.isVisible(cellOrgEntityType) && cell.isVisibleOriginal();
+
+                if (cellOrgEntityType === OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR)
+                {
+                    visibilityToReturn &&= (visibilityState.isVisible(OrgEntityTypes.MANAGER) ||
+                                            visibilityState.isVisible(OrgEntityTypes.TEAM));
+                }
+            }
+
+            return visibilityToReturn;
         }
     }
 
