@@ -5,6 +5,7 @@
         type OrgEntityPropertyDescriptor,
         type OrgDataCore,
         EmployeeReservedPropertyDescriptors,
+        OrgEntityTypes,
     } from "orgplanner-common/model";
 
     import type { PageData } from "./$types";
@@ -19,15 +20,19 @@
         SelectOption,
     } from "@sphyrna/uicomponents";
     import OrgChart from "@src/components/orgchart/OrgChart.svelte";
-    import { OrgChartMode } from "@src/components/orgchart/orgChartViewState";
+    import {
+        OrgChartMode,
+        ViewToggableEntityToggledEvent,
+        type ViewToggableEntity,
+    } from "@src/components/orgchart/orgChartViewState";
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
+        PubSubManager,
         SERIALIZATION_SERVICE_NAME,
         SerializationFormat,
         type SerializationService,
     } from "orgplanner-common/jscore";
     import { ChevronLeft, ChevronRight } from "lucide-svelte";
-    import { goto } from "$app/navigation";
 
     let { data }: { data: PageData } = $props();
 
@@ -43,12 +48,38 @@
     let colorThemeName: string = $state(
         OrgEntityColorThemes.DEEP_BLUE_THEME.name,
     );
+    let colorVariant = "primary";
+    let dynamicColorTheme = $derived.by(() => {
+        let managerColorAssignment = OrgEntityColorThemes.getColorThemeByName(
+            colorThemeName,
+        ).getColorAssignment(OrgEntityTypes.MANAGER);
+        return {
+            colorThemes: new Map([
+                [
+                    "primary",
+                    {
+                        coreColor: managerColorAssignment.primary,
+                        textColor: managerColorAssignment.textOnPrimary,
+                    },
+                ],
+            ]),
+        };
+    });
+
     let orgStructure: OrgStructure | undefined = $state();
 
     let propertyDescriptors = new Set<OrgEntityPropertyDescriptor>([
         EmployeeReservedPropertyDescriptors.PHONE,
         EmployeeReservedPropertyDescriptors.LOCATION,
     ]);
+
+    function toggleVisibility(entity: ViewToggableEntity, isVisibile: boolean) {
+        const visibilityChangeEvent = new ViewToggableEntityToggledEvent(
+            entity,
+            isVisibile,
+        );
+        PubSubManager.instance.fireEvent(visibilityChangeEvent);
+    }
 
     function onModeChange(newMode: string) {
         // goto does not seem to change state
@@ -134,18 +165,64 @@
                 >{OrgEntityColorThemes.DEEP_GREEN_THEME.label}</RadioGroupOption
             >
         </RadioGroup>
-        <Checkbox onclick={() => alert("clicked")}>Show/Hide Teams</Checkbox>
-        <Checkbox onclick={() => alert("clicked")}>Show/Hide Managers</Checkbox>
-        <Checkbox onclick={() => alert("clicked")}>Show/Hide ICs</Checkbox>
-        <Checkbox onclick={() => alert("clicked")}
-            >Show/Hide Team Property</Checkbox
+        <Checkbox
+            id="teamVisibilityCheckbox_input_id"
+            name="teamVisibilityCheckbox_name_id"
+            {colorVariant}
+            {dynamicColorTheme}
+            onValueChange={(checked) => {
+                toggleVisibility(OrgEntityTypes.TEAM, checked);
+            }}>Show/Hide Teams</Checkbox
+        >
+        <Checkbox
+            id="managerVisibilityCheckbox_input_id"
+            name="managerVisibilityCheckbox_name_id"
+            {colorVariant}
+            {dynamicColorTheme}
+            checked
+            onValueChange={(checked) => {
+                toggleVisibility(OrgEntityTypes.MANAGER, checked);
+            }}>Show/Hide Managers</Checkbox
+        >
+        <Checkbox
+            id="icVisibilityCheckbox_input_id"
+            name="icVisibilityCheckbox_name_id"
+            {colorVariant}
+            {dynamicColorTheme}
+            checked
+            onValueChange={(checked) => {
+                toggleVisibility(
+                    OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                    checked,
+                );
+            }}>Show/Hide ICs</Checkbox
+        >
+        <Checkbox
+            id="teamPropertyVisibilityCheckbox_input_id"
+            name="teamPropertyVisibilityCheckbox_name_id"
+            {colorVariant}
+            checked
+            {dynamicColorTheme}>Show/Hide Team Property</Checkbox
         >
         {#each propertyDescriptors as nextPropertyDescriptor: OrgEntityPropertyDescriptor}
-            <Checkbox onclick={() => alert("clicked")}
-                >Show/Hide {nextPropertyDescriptor.title}</Checkbox
+            <Checkbox
+                id={`${nextPropertyDescriptor.title}PropertyVisibilityCheckbox_input_id`}
+                name={`${nextPropertyDescriptor.title}PropertyVisibilityCheckbox_name_id`}
+                {colorVariant}
+                {dynamicColorTheme}
+                checked
+                onValueChange={(checked) => {
+                    toggleVisibility(nextPropertyDescriptor, checked);
+                }}>Show/Hide {nextPropertyDescriptor.title}</Checkbox
             >
         {/each}
-        <Checkbox onclick={() => alert("clicked")}
+        <Checkbox
+            id="phonePropertyVisibilityCheckbox_input_id"
+            name="phonePropertyVisibilityCheckbox_name_id"
+            {colorVariant}
+            {dynamicColorTheme}
+            checked
+            onValueChange={() => alert("clicked")}
             >Add/Remove Phone Property</Checkbox
         >
     </div>

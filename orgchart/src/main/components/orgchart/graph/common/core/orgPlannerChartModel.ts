@@ -1,35 +1,20 @@
 import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {Cell, GraphDataModel} from "@maxgraph/core";
+import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
 import type {Employee, IndividualContributor, Manager, OrgEntity, Team} from "orgplanner-common/model";
 
 class OrgPlannerChartModel extends GraphDataModel
 {
-    public static readonly IC_MODE = "IC_MODE";
-    public static readonly TEAM_MODE = "TEAM_MODE";
-
-    private currentMode = OrgPlannerChartModel.IC_MODE;
-
-    constructor()
+    constructor(private _visibilityState: OrgChartEntityVisibleState)
     {
         super();
     }
 
     isVisible(cell: Cell): boolean
     {
-        let visiblityToReturn = true;
-
-        // FIX ME - Refactor horrible code
         const cellValue = cell.getValue();
-        if ((cellValue) &&
-            (((cellValue.getVertexType() == VertexType.TEAM) && (this.currentMode != OrgPlannerChartModel.TEAM_MODE)) ||
-             ((cellValue.getVertexType() == VertexType.IC) && (this.currentMode != OrgPlannerChartModel.IC_MODE))))
-        {
-            visiblityToReturn = false;
-        }
-        else
-        {
-            visiblityToReturn = cell.isVisible();
-        }
+        const visiblityToReturn =
+            cellValue && this._visibilityState.isVisible(cellValue.orgEntity.orgEntityType) && cell.isVisible();
 
         return visiblityToReturn;
     }
@@ -46,20 +31,6 @@ class OrgPlannerChartModel extends GraphDataModel
         }
 
         return isLeafNode;
-    }
-
-    toggleTeamMode()
-    {
-        this.beginUpdate();
-        if (this.currentMode === OrgPlannerChartModel.IC_MODE)
-        {
-            this.currentMode = OrgPlannerChartModel.TEAM_MODE;
-        }
-        else
-        {
-            this.currentMode = OrgPlannerChartModel.IC_MODE;
-        }
-        this.endUpdate();
     }
 }
 

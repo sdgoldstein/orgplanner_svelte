@@ -19,6 +19,11 @@ interface OrgStructure
      */
     orgStatistics: OrgStatistics;
 
+    /**
+     * The root team of this org structure
+     */
+    readonly rootTeam: Team;
+
     /*
      * The leader of this org
      */
@@ -125,15 +130,21 @@ interface OrgStructure
     removeEmployees(employeesToRemove: Employee[]): void;
 
     /**
-     * Create a new Employee and add it to the org structure
+     * Create the org leader of this org structure
      */
-    createOrgLeader(name: string, title: string, teamId: string, properties: OrgEntityPropertyBag): Manager;
+    createOrgLeader(name: string, title: string, properties: OrgEntityPropertyBag): Manager;
 
     /**
      * Create a new Employee and add it to the org structure
      */
     createEmployee(name: string, title: string, managerId: string, teamId: string, isManager: boolean,
                    properties: OrgEntityPropertyBag): Employee;
+
+    /**
+     * Create the root team of this org structure
+     * @param newTeamTitle
+     */
+    createRootTeam(newTeamTitle: string): Team;
 
     /**
      * Create a new team and add it to the org structure

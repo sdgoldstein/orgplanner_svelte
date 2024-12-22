@@ -1,5 +1,4 @@
-import type {OrgStructure, OrgEntityColorTheme} from "orgplanner-common/model";
-import type {OrgEntityPropertyDescriptor} from "../../../../../../../common/src/main/model/orgStructure/orgEntity";
+import type {OrgEntityPropertyDescriptor, OrgStructure, OrgEntityColorTheme} from "orgplanner-common/model";
 import type {OrgChartMode} from "../../orgChartViewState";
 
 interface OrgChartProps

@@ -14,7 +14,7 @@ import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphThemeDefault} from "../common/themes/orgChartMaxGraphThemeDefault";
 import type {OrgChartMaxGraph} from "../model/orgChartMaxGraph";
 import type {OrgChartMaxGraphAssemblyService} from "../model/orgChartMaxGraphAssemblyService";
-import { OrgChartMaxGraphAssemblyServiceImpl } from "../common/assembly/orgChartMaxGraphAssemblyServiceImpl";
+import {OrgChartMaxGraphAssemblyServiceImpl} from "../common/assembly/orgChartMaxGraphAssemblyServiceImpl";
 
 /**
  * A visitor used to apply logic while traversing the nodes of the graph
@@ -125,7 +125,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
     constructor(_element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
                 private _visibilityState: OrgChartEntityVisibleState)
     {
-        super(_element, new OrgPlannerChartModel());
+        super(_element, new OrgPlannerChartModel(_visibilityState));
 
         this.orgChartMaxGraphAssemblyService = new OrgChartMaxGraphAssemblyServiceImpl();
 
@@ -352,8 +352,13 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     onVisibilityUpdate(entity: ViewToggableEntity, isVisible: boolean)
     {
+        this._visibilityState.setVisible(entity, isVisible);
+
+        // FIXME - Do we have to rehydrate for every visibility change?  It's expensive
+        this.rehydrate();
+
         // the label has changed, so resize all cells.  The resize will, in turn, redraw the cells
-        this._layout?.traverse({
+        /*this._layout?.traverse({
             vertex : this.rootCell,
             directed : true,
             func : (vertex: Cell) => {
@@ -364,7 +369,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
             },
             edge : null,
             visited : null
-        });
+        });*/
     }
 
     private populateGraph(): void

@@ -79,14 +79,18 @@ class TeamMoveOrgStructureVisitor implements OrgStructureVisitor
 @RegisterSerializable("OrgStructure", 1)
 class TreeBasedOrgStructure implements OrgStructure
 {
-    private static readonly ROOT_MANAGER_ID: string = "ROOT";
+    private static readonly ROOT_ID: string = "ROOT_ID";
 
     locked: boolean = false;
 
     orgStatistics: OrgStatistics;
 
-    private _orgLeader: Employee|undefined;
     private _employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>;
+
+    // This is set in the constructor, but Typescruipt doesn't recognize this, so we need to add
+    // undefined to the type list
+    private _orgLeader: Manager|undefined;
+    private _rootTeam: Team|undefined;
 
     // All 4 variables are initialized in "initOrReset function
     private _orgTree!: Tree<string, Employee>;
@@ -101,6 +105,10 @@ class TreeBasedOrgStructure implements OrgStructure
     {
         this._employeePropertyDescriptors = propertyDescriptors;
         this.initOrReset();
+
+        // Create org leader and root team
+        this.createRootTeam("Root Team");
+        this.createOrgLeader("Org Leader", "Org Leader", new Map());
 
         // FIXME
         this.orgStatistics = StatsCollector.instance.collectStats(this);
@@ -138,7 +146,7 @@ class TreeBasedOrgStructure implements OrgStructure
                    properties: OrgEntityPropertyBag): Employee
     {
         const createdEmployee = this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, properties);
-        if (managerId === TreeBasedOrgStructure.ROOT_MANAGER_ID)
+        if (managerId === TreeBasedOrgStructure.ROOT_ID)
         {
             this.orgLeader = createdEmployee;
         }
@@ -149,6 +157,13 @@ class TreeBasedOrgStructure implements OrgStructure
     isEmpty(): boolean
     {
         return this.orgTree.isEmpty();
+    }
+
+    createRootTeam(title: string): Team
+    {
+        this.rootTeam = this.createTeam(title, TreeBasedOrgStructure.ROOT_ID);
+
+        return this.rootTeam;
     }
 
     createTeam(title: string, managerId: string): Team
@@ -255,10 +270,14 @@ class TreeBasedOrgStructure implements OrgStructure
         return valueToReturn;
     }
 
-    createOrgLeader(name: string, title: string, teamId: string, properties: OrgEntityPropertyBag): Employee
+    createOrgLeader(name: string, title: string, properties: OrgEntityPropertyBag): Employee
     {
-        this.orgLeader =
-            this.createEmployee(name, title, TreeBasedOrgStructure.ROOT_MANAGER_ID, teamId, true, properties);
+        // If the root team is created, then the org leader is assigned to the root team.  Othewrise, the org leader has
+        // no team
+        const teamId = this._rootTeam != undefined ? this._rootTeam.id : TeamConstants.NO_TEAM_ID;
+
+        this.orgLeader = this.createEmployee(name, title, TreeBasedOrgStructure.ROOT_ID, teamId, true, properties);
+
         return this.orgLeader;
     }
 
@@ -274,7 +293,75 @@ class TreeBasedOrgStructure implements OrgStructure
 
     private set orgLeader(leaderToSet: Employee)
     {
+        const previousLeader = this._cleanCurrentLeaderPre();
+
         this._orgLeader = leaderToSet;
+
+        this._cleanCurrentLeaderPost(previousLeader);
+    }
+
+    private _cleanCurrentLeaderPre(): Manager|undefined
+    {
+        const previousLeader = this._orgLeader;
+        if (previousLeader)
+        {
+        }
+
+        return this._orgLeader;
+    }
+
+    private _cleanCurrentLeaderPost(previousLeader: Manager|undefined): void
+    {
+        // Point all children of the previous leader to the new leader
+        if (previousLeader)
+        {
+            // Move all children of previous leader to new leader
+            for (const nextChild of this.orgTree.childrenIterator(previousLeader.id))
+            {
+                this.orgTree.moveNodeToParent(nextChild.key, this.orgLeader.id);
+            }
+
+            // Remove previous leader from tree
+            this.orgTree.removeNodes([ previousLeader.id ]);
+
+            // Move all teams managed by previous leader to new leader
+            const previousTeams = this._managerIdToTeamsMap.get(previousLeader.id);
+            if (previousTeams !== undefined)
+            {
+                this._managerIdToTeamsMap.delete(previousLeader.id);
+                const currentLeaderTeams = this._managerIdToTeamsMap.get(this.orgLeader.id);
+                if (!currentLeaderTeams)
+                {
+                    this._managerIdToTeamsMap.set(this.orgLeader.id, previousTeams!);
+                }
+                else
+                {
+                    currentLeaderTeams.push(...previousTeams);
+                }
+            }
+        }
+    }
+    get rootTeam(): Team
+    {
+        if (!this._rootTeam)
+        {
+            throw new Error("Root team has not yet been created.");
+        }
+        return this._rootTeam;
+    }
+
+    private set rootTeam(teamToSet: Team)
+    {
+        this._rootTeam = teamToSet;
+
+        // If we've set the root team and the org leader has been created, we reassign the org leader to the root team
+        if (this._orgLeader != undefined)
+        {
+            this._orgLeader.team = teamToSet;
+        }
+
+        // We do not reset.  It's possible the root team is created in the middle of import.  As the ID is fixed, this
+        // shouldn't be a problem
     }
 
     /**
@@ -427,8 +514,7 @@ class TreeBasedOrgStructure implements OrgStructure
         this._employeeIdToEmployeeMap = new Map<string, Employee>();
 
         // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
-        this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE,
-                             TreeBasedOrgStructure.ROOT_MANAGER_ID);
+        this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE, TreeBasedOrgStructure.ROOT_ID);
     }
 }
 

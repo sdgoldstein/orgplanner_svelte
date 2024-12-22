@@ -12,7 +12,7 @@ import {
     OrgStructureChangedEventEntityAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEventEntitiesRemoved
-} from "../../../../../common/src/main/model/orgStructure/orgStructureEvents";
+} from "orgplanner-common/model";
 
 interface OrgPageMediator
 {

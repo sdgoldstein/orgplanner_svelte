@@ -13,7 +13,8 @@ class SimpleOrgTemplate implements OrgTemplate
 {
     apply(orgStructure: OrgStructure): void
     {
-        orgStructure.createOrgLeader("First Last", "Senior Vice President", "NO_TEAM_ID", EMPTY_PROPERTY_BAG);
+        orgStructure.createRootTeam("FIX ME");
+        orgStructure.createOrgLeader("First Last", "Senior Vice President", EMPTY_PROPERTY_BAG);
     }
 }
 
@@ -21,8 +22,8 @@ class SmallOrgTemplate implements OrgTemplate
 {
     apply(orgStructure: OrgStructure): void
     {
-        const orgLeader =
-            orgStructure.createOrgLeader("Steve Johnson", "Senior Vice President", "NO_TEAM_ID", EMPTY_PROPERTY_BAG);
+        orgStructure.createRootTeam("FIX ME");
+        const orgLeader = orgStructure.createOrgLeader("Steve Johnson", "Senior Vice President", EMPTY_PROPERTY_BAG);
         orgStructure.createEmployee("Frank Smith", "Senior Manager", orgLeader.id, "NO_TEAM_ID", true,
                                     EMPTY_PROPERTY_BAG);
         orgStructure.createEmployee("Bilbo Baggins", "Engineer", orgLeader.id, "NO_TEAM_ID", false, EMPTY_PROPERTY_BAG);

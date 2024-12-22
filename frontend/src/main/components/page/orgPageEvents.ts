@@ -1,6 +1,5 @@
 import {BasePubSubEvent} from "orgplanner-common/jscore";
-import type {OrgEntity, Employee} from "orgplanner-common/model";
-import type {OrgEntityPropertyBag} from "../../../../../common/src/main/model/orgStructure/orgEntity";
+import type {OrgEntityPropertyBag, OrgEntity, Employee} from "orgplanner-common/model";
 
 class OrgPageEvents
 {

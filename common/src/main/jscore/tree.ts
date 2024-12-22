@@ -13,9 +13,9 @@ interface Node<K, V>
     readonly key: K;
     value: V;
     parent: Node<K, V>;
-    readonly childrenIterator: IterableIterator<Node<K, V>>
+    readonly childrenIterator: IterableIterator<Node<K, V>>;
 
-        addChild(childNode: Node<K, V>): void;
+    addChild(childNode: Node<K, V>): void;
     removeChild(childNode: Node<K, V>): void
 }
 
@@ -51,7 +51,7 @@ class DefaultNode<K, V> implements Node<K, V>
 
     get parent(): Node<K, V>
     {
-        if (!parent)
+        if (this._parent === undefined)
         {
             throw new Error("Attempt to retrieve parent before it's been set");
         }
@@ -366,6 +366,17 @@ class Tree<K, V>
         parentNode.addChild(nodeToMove);
     }
 
+    public childrenIterator(nodeKey: K): IterableIterator<Node<K, V>>
+    {
+        const parentNode = this.nodeByKeyMap.get(nodeKey);
+        if (parentNode === undefined)
+        {
+            throw new Error("Node for node key, " + nodeKey + "does not exist");
+        }
+
+        return parentNode.childrenIterator;
+    }
+
     /**
      * Perform a depth first traversal of this tree
      *
@@ -521,4 +532,4 @@ class Tree<K, V>
 }
 
 export {Tree, TreeVisitor};
-export type {Node};
+export type{Node};
