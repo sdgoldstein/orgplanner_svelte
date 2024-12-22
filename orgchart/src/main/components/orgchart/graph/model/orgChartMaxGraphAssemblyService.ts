@@ -2,6 +2,7 @@ import type {Graph, Cell, EventObject} from "@maxgraph/core";
 import type {Service} from "@sphyrna/service-manager-ts";
 import type {Manager, IndividualContributor, Team} from "orgplanner-common/model";
 import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
+import type {OrgChartEntityVisibleState} from "../../orgChartViewState";
 
 interface OrgChartMaxGraphAssemblyService extends Service
 {
@@ -17,7 +18,8 @@ interface OrgChartMaxGraphAssemblyService extends Service
     addManagerNode(manager: Manager): Cell;
     addICNode(ic: IndividualContributor): Cell;
     addTeamNode(team: Team): Cell;
-    //deleteOrgEntities(cellsToDelete: Cell[]): unknown;
+    augmentCellTemp(cell: Cell, visibilityState: OrgChartEntityVisibleState): void;
+    // deleteOrgEntities(cellsToDelete: Cell[]): unknown;
 }
 
 export type{OrgChartMaxGraphAssemblyService};

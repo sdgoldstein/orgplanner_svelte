@@ -93,6 +93,8 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase
                 cellAdded = this.orgChartMaxGraphAssemblyService.addICNode(employeeToAdd);
             }
 
+            this.orgChartMaxGraphAssemblyService.augmentCellTemp(cellAdded, this.visibilityState);
+
             // Expand the parent in case it is collapsed so the new cell shows
             const managerCell = this.model.getCell(employeeToAdd.managerId);
             if (managerCell != null)
@@ -212,13 +214,6 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase
             // Is this the best way to force a redraw?
             this.refresh(cell);
         });
-    }
-
-    toggleTeamMode(): void
-    {
-        const chartModel: OrgPlannerChartModel = this.model as OrgPlannerChartModel;
-        chartModel.toggleTeamMode();
-        this.rehydrate();
     }
 }
 

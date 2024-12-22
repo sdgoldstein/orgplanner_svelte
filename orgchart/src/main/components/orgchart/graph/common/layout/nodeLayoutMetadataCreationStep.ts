@@ -32,8 +32,6 @@ class NodeLayoutMetadataCreationStep
 
     private traverseEdges(layout: OrgPlannerChartLayout, nodeMetadata: NodeLayoutMetadata)
     {
-        const model: OrgPlannerChartModel = layout.graph.model as OrgPlannerChartModel;
-
         let leafNodeMetadata = null;
 
         const cell: Cell = nodeMetadata.cell;
@@ -41,7 +39,7 @@ class NodeLayoutMetadataCreationStep
         for (const nextEdge of outgoingEdges)
         {
             const nextChild = nextEdge.getTerminal(false);
-            if ((nextChild) && (!layout.isVertexIgnored(nextChild)) && (model.isVisible(nextChild)))
+            if ((nextChild) && (!layout.isVertexIgnored(nextChild)) && (nextChild.isVisible()))
             {
                 console.trace(`Creating node metadata for child: ${nextChild.value}`);
 
@@ -66,7 +64,6 @@ class NodeLayoutMetadataCreationStep
 
                     leafNodeMetadata.addChildNode(nextChildNodeMetadata);
                 }
-
                 else
                 {
                     console.trace(`Adding child, ${nextChild.value}, to, ${cell.value}`);

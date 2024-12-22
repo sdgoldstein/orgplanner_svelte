@@ -10,15 +10,6 @@ class OrgPlannerChartModel extends GraphDataModel
         super();
     }
 
-    isVisible(cell: Cell): boolean
-    {
-        const cellValue = cell.getValue();
-        const visiblityToReturn =
-            cellValue && this._visibilityState.isVisible(cellValue.orgEntity.orgEntityType) && cell.isVisible();
-
-        return visiblityToReturn;
-    }
-
     isLeafNode(cell: Cell): boolean
     {
         let isLeafNode = false;

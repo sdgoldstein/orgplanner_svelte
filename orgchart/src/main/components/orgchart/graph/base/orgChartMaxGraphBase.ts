@@ -54,12 +54,11 @@ class OrgPlannerChartLayoutManager extends LayoutManager
 
 class OrgChartBuildingVisitor implements OrgStructureVisitor
 {
-    private _orgChartMaxGraphBuilderService: OrgChartMaxGraphAssemblyService;
     rootCell?: Cell;
 
-    constructor(orgChartMaxGraphBuilderService: OrgChartMaxGraphAssemblyService)
+    constructor(private _orgChartMaxGraphBuilderService: OrgChartMaxGraphAssemblyService,
+                protected _visibilityState: OrgChartEntityVisibleState)
     {
-        this._orgChartMaxGraphBuilderService = orgChartMaxGraphBuilderService;
     }
 
     visitEnter(employee: Employee): void
@@ -96,6 +95,7 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
             newCell = this._orgChartMaxGraphBuilderService.addICNode(employee);
         }
 
+        this._orgChartMaxGraphBuilderService.augmentCellTemp(newCell, this._visibilityState);
         // this._orgChartMaxGraphBuilderService.addEditButtonOverlay(newCell);
     }
 
@@ -123,9 +123,9 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
     protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService;
 
     constructor(_element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
-                private _visibilityState: OrgChartEntityVisibleState)
+                protected visibilityState: OrgChartEntityVisibleState)
     {
-        super(_element, new OrgPlannerChartModel(_visibilityState));
+        super(_element, new OrgPlannerChartModel(visibilityState));
 
         this.orgChartMaxGraphAssemblyService = new OrgChartMaxGraphAssemblyServiceImpl();
 
@@ -197,7 +197,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
         if (updatedViewState)
         {
-            this._visibilityState = updatedViewState;
+            this.visibilityState = updatedViewState;
         }
 
         if (updatedColorTheme)
@@ -267,7 +267,8 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     public renderGraph(): void
     {
-        this._layout = new OrgPlannerChartLayout(this);
+        this._layout = new OrgPlannerChartLayout(this, () => {return this.rootCell});
+
         // let layout = new CompactTreeLayout(this);
         const layoutMgr = new OrgPlannerChartLayoutManager(this, this._layout);
 
@@ -323,7 +324,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
                     for (const nextProperty of employee.propertyIterator())
                     {
-                        if (this._visibilityState.isVisible(nextProperty[0]))
+                        if (this.visibilityState.isVisible(nextProperty[0]))
                         {
                             let nextPropertyToDisplay = (nextProperty[1].length != 0) ? nextProperty[1] : "(unknown)";
 
@@ -352,7 +353,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     onVisibilityUpdate(entity: ViewToggableEntity, isVisible: boolean)
     {
-        this._visibilityState.setVisible(entity, isVisible);
+        this.visibilityState.setVisible(entity, isVisible);
 
         // FIXME - Do we have to rehydrate for every visibility change?  It's expensive
         this.rehydrate();
@@ -378,7 +379,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
         // is normally the first child of the root (ie. layer 0).
         // const parent = this.getDefaultParent();
 
-        const visitor = new OrgChartBuildingVisitor(this.orgChartMaxGraphAssemblyService);
+        const visitor = new OrgChartBuildingVisitor(this.orgChartMaxGraphAssemblyService, this.visibilityState);
         this._orgStructure.traverseBF(visitor);
         if (!visitor.rootCell)
         {

@@ -25,6 +25,7 @@ import {
     EditButtonCellOverlay
 } from "../themes/shape/orgChartCellOverlay";
 import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
+import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
 
 class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChartMaxGraphAssemblyService
 {
@@ -251,6 +252,20 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         throw new Error("Method not implemented.");
     }
 
+    augmentCellTemp(cell: Cell, visibilityState: OrgChartEntityVisibleState): void
+    {
+        const isVisibleOriginal = cell.isVisible;
+        cell.isVisibleOriginal = isVisibleOriginal;
+
+        cell.isVisible = () => {
+            const cellValue = cell.getValue();
+            const visiblityToReturn =
+                cellValue && visibilityState.isVisible(cellValue.orgEntity.orgEntityType) && cell.isVisibleOriginal();
+
+            return visiblityToReturn;
+        }
+    }
+
     private _insertEmployeeNode(employee: Employee, orgChartVertex: OrgPlannerChartEmployeeVertex,
                                 cellStyleOverride: CellStateStyle): Cell
     {
@@ -266,7 +281,9 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         const managerCell = this._graph.model.getCell(employee.managerId);
         if (managerCell)
         {
-            this._graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
+            const insertedEdge =
+                this._graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
+            this._augmentEdgeTemp(insertedEdge);
         }
         /*else
         {
@@ -276,6 +293,16 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         }*/
 
         return newCell;
+    }
+
+    private _augmentEdgeTemp(insertedEdge: Cell)
+    {
+        insertedEdge.isVisibleOriginal = insertedEdge.isVisible;
+        insertedEdge.isVisible = () => {
+            return (insertedEdge.source === null || insertedEdge.source.isVisible()) &&
+                   (insertedEdge.target === null || insertedEdge.target.isVisible()) &&
+                   insertedEdge.isVisibleOriginal();
+        }
     }
 }
 

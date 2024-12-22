@@ -16,8 +16,6 @@ class OrgPlannerChartLayout extends GraphLayout
 {
     private readonly _layoutConfiguration: LayoutConfiguration;
 
-    private _treeRoot?: Cell; /* We need to save this when change events occur with cells in the graph */
-
     private readonly _leafEdgeLeftOffset =
         10; // FIXME - Put this in configuration?  It's part of the edge style, not the layout config
 
@@ -26,7 +24,7 @@ class OrgPlannerChartLayout extends GraphLayout
      *
      * @param graph The graph to layout
      */
-    constructor(graph: Graph)
+    constructor(graph: Graph, private _rootCellCallback: () => Cell)
     {
         super(graph);
         this._layoutConfiguration = new DefaultLayoutConfiguration();
@@ -41,7 +39,10 @@ class OrgPlannerChartLayout extends GraphLayout
     {
         console.trace("Laying out Tree");
 
-        const root: Cell|undefined = this.findRoot(parent);
+        // FIXME - This is a hack to get the root cell.  Is there a better way?
+        // Should create a "TreeGraph interface that as a getRootCell method"
+        const root: Cell = this._rootCellCallback();
+
         if (root)
         {
             console.trace(`Starting with root node: ${root.value}`);
@@ -94,60 +95,6 @@ class OrgPlannerChartLayout extends GraphLayout
             boundsToReturn.width = this.layoutConfiguration.minCellWidth;
         }
         return boundsToReturn;
-    }
-
-    private findRoot(cell: Cell): Cell|undefined
-    {
-        const roots = this.findTreeRoots(this.graph, cell);
-        if (roots.length > 0)
-        {
-            // This is not generic.  It assumes a single, connected graph with one root
-            this._treeRoot = roots[0];
-        }
-
-        return this._treeRoot;
-    }
-
-    /**
-     *
-     * @param graph copied from max graph package
-     * @param parent
-     * @returns
-     */
-    findTreeRoots(graph: Graph, parent: Cell): Cell[]
-    {
-        const roots: Cell[] = [];
-
-        for (const cell of parent.getChildren())
-        {
-            if (cell.isVertex() && cell.isVisible())
-            {
-                const conns: Cell[] = graph.getConnections(cell, parent);
-                let fanOut = 0;
-                let fanIn = 0;
-
-                for (const conn of conns)
-                {
-                    const src = graph.view.getVisibleTerminal(conn, true);
-
-                    if (src == cell)
-                    {
-                        fanOut++;
-                    }
-                    else
-                    {
-                        fanIn++;
-                    }
-                }
-
-                if (fanIn == 0 && fanOut >= 0)
-                {
-                    roots.push(cell);
-                }
-            }
-        }
-
-        return roots;
     }
 }
 
