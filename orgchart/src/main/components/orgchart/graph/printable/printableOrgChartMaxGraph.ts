@@ -1,9 +1,7 @@
-import {ServiceManager} from "@sphyrna/service-manager-ts";
 import type {OrgStructure} from "orgplanner-common/model";
 import type {OrgChartEntityVisibleState} from "../../orgChartViewState";
 import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphBase} from "../base/orgChartMaxGraphBase";
-import type {OrgChartMaxGraphAssemblyService} from "../model/orgChartMaxGraphAssemblyService";
 
 /**
  * The org chart graph visual component.

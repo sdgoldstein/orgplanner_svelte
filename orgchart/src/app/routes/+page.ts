@@ -4,7 +4,7 @@ import {SERIALIZATION_SERVICE_NAME, SerializationServiceImpl} from "orgplanner-c
 
 export const ssr = false;
 
-export const load: PageLoad = async ({fetch}) => {
+export const load: PageLoad = async ({url, fetch}) => {
     const serviceManagerStrategy = new DefaultServiceManagerStrategyImpl();
     serviceManagerStrategy.registerSingletonService(SERIALIZATION_SERVICE_NAME, SerializationServiceImpl);
     ServiceManager.setDefaultStrategy(serviceManagerStrategy);
@@ -13,5 +13,7 @@ export const load: PageLoad = async ({fetch}) => {
     const orgListText = await response.text();
     const orgList = orgListText.split("\n").filter(line => line.trim() !== "");
 
-    return {orgList : orgList};
+    const modeParam = url.searchParams.get("mode");
+
+    return {modeParam : modeParam, orgList : orgList};
 };

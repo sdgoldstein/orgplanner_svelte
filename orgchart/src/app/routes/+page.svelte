@@ -27,6 +27,7 @@
         type SerializationService,
     } from "orgplanner-common/jscore";
     import { ChevronLeft, ChevronRight } from "lucide-svelte";
+    import { goto } from "$app/navigation";
 
     let { data }: { data: PageData } = $props();
 
@@ -34,7 +35,11 @@
         value: 0,
         label: data.orgList[0],
     });
-    let mode = $state(OrgChartMode.EDIT);
+    let mode = $state(
+        data.modeParam != null
+            ? OrgChartMode[data.modeParam as keyof typeof OrgChartMode]
+            : OrgChartMode.EDIT,
+    );
     let colorThemeName: string = $state(
         OrgEntityColorThemes.DEEP_BLUE_THEME.name,
     );
@@ -44,6 +49,14 @@
         EmployeeReservedPropertyDescriptors.PHONE,
         EmployeeReservedPropertyDescriptors.LOCATION,
     ]);
+
+    function onModeChange(newMode: string) {
+        // goto does not seem to change state
+        //goto(`?mode=${newMode}`, { replaceState: true, invalidateAll: true });
+        const currentUrl = window.location.href.split("?")[0];
+        const newUrl = `${currentUrl}?mode=${newMode}`;
+        window.location.href = newUrl;
+    }
 
     function loadNextOrg() {
         const newIndex =
@@ -95,6 +108,7 @@
             id="orgChartMode_input_id"
             name="orgChartMode_input_name"
             bind:value={mode}
+            onValueChange={onModeChange}
         >
             <RadioGroupOption value={OrgChartMode.EDIT}>Edit</RadioGroupOption>
             <RadioGroupOption value={OrgChartMode.READ_ONLY}
@@ -141,7 +155,7 @@
             id="orglist_input_id"
             name="orglist_input_name"
             bind:selected={selectedOrg}
-            onSelectedChange={loadSelectedOrg}
+            onValueChange={loadSelectedOrg}
         >
             {#each data.orgList as nextOrg: String, index}
                 <SelectOption value={index}>{nextOrg}</SelectOption>
