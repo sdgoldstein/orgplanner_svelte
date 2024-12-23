@@ -16,7 +16,6 @@ import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex,
-    type OrgPlannerChartVertex
 } from "../../common/core/orgPlannerChartModel";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
@@ -27,7 +26,7 @@ import {
     EditEntityCellActionEvent,
     OrgChartSelectionChangedEvent
 } from "../../../OrgChartEvents";
-import {EditableOrgChartMaxGraphAssemblyServiceBase} from "./editableOrgChartMaxGraphAssemblyService";
+import {EditableOrgChartMaxGraphAssemblyService} from "./editableOrgChartMaxGraphAssemblyService";
 import {
     type EntityViewToggableOrgChartMaxGraph,
 } from "../shared/viewToggableEntityEventHandler";
@@ -46,7 +45,7 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     constructor(element: HTMLElement, orgStructure: OrgStructure, theme: MaxGraphTheme,
                 visibilityState: OrgChartEntityVisibleState)
     {
-        super(element, orgStructure, theme, visibilityState, new EditableOrgChartMaxGraphAssemblyServiceBase);
+        super(element, orgStructure, theme, visibilityState, new EditableOrgChartMaxGraphAssemblyService);
 
         /* fix to
          * https://stackoverflow.com/questions/66452387/error-in-mxgraph-firemouseevent-failed-to-execute-getcomputedstyle-on-windo
@@ -64,8 +63,6 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     {
         super.setup(orgChartMaxGraphBuilderService);
 
-        orgChartMaxGraphBuilderService.createToggleSubtreeOverlay(
-            (sender: EventTarget, event: EventObject) => { this.toggleSubtree(event.getProperty("cell") as Cell); });
         orgChartMaxGraphBuilderService.createDeleteButtonOverlay((sender: EventTarget, event: EventObject) => {
             const cellToEdit = event.getProperty("cell") as Cell;
             const employeeToDelete = (cellToEdit.value as OrgPlannerChartEmployeeVertex).employee;
@@ -171,54 +168,6 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
         }
 
         return newCell;
-    }
-
-    private toggleSubtree(cell: Cell): void
-    {
-        let isCollapsed = false;
-        const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
-        if (orgChartVertext.hasProperty("collapsed"))
-        {
-            isCollapsed = (orgChartVertext.getProperty("collapsed") == "true");
-        }
-        this.showHideSubtree(cell, isCollapsed);
-    }
-
-    private showHideSubtree(cell: Cell, show: boolean): void
-    {
-        this.batchUpdate(() => {
-            const cells: Cell[] = [];
-
-            this.traverse({
-                visitEnter(cellToVisit: Cell) {
-                    if (cellToVisit != cell)
-                    {
-                        cells.push(cellToVisit);
-
-                        // HACK - FIX ME - The only state we have to determine if the cell is expanded or not is the
-                        // overlays
-                        // const overLays = savedGraph.getCellOverlays(cellToVisit);
-
-                        // If we're expanding and the vertex collapsed, don't expand it - FIXME
-                        /*if ((overLays != null) && show && (overLays[0] == savedGraph._collapsedOverlay))
-                        {
-                            valueToReturn = false;
-                        }*/
-                    }
-                },
-                visitLeave(cell: Cell) {
-
-                },
-            },
-                          cell);
-
-            this.toggleCells(show, cells, true);
-
-            const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
-            orgChartVertext.setProperty("collapsed", (!show).toString());
-            // Is this the best way to force a redraw?
-            this.refresh(cell);
-        });
     }
 }
 

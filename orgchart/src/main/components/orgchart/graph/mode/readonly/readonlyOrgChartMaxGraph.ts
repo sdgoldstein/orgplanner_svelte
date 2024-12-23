@@ -2,7 +2,7 @@ import type {OrgStructure} from "orgplanner-common/model";
 import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
-import {OrgChartMaxGraphAssemblyServiceBase} from "../shared/orgChartMaxGraphAssemblyServiceBase";
+import {ReadOnlyOrgChartMaxGraphAssemblyService} from "./readOnlyOrgChartMaxGraphAssemblyService";
 
 /**
  * The org chart graph visual component.
@@ -17,7 +17,7 @@ class ReadOnlyOrgChartMaxGraph extends OrgChartMaxGraphBase
     constructor(element: HTMLElement, orgStructure: OrgStructure, theme: MaxGraphTheme,
                 visibilityState: OrgChartEntityVisibleState)
     {
-        super(element, orgStructure, theme, visibilityState, new OrgChartMaxGraphAssemblyServiceBase());
+        super(element, orgStructure, theme, visibilityState, new ReadOnlyOrgChartMaxGraphAssemblyService());
     }
 }
 

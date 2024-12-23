@@ -3,6 +3,7 @@ import {AbstractCanvas2D, Cell, Rectangle, SvgCanvas2D} from "@maxgraph/core";
 import {OrgPlannerChartEmployeeVertex, type OrgPlannerChartVertex} from "../../core/orgPlannerChartModel";
 
 import {OrgChartNodeShapeBase} from "./orgChartNodeShapeBase";
+import {ToggleSubtreeOveralyShapeDecorator} from "./toggleSubtreeOverlayShapeDecorator";
 
 class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
 {
@@ -13,13 +14,15 @@ class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
     {
         // At runtime, these parameters are all undefined!  Seemed like a bug in the library
         super(bounds, fill, stroke, strokewidth);
+
+        this.registerDecorator(new ToggleSubtreeOveralyShapeDecorator());
     }
 
     paintBackground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number): void
     {
         super.paintBackground(canvas, x, y, width, height);
 
-        this._paintToggleSubtreeButton(canvas, x, width, y, height);
+        // this._paintToggleSubtreeButton(canvas, x, width, y, height);
         this._paintActionButtons(height, canvas, x, width, y);
     }
 

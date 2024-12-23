@@ -3,7 +3,7 @@ import type {Manager, IndividualContributor, Team} from "orgplanner-common/model
 import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
 import {OrgChartMaxGraphAssemblyServiceBase} from "../shared/orgChartMaxGraphAssemblyServiceBase";
 
-class EditableOrgChartMaxGraphAssemblyServiceBase extends OrgChartMaxGraphAssemblyServiceBase implements
+class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblyServiceBase implements
     OrgChartMaxGraphAssemblyService
 {
     addManagerNode(manager: Manager): Cell
@@ -20,7 +20,6 @@ class EditableOrgChartMaxGraphAssemblyServiceBase extends OrgChartMaxGraphAssemb
     {
         let cellToReturn = super.addICNode(ic);
 
-        this.addToggleSubtreeOverlay(cellToReturn);
         this.addEditButtonOverlay(cellToReturn);
         this.addDeleteButtonOverlay(cellToReturn);
 
@@ -41,4 +40,4 @@ class EditableOrgChartMaxGraphAssemblyServiceBase extends OrgChartMaxGraphAssemb
     }
 }
 
-export {EditableOrgChartMaxGraphAssemblyServiceBase};
+export {EditableOrgChartMaxGraphAssemblyService};

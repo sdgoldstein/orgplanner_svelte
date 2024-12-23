@@ -4,7 +4,7 @@ import {PubSubManager} from "orgplanner-common/jscore";
 import type {OrgChartProxy} from "../../model/orgChartProxy";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import type {OrgChartProps} from "../editable/editableOrgChartProxy";
-import {ReadOnlyOrgChartMaxGraph} from "./readonlyOrgChartMaxGraph";
+import {ReadOnlyOrgChartMaxGraph} from "./readOnlyOrgChartMaxGraph";
 import {ReadOnlyOrgChartMaxGraphTheme} from "./readOnlyOrgChartMaxGraphTheme";
 import {OrgChartEvents} from "../../../OrgChartEvents";
 import {

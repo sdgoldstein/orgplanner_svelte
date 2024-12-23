@@ -1,4 +1,4 @@
-import {Cell, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
+import {Cell, EventObject, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
 import {
@@ -140,6 +140,9 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
         assemblyService.insertGraph(this);
         assemblyService.configureBaseOptions();
         assemblyService.applyTheme(this._graphTheme);
+
+        assemblyService.createToggleSubtreeOverlay(
+            (sender: EventTarget, event: EventObject) => { this.toggleSubtree(event.getProperty("cell") as Cell); });
     }
 
     protected traverse(chartVisitor: OrgPlannerChartVisitor, startCell: Cell): void
@@ -423,6 +426,54 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
             },
             edge : null,
             visited : null
+        });
+    }
+
+    private toggleSubtree(cell: Cell): void
+    {
+        let isCollapsed = false;
+        const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
+        if (orgChartVertext.hasProperty("collapsed"))
+        {
+            isCollapsed = (orgChartVertext.getProperty("collapsed") == "true");
+        }
+        this.showHideSubtree(cell, isCollapsed);
+    }
+
+    protected showHideSubtree(cell: Cell, show: boolean): void
+    {
+        this.batchUpdate(() => {
+            const cells: Cell[] = [];
+
+            this.traverse({
+                visitEnter(cellToVisit: Cell) {
+                    if (cellToVisit != cell)
+                    {
+                        cells.push(cellToVisit);
+
+                        // HACK - FIX ME - The only state we have to determine if the cell is expanded or not is the
+                        // overlays
+                        // const overLays = savedGraph.getCellOverlays(cellToVisit);
+
+                        // If we're expanding and the vertex collapsed, don't expand it - FIXME
+                        /*if ((overLays != null) && show && (overLays[0] == savedGraph._collapsedOverlay))
+                        {
+                            valueToReturn = false;
+                        }*/
+                    }
+                },
+                visitLeave(cell: Cell) {
+
+                },
+            },
+                          cell);
+
+            this.toggleCells(show, cells, true);
+
+            const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
+            orgChartVertext.setProperty("collapsed", (!show).toString());
+            // Is this the best way to force a redraw?
+            this.refresh(cell);
         });
     }
 
