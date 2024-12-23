@@ -111,7 +111,6 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
         this._propertyDescriptors = orgChartProps.propertyDescriptors;
         this._orgStructure = orgChartProps.orgStructure;
         this._colorTheme = orgChartProps.colorTheme;
-        this._mode = orgChartProps.mode;
 
         const orgChartTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
         const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
