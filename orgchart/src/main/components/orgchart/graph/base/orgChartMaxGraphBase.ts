@@ -1,7 +1,13 @@
 import {Cell, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
-import type {OrgStructureVisitor, Employee, OrgStructure, OrgEntityColorTheme} from "orgplanner-common/model";
+import {
+    type OrgStructureVisitor,
+    type Employee,
+    type OrgStructure,
+    type OrgEntityColorTheme,
+    TeamConstants
+} from "orgplanner-common/model";
 import {
     FixedOrgEntityPropertyDescriptors,
     type OrgChartEntityVisibleState,
@@ -384,8 +390,12 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
         // Now insert Teams
         for (const team of this._orgStructure.getTeams())
         {
-            const teamCellAdded = this.orgChartMaxGraphAssemblyService.addTeamNode(team);
-            this.orgChartMaxGraphAssemblyService.augmentCellTemp(teamCellAdded, this.visibilityState);
+            // Don't add the "No Team" team
+            if (team.id != TeamConstants.NO_TEAM_ID)
+            {
+                const teamCellAdded = this.orgChartMaxGraphAssemblyService.addTeamNode(team);
+                this.orgChartMaxGraphAssemblyService.augmentCellTemp(teamCellAdded, this.visibilityState);
+            }
         }
     }
 
