@@ -271,6 +271,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         cellToReturn = this._graph.insertVertex(parent, team.id, orgChartVertex, 20, 20, 80, 30,
                                                 graphStylesheet.styles.get("team")!);
 
+        // Create edge from manager to team
         const managerCell = this._graph.model.getCell(team.managerId);
         if (managerCell)
         {
@@ -325,6 +326,7 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         const newCell =
             this._graph.insertVertex(parent, employee.id, orgChartVertex, 20, 20, 80, 30, cellStyleOverride);
 
+        // Create edge from manager to employee
         const managerCell = this._graph.model.getCell(employee.managerId);
         if (managerCell)
         {
@@ -332,6 +334,15 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
                 this._graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
             this._augmentEdgeTemp(insertedEdge);
         }
+
+        // Create edge from teams to employee
+        const teamCell = this._graph.model.getCell(employee.team.id);
+        if (teamCell)
+        {
+            const insertedEdge = this._graph.insertEdge(parent, employee.team.id + employee.id, "", teamCell, newCell);
+            this._augmentEdgeTemp(insertedEdge);
+        }
+
         /*else
         {
             FIXME - The root manager doens't have a parent manager.  Therefore, this code which applies to all other

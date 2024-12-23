@@ -6,7 +6,8 @@ import {
     type Employee,
     type OrgStructure,
     type OrgEntityColorTheme,
-    TeamConstants
+    TeamConstants,
+    type Team
 } from "orgplanner-common/model";
 import {
     FixedOrgEntityPropertyDescriptors,
@@ -64,10 +65,9 @@ class OrgPlannerChartLayoutManager extends LayoutManager
 
 class OrgChartBuildingVisitor implements OrgStructureVisitor
 {
-    rootCell?: Cell;
-
-    constructor(private _orgChartMaxGraphBuilderService: OrgChartMaxGraphAssemblyService,
-                protected _visibilityState: OrgChartEntityVisibleState)
+    constructor(private _orgStructure: OrgStructure,
+                private _orgChartMaxGraphBuilderService: OrgChartMaxGraphAssemblyService,
+                private _visibilityState: OrgChartEntityVisibleState)
     {
     }
 
@@ -78,12 +78,15 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
         if (employee.isManager())
         {
             newCell = this._orgChartMaxGraphBuilderService.addManagerNode(employee);
-            // this._orgChartMaxGraphBuilderService.addToggleSubtreeOverlay(newCell);
 
-            if (!this.rootCell)
+            // Add all teams that this manager manages
+            if (this._orgStructure.managerHasTeams(employee))
             {
-                // Root cell is the first manager created
-                this.rootCell = newCell;
+                let teamsForManager: Team[] = this._orgStructure.getTeamsForManager(employee);
+                teamsForManager.forEach((team: Team) => {
+                    const teamCellAdded = this._orgChartMaxGraphBuilderService.addTeamNode(team);
+                    this._orgChartMaxGraphBuilderService.augmentCellTemp(teamCellAdded, this._visibilityState);
+                });
             }
         }
         else
@@ -92,7 +95,6 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
         }
 
         this._orgChartMaxGraphBuilderService.augmentCellTemp(newCell, this._visibilityState);
-        // this._orgChartMaxGraphBuilderService.addEditButtonOverlay(newCell);
     }
 
     visitLeave(employee: Employee): void
@@ -378,25 +380,23 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     private populateGraph(): void
     {
+        // First, add the root team
+        const rootTeamCellAdded = this.orgChartMaxGraphAssemblyService.addTeamNode(this._orgStructure.rootTeam);
+        this.orgChartMaxGraphAssemblyService.augmentCellTemp(rootTeamCellAdded, this.visibilityState);
+
+        // The root team is the root cell
+        this.rootCell = rootTeamCellAdded;
+
         // Traverse the org structure and to add Employee Nodes
-        const visitor = new OrgChartBuildingVisitor(this.orgChartMaxGraphAssemblyService, this.visibilityState);
+        const visitor =
+            new OrgChartBuildingVisitor(this._orgStructure, this.orgChartMaxGraphAssemblyService, this.visibilityState);
         this._orgStructure.traverseBF(visitor);
-        if (!visitor.rootCell)
+        /*if (!visitor.rootCell)
         {
             throw new Error("Problem building graph. Root cell not found.");
         }
         this.rootCell = visitor.rootCell;
-
-        // Now insert Teams
-        for (const team of this._orgStructure.getTeams())
-        {
-            // Don't add the "No Team" team
-            if (team.id != TeamConstants.NO_TEAM_ID)
-            {
-                const teamCellAdded = this.orgChartMaxGraphAssemblyService.addTeamNode(team);
-                this.orgChartMaxGraphAssemblyService.augmentCellTemp(teamCellAdded, this.visibilityState);
-            }
-        }
+*/
     }
 
     private refreshStyles()
