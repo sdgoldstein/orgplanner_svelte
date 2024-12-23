@@ -16,7 +16,6 @@ import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
 import {OrgChartMaxGraphThemeDefault} from "../common/themes/orgChartMaxGraphThemeDefault";
 import {
     OrgChartEntityVisibleStateImpl,
-    OrgChartMode,
     ViewToggableEntityToggledEvent,
 } from "../../orgChartViewState";
 import type {OrgChartProps, OrgChartProxy} from "../model/orgChartProxy";
@@ -32,7 +31,6 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
 {
     private _colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME;
     private _orgStructure?: OrgStructure;
-    private _mode: OrgChartMode = OrgChartMode.READ_ONLY;
     private _currentGraph?: EditableOrgChartMaxGraph;
     private _propertyDescriptors: Set<OrgEntityPropertyDescriptor> = new Set();
 
@@ -41,8 +39,6 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
     onMount(): void
     {
         const pubSubManager = PubSubManager.instance;
-        //        pubSubManager.registerListener(OrgPlannerAppEvents.TOGGLE_TEAM_MODE, this);
-        //        pubSubManager.registerListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.registerListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
@@ -52,8 +48,6 @@ class EditableOrgChartProxy implements OrgChartProxy, PubSubListener
     onDismount(): void
     {
         const pubSubManager = PubSubManager.instance;
-        //        pubSubManager.unregisterListener(OrgPlannerAppEvents.TOGGLE_TEAM_MODE, this);
-        //        pubSubManager.unregisterListener(OrgPlannerAppEvents.TOGGLE_PLANNING_MODE, this);
         pubSubManager.unregisterListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);

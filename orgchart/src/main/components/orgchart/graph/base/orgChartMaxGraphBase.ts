@@ -2,7 +2,11 @@ import {Cell, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
 import type {OrgStructureVisitor, Employee, OrgStructure, OrgEntityColorTheme} from "orgplanner-common/model";
-import type {OrgChartEntityVisibleState, ViewToggableEntity} from "../../orgChartViewState";
+import {
+    FixedOrgEntityPropertyDescriptors,
+    type OrgChartEntityVisibleState,
+    type ViewToggableEntity
+} from "../../orgChartViewState";
 import {
     OrgPlannerChartModel,
     type OrgPlannerChartVertex,
@@ -319,12 +323,16 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
                 if (cellValue instanceof OrgPlannerChartEmployeeVertex)
                 {
                     const employee = cellValue.employee;
-                    valueToReturn +=
-                        `<div data-testid="chart_cell_text_title_${employee.id}_testid">${employee.title}</div>`;
+
+                    if (this.visibilityState.isVisible(FixedOrgEntityPropertyDescriptors.TITLE))
+                    {
+                        valueToReturn +=
+                            `<div data-testid="chart_cell_text_title_${employee.id}_testid">${employee.title}</div>`;
+                    }
 
                     for (const nextProperty of employee.propertyIterator())
                     {
-                        if (this.visibilityState.isVisible(nextProperty[0]))
+                        if (this.visibilityState.isVisible(nextProperty[0]) && nextProperty[0].enabled)
                         {
                             let nextPropertyToDisplay = (nextProperty[1].length != 0) ? nextProperty[1] : "(unknown)";
 
@@ -333,8 +341,11 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
                         }
                     }
 
-                    valueToReturn += `<div data-testid="chart_cell_text_team_${employee.id}_testid"><i>${
-                        employee.team.title}</i></div>`;
+                    if (this.visibilityState.isVisible(FixedOrgEntityPropertyDescriptors.TEAM_TITLE))
+                    {
+                        valueToReturn += `<div data-testid="chart_cell_text_team_${employee.id}_testid"><i>${
+                            employee.team.title}</i></div>`;
+                    }
                 }
                 else if (cellValue instanceof OrgPlannerChartTeamVertex)
                 {

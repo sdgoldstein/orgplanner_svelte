@@ -21,6 +21,7 @@
     } from "@sphyrna/uicomponents";
     import OrgChart from "@src/components/orgchart/OrgChart.svelte";
     import {
+        FixedOrgEntityPropertyDescriptors,
         OrgChartMode,
         ViewToggableEntityToggledEvent,
         type ViewToggableEntity,
@@ -68,10 +69,16 @@
 
     let orgStructure: OrgStructure | undefined = $state();
 
-    let propertyDescriptors = new Set<OrgEntityPropertyDescriptor>([
-        EmployeeReservedPropertyDescriptors.PHONE,
-        EmployeeReservedPropertyDescriptors.LOCATION,
-    ]);
+    let propertyDescriptors = $derived.by(() => {
+        let valueToReturn = undefined;
+        if (orgStructure !== undefined) {
+            valueToReturn = new Set<OrgEntityPropertyDescriptor>([
+                ...orgStructure.employeePropertyIterator(),
+            ]);
+        }
+
+        return valueToReturn;
+    });
 
     function toggleVisibility(entity: ViewToggableEntity, isVisibile: boolean) {
         const visibilityChangeEvent = new ViewToggableEntityToggledEvent(
@@ -198,11 +205,30 @@
             }}>Show/Hide ICs</Checkbox
         >
         <Checkbox
+            id="titleVisibilityCheckbox_input_id"
+            name="titleVisibilityCheckbox_name_id"
+            {colorVariant}
+            checked
+            {dynamicColorTheme}
+            onValueChange={(checked) => {
+                toggleVisibility(
+                    FixedOrgEntityPropertyDescriptors.TITLE,
+                    checked,
+                );
+            }}>Show/Hide Title Property</Checkbox
+        >
+        <Checkbox
             id="teamPropertyVisibilityCheckbox_input_id"
             name="teamPropertyVisibilityCheckbox_name_id"
             {colorVariant}
             checked
-            {dynamicColorTheme}>Show/Hide Team Property</Checkbox
+            {dynamicColorTheme}
+            onValueChange={(checked) => {
+                toggleVisibility(
+                    FixedOrgEntityPropertyDescriptors.TEAM_TITLE,
+                    checked,
+                );
+            }}>Show/Hide Team Property</Checkbox
         >
         {#each propertyDescriptors as nextPropertyDescriptor: OrgEntityPropertyDescriptor}
             <Checkbox
@@ -222,8 +248,19 @@
             {colorVariant}
             {dynamicColorTheme}
             checked
-            onValueChange={() => alert("clicked")}
-            >Add/Remove Phone Property</Checkbox
+            onValueChange={(checked) => {
+                // iterate through to find phone and disable it
+                if (propertyDescriptors !== undefined) {
+                    for (const nextPropertyDescriptor of propertyDescriptors) {
+                        if (
+                            nextPropertyDescriptor.name ==
+                            EmployeeReservedPropertyDescriptors.PHONE.name
+                        ) {
+                            nextPropertyDescriptor.enabled = checked;
+                        }
+                    }
+                }
+            }}>Add/Remove Phone Property</Checkbox
         >
     </div>
     <div class="flex">
