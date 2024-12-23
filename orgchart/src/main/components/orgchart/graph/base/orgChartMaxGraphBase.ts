@@ -79,20 +79,6 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
                 // Root cell is the first manager created
                 this.rootCell = newCell;
             }
-
-            // Not sure if this will stay here
-            // const orgStructure = this.orgStructure;
-            // if (orgStructure.managerHasTeams(manager))
-            //{
-            //    const teamsForManager = orgStructure.getTeamsForManager(manager);
-            //    teamsForManager.forEach(
-            //        (team: Team) => {
-            // FIXME - not creating team nodes for now
-            /*let teamVertex = new OrgPlannerChartTeamVertex(team);
-            this.insertTeamNode(team, teamVertex, this.getStylesheet().styles.get("team")!);
-            */
-            //        });
-            //}
         }
         else
         {
@@ -386,10 +372,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     private populateGraph(): void
     {
-        // Gets the default parent for inserting new cells. This
-        // is normally the first child of the root (ie. layer 0).
-        // const parent = this.getDefaultParent();
-
+        // Traverse the org structure and to add Employee Nodes
         const visitor = new OrgChartBuildingVisitor(this.orgChartMaxGraphAssemblyService, this.visibilityState);
         this._orgStructure.traverseBF(visitor);
         if (!visitor.rootCell)
@@ -397,6 +380,13 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
             throw new Error("Problem building graph. Root cell not found.");
         }
         this.rootCell = visitor.rootCell;
+
+        // Now insert Teams
+        for (const team of this._orgStructure.getTeams())
+        {
+            const teamCellAdded = this.orgChartMaxGraphAssemblyService.addTeamNode(team);
+            this.orgChartMaxGraphAssemblyService.augmentCellTemp(teamCellAdded, this.visibilityState);
+        }
     }
 
     private refreshStyles()

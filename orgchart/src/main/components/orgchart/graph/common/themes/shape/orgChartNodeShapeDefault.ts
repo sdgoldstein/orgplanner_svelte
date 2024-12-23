@@ -1,6 +1,6 @@
 import {AbstractCanvas2D, Cell, Rectangle, SvgCanvas2D} from "@maxgraph/core";
 
-import {OrgPlannerChartEmployeeVertex} from "../../core/orgPlannerChartModel";
+import {OrgPlannerChartEmployeeVertex, type OrgPlannerChartVertex} from "../../core/orgPlannerChartModel";
 
 import {OrgChartNodeShapeBase} from "./orgChartNodeShapeBase";
 
@@ -76,7 +76,7 @@ class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
         if (this.state)
         {
             const currentCell: Cell = this.state.cell;
-            const currentCellValue: OrgPlannerChartEmployeeVertex = currentCell.value as OrgPlannerChartEmployeeVertex;
+            const currentCellValue: OrgPlannerChartVertex = currentCell.value as OrgPlannerChartVertex;
             // FIXME - Need to all determine if this call HAS children
             if (currentCellValue.canBeParent() && this._hasChildren(currentCell))
             {

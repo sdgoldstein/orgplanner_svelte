@@ -39,6 +39,8 @@ interface OrgPlannerChartVertex
     setProperty(name: string, value: string): void;
     getProperty(name: string): string;
     hasProperty(name: string): boolean;
+    canBeParent(): boolean; // FIXME - Moved this up to this interface from Employee when I added Team support.  Does it
+                            // make sense?  Is a Team a parent?
 }
 
 abstract class OrgPlannerChartEmployeeVertex implements OrgPlannerChartVertex
@@ -171,6 +173,11 @@ class OrgPlannerChartTeamVertex implements OrgPlannerChartVertex
     get team()
     {
         return this.orgEntity;
+    }
+
+    canBeParent()
+    {
+        return true;
     }
 
     toString()

@@ -9,12 +9,19 @@ import {
     InternalEvent
 } from "@maxgraph/core";
 import {BaseService, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
-import {OrgEntityTypes, type Employee, type IndividualContributor, type Manager} from "orgplanner-common/model";
+import {
+    OrgEntityTypes,
+    type Employee,
+    type IndividualContributor,
+    type Manager,
+    type Team
+} from "orgplanner-common/model";
 
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartICVertex,
     OrgPlannerChartManagerVertex,
+    OrgPlannerChartTeamVertex,
     type OrgPlannerChartVertex,
     VertexType
 } from "../core/orgPlannerChartModel";
@@ -247,9 +254,38 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         return cellToReturn;
     }
 
-    addTeamNode(): Cell
+    addTeamNode(team: Team): Cell
     {
-        throw new Error("Method not implemented.");
+        let cellToReturn;
+
+        if (!this._graph)
+        {
+            throw new Error("Graph has not be inserted");
+        }
+
+        const graphStylesheet = this._graph.getStylesheet();
+
+        const orgChartVertex = new OrgPlannerChartTeamVertex(team);
+
+        const parent = this._graph.getDefaultParent();
+        cellToReturn = this._graph.insertVertex(parent, team.id, orgChartVertex, 20, 20, 80, 30,
+                                                graphStylesheet.styles.get("team")!);
+
+        const managerCell = this._graph.model.getCell(team.managerId);
+        if (managerCell)
+        {
+            const insertedEdge =
+                this._graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
+            this._augmentEdgeTemp(insertedEdge);
+        }
+
+        this.addToggleSubtreeOverlay(cellToReturn);
+        this.addEditButtonOverlay(cellToReturn);
+        this.addDeleteButtonOverlay(cellToReturn);
+
+        // FIXME - This does not account for edges from children to their Teams
+
+        return cellToReturn;
     }
 
     augmentCellTemp(cell: Cell, visibilityState: OrgChartEntityVisibleState): void

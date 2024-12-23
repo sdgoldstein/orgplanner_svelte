@@ -139,7 +139,14 @@ class TreeBasedOrgStructure implements OrgStructure
 
     importTeam(id: string, title: string, managerId: string): Team
     {
-        return this._createTeamImpl(id, title, managerId);
+        const createdTeam = this._createTeamImpl(id, title, managerId);
+        if ((managerId === TreeBasedOrgStructure.ROOT_ID) && (id != TeamConstants.NO_TEAM_ID))
+        {
+            // FIXME - Why the No Team ID is hard coded , but the root team is not?  Seems inconsistent, but it's
+            // allowing us to differentiate at this point
+            this.rootTeam = createdTeam;
+        }
+        return createdTeam;
     }
 
     importEmployee(id: string, name: string, title: string, managerId: string, teamId: string, isManager: boolean,
@@ -307,7 +314,7 @@ class TreeBasedOrgStructure implements OrgStructure
         {
         }
 
-        return this._orgLeader;
+        return previousLeader;
     }
 
     private _cleanCurrentLeaderPost(previousLeader: Manager|undefined): void
@@ -352,6 +359,8 @@ class TreeBasedOrgStructure implements OrgStructure
 
     private set rootTeam(teamToSet: Team)
     {
+        const previousRootTeam: Team|undefined = this._cleanCurrentRootTeamPre();
+
         this._rootTeam = teamToSet;
 
         // If we've set the root team and the org leader has been created, we reassign the org leader to the root team
@@ -360,8 +369,38 @@ class TreeBasedOrgStructure implements OrgStructure
             this._orgLeader.team = teamToSet;
         }
 
-        // We do not reset.  It's possible the root team is created in the middle of import.  As the ID is fixed, this
-        // shouldn't be a problem
+        this._cleanCurrentRootTeamPost(previousRootTeam);
+    }
+
+    private _cleanCurrentRootTeamPre(): Team|undefined
+    {
+        const previousRootTeam = this._rootTeam;
+        if (previousRootTeam)
+        {
+        }
+
+        return previousRootTeam;
+    }
+
+    private _cleanCurrentRootTeamPost(previousRootTeam: Team|undefined): void
+    {
+        // Point all children of the previous RootTeam to the new RootTeam
+        if (previousRootTeam)
+        {
+            // Remove previous root team from team map
+            this._teamsIdToTeamsMap.delete(previousRootTeam.id);
+
+            // Remove previous root team from manager's teams map
+            const previousRootTeamsManagersTeams = this._managerIdToTeamsMap.get(previousRootTeam.managerId);
+            if (previousRootTeamsManagersTeams !== undefined)
+            {
+                const index = previousRootTeamsManagersTeams.indexOf(previousRootTeam);
+                if (index !== -1)
+                {
+                    previousRootTeamsManagersTeams.splice(index, 1);
+                }
+            }
+        }
     }
 
     /**
