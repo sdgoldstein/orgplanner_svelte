@@ -1,16 +1,15 @@
 import {CellRenderer, type CellStateStyle} from "@maxgraph/core";
 import {type OrgEntityColorTheme} from "orgplanner-common/model";
 
-import {OrgChartMaxGraphThemeDefault} from "./orgChartMaxGraphThemeDefault";
-import {PrintableOrgChartNodeShape} from "./shape/printableOrgChartNodeShape";
+import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
+import {ReadOnlyOrgChartNodeShape} from "./readOnlyOrgChartNodeShape";
 
-class PrintableOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
+class ReadOnlyOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
 {
     static
     {
-
         //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("printableOrgChartNodeShape", PrintableOrgChartNodeShape);
+        CellRenderer.registerShape("readOnlyOrgChartNodeShape", ReadOnlyOrgChartNodeShape);
     }
 
     constructor(colorTheme: OrgEntityColorTheme)
@@ -21,9 +20,9 @@ class PrintableOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
     getStyleForNodeType(nodeType: string): CellStateStyle
     {
         const cellStateToReturn = super.getStyleForNodeType(nodeType);
-        cellStateToReturn.shape = "printableOrgChartNodeShape";
+        cellStateToReturn.shape = "readOnlyOrgChartNodeShape";
         return cellStateToReturn;
     }
 }
 
-export {PrintableOrgChartMaxGraphTheme};
+export {ReadOnlyOrgChartMaxGraphTheme};

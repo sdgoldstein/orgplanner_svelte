@@ -1,6 +1,6 @@
 import {Point} from "@maxgraph/core";
 
-import type {EditableOrgChartMaxGraph} from "../../editable/editbleOrgChartMaxGraph";
+import type {EditableOrgChartMaxGraph} from "../../mode/editable/editbleOrgChartMaxGraph";
 
 import {LeafWrapperNodeMetadata, type NodeLayoutMetadata} from "./nodeLayoutMetadata";
 import {OrgPlannerChartLayout} from "./orgPlannerChartLayout";

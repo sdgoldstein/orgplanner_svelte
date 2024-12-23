@@ -1,40 +1,39 @@
 import {
-    Cell,
-    CellOverlay,
-    type CellStateStyle,
     constants,
-    EventObject,
-    Graph,
+    InternalEvent,
+    type CellOverlay,
+    type Graph,
+    type EventObject,
     ImageBox,
-    InternalEvent
+    type Cell,
+    type CellStateStyle
 } from "@maxgraph/core";
 import {BaseService, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
+import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
 import {
-    OrgEntityTypes,
-    type Employee,
-    type IndividualContributor,
     type Manager,
-    type Team
+    type IndividualContributor,
+    type Team,
+    OrgEntityTypes,
+    type Employee
 } from "orgplanner-common/model";
-
 import {
-    OrgPlannerChartEmployeeVertex,
-    OrgPlannerChartICVertex,
-    OrgPlannerChartManagerVertex,
-    OrgPlannerChartTeamVertex,
     type OrgPlannerChartVertex,
-    VertexType
-} from "../core/orgPlannerChartModel";
-import type {MaxGraphTheme} from "../themes/maxGraphTheme";
+    VertexType,
+    OrgPlannerChartManagerVertex,
+    OrgPlannerChartICVertex,
+    OrgPlannerChartTeamVertex,
+    OrgPlannerChartEmployeeVertex
+} from "../../common/core/orgPlannerChartModel";
+import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {
     DefaultOrgChartCellOverlay,
-    DeleteButtonCellOverlay,
-    EditButtonCellOverlay
-} from "../themes/shape/orgChartCellOverlay";
+    EditButtonCellOverlay,
+    DeleteButtonCellOverlay
+} from "../../common/themes/shape/orgChartCellOverlay";
 import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
-import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
 
-class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChartMaxGraphAssemblyService
+class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChartMaxGraphAssemblyService
 {
     private _toggleSubtreeOverlay?: CellOverlay;
     private _editButtonOverlay?: CellOverlay;
@@ -226,9 +225,6 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
         const orgChartManager = new OrgPlannerChartManagerVertex(manager);
         // FIX ME - Last Param
         cellToReturn = this._insertEmployeeNode(manager, orgChartManager, graphStylesheet.styles.get("manager")!);
-        this.addToggleSubtreeOverlay(cellToReturn);
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
 
         return cellToReturn;
     }
@@ -247,9 +243,6 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
 
         // FIX ME = Last param
         cellToReturn = this._insertEmployeeNode(ic, orgChartEmployee, graphStylesheet.styles.get("ic")!);
-        this.addToggleSubtreeOverlay(cellToReturn);
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
 
         return cellToReturn;
     }
@@ -279,10 +272,6 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
                 this._graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
             this._augmentEdgeTemp(insertedEdge);
         }
-
-        this.addToggleSubtreeOverlay(cellToReturn);
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
 
         // FIXME - This does not account for edges from children to their Teams
 
@@ -364,4 +353,4 @@ class OrgChartMaxGraphAssemblyServiceImpl extends BaseService implements OrgChar
     }
 }
 
-export {OrgChartMaxGraphAssemblyServiceImpl};
+export {OrgChartMaxGraphAssemblyServiceBase};

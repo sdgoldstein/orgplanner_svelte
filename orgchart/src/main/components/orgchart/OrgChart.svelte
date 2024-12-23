@@ -10,7 +10,7 @@
         OrgChartProxy,
         OrgChartProps,
     } from "./graph/model/orgChartProxy";
-    import { EditableOrgChartProxy } from "./graph/editable/editableOrgChartProxy";
+    import OrgChartProxyFactory from "./graph/model/orgChartProxyFactory";
 
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;
@@ -28,8 +28,8 @@
         if (!chartContainer) {
             throw new Error("chartContainer undefined in mount");
         }
-        orgChartHelper = new EditableOrgChartProxy(chartContainer);
-        orgChartHelper.onMount();
+        orgChartHelper = OrgChartProxyFactory.instance.getOrgChartProxy(mode);
+        orgChartHelper.onMount(chartContainer);
 
         return () => {
             if (!orgChartHelper) {

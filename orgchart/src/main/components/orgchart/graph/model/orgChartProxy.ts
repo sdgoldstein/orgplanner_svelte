@@ -11,7 +11,7 @@ interface OrgChartProps
 
 interface OrgChartProxy
 {
-    onMount(): void;
+    onMount(chartContainer: HTMLElement): void;
     onDismount(): void;
     onUpdate(orgChartProps: OrgChartProps): void;
 }

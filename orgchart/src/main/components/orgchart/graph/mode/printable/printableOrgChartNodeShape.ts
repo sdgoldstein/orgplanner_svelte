@@ -1,7 +1,7 @@
 import type {Rectangle} from "@maxgraph/core";
-import {OrgChartNodeShapeBase} from "./orgChartNodeShapeBase";
+import {OrgChartNodeShapeBase} from "../../common/themes/shape/orgChartNodeShapeBase";
 
-class ReadOnlyOrgChartNodeShape extends OrgChartNodeShapeBase
+class PrintableOrgChartNodeShape extends OrgChartNodeShapeBase
 {
     constructor(bounds: Rectangle, fill: string, stroke: string, strokewidth: number|undefined)
     {
@@ -10,4 +10,4 @@ class ReadOnlyOrgChartNodeShape extends OrgChartNodeShapeBase
     }
 }
 
-export {ReadOnlyOrgChartNodeShape};
+export {PrintableOrgChartNodeShape};

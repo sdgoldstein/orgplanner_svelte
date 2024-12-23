@@ -6,27 +6,29 @@ import {
     type Employee,
     type OrgStructure,
     type OrgEntityColorTheme,
-    TeamConstants,
     type Team
 } from "orgplanner-common/model";
 import {
     FixedOrgEntityPropertyDescriptors,
     type OrgChartEntityVisibleState,
     type ViewToggableEntity
-} from "../../orgChartViewState";
+} from "../../../orgChartViewState";
 import {
     OrgPlannerChartModel,
     type OrgPlannerChartVertex,
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex
-} from "../common/core/orgPlannerChartModel";
-import {OrgPlannerChartLayout} from "../common/layout/orgPlannerChartLayout";
-import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
-import {OrgChartMaxGraphThemeDefault} from "../common/themes/orgChartMaxGraphThemeDefault";
-import type {OrgChartMaxGraph} from "../model/orgChartMaxGraph";
-import type {OrgChartMaxGraphAssemblyService} from "../model/orgChartMaxGraphAssemblyService";
-import {OrgChartMaxGraphAssemblyServiceImpl} from "../common/assembly/orgChartMaxGraphAssemblyServiceImpl";
+} from "../../common/core/orgPlannerChartModel";
+import {OrgPlannerChartLayout} from "../../common/layout/orgPlannerChartLayout";
+import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
+import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
+import type {OrgChartMaxGraph} from "../../model/orgChartMaxGraph";
+import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
+import type {EntityViewToggableOrgChartMaxGraph} from "./viewToggableEntityEventHandler";
 
+// FIXME - Prefer composition to inheritance?  The entire mode design is based on inheritance - is there a way to make
+// it use composition instead with decorators to incerease sharing nad make it more flexible?  Difficult due to the
+// functional nature of the MaxGraph library?
 /**
  * A visitor used to apply logic while traversing the nodes of the graph
  */
@@ -110,7 +112,8 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
  * other actions/logic it handles directly.  It also is responsible for directly updated the underlying orgstructure
  * when changs occur
  */
-abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, PubSubListener
+abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, PubSubListener,
+                                                             EntityViewToggableOrgChartMaxGraph
 {
     // @ts-ignore: _isUpdating is declared but its value is never read - FIXME
     private _isUpdating: boolean = false;
@@ -118,14 +121,11 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
     private _rootCell?: Cell;
     private _layout?: OrgPlannerChartLayout;
 
-    protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService;
-
     constructor(_element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
-                protected visibilityState: OrgChartEntityVisibleState)
+                protected visibilityState: OrgChartEntityVisibleState,
+                protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService)
     {
         super(_element, new OrgPlannerChartModel(visibilityState));
-
-        this.orgChartMaxGraphAssemblyService = new OrgChartMaxGraphAssemblyServiceImpl();
 
         // FIXME - Need a mechanism to register services that the app does not know about, but are part of dependent
         // libraries

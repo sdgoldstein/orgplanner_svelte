@@ -11,23 +11,27 @@ import {Cell, CellState, type CellStateStyle, EventObject, VertexHandler} from "
 import {PubSubManager} from "orgplanner-common/jscore";
 import type {Employee, OrgStructure, Team} from "orgplanner-common/model";
 
-import type {OrgChartEntityVisibleState} from "../../orgChartViewState";
+import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
 import {
     OrgPlannerChartEmployeeVertex,
-    OrgPlannerChartModel,
     OrgPlannerChartTeamVertex,
     type OrgPlannerChartVertex
-} from "../common/core/orgPlannerChartModel";
-import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
-import {OrgChartVertexHandler} from "../common/themes/orgChartVertexHandler";
-import {OrgChartMaxGraphBase} from "../base/orgChartMaxGraphBase";
-import type {OrgChartMaxGraphAssemblyService} from "../model/orgChartMaxGraphAssemblyService";
+} from "../../common/core/orgPlannerChartModel";
+import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
+import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
+import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
+import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
 import {
     DeleteEntityCellActionEvent,
     EditEntityCellActionEvent,
     OrgChartSelectionChangedEvent
-} from "../../OrgChartEvents";
+} from "../../../OrgChartEvents";
+import {EditableOrgChartMaxGraphAssemblyServiceBase} from "./editableOrgChartMaxGraphAssemblyService";
+import {
+    type EntityViewToggableOrgChartMaxGraph,
+} from "../shared/viewToggableEntityEventHandler";
+import type {OrgChartMaxGraph} from "../../model/orgChartMaxGraph";
 
 /**
  * The org chart graph visual component.
@@ -36,12 +40,13 @@ import {
  * other actions/logic it handles directly.  It also is responsible for directly updated the underlying orgstructure
  * when changs occur
  */
-class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase
+class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityViewToggableOrgChartMaxGraph,
+                                                                       OrgChartMaxGraph
 {
     constructor(element: HTMLElement, orgStructure: OrgStructure, theme: MaxGraphTheme,
                 visibilityState: OrgChartEntityVisibleState)
     {
-        super(element, orgStructure, theme, visibilityState);
+        super(element, orgStructure, theme, visibilityState, new EditableOrgChartMaxGraphAssemblyServiceBase);
 
         /* fix to
          * https://stackoverflow.com/questions/66452387/error-in-mxgraph-firemouseevent-failed-to-execute-getcomputedstyle-on-windo
