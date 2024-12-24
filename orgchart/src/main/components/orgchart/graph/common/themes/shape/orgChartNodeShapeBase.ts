@@ -1,4 +1,4 @@
-import {AbstractCanvas2D, type CellStateStyle, constants, Rectangle, RectangleShape, TextShape} from "@maxgraph/core";
+import {AbstractCanvas2D, type CellStateStyle, constants, Rectangle, TextShape} from "@maxgraph/core";
 
 import {
     OrgPlannerChartEmployeeVertex,
@@ -7,25 +7,17 @@ import {
 } from "../../core/orgPlannerChartModel";
 
 import type {OrgChartMaxGraphThemeCellStateStyle} from "../orgChartMaxGraphThemeDefault";
-import type {OrgChartNodeShapeDecorator} from "./orgChartNodeShapeDecorator";
+import {OrgChartNodeShapeConstants} from "./orgChartNodeShareConstants";
+import {DecoratedRectangleMaxGraphShape} from "./decoratedRectangleMaxGraphShape";
 
-class OrgChartNodeShapeBase extends RectangleShape
+class OrgChartNodeShapeBase extends DecoratedRectangleMaxGraphShape
 {
-    private static readonly _DEFAULT_FONT_FAMILY =
-        "Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji";
     private _baseRoundedCornerRadius: number = -1;
-
-    private _decorators = new Array<OrgChartNodeShapeDecorator>();
 
     constructor(bounds: Rectangle, fill: string, stroke: string, strokewidth: number|undefined)
     {
         // At runtime, these parameters are all undefined!  Seemed like a bug in the library
         super(bounds, fill, stroke, strokewidth);
-    }
-
-    protected registerDecorator(decorator: OrgChartNodeShapeDecorator): void
-    {
-        this._decorators.push(decorator);
     }
 
     paintForeground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number): void
@@ -61,12 +53,6 @@ class OrgChartNodeShapeBase extends RectangleShape
                 nodeName = cellValue.team.title;
             }
             this._paintForegroundTitleText(nodeName, canvas, x, y, width, rowHeight, this.state.style);
-
-            // Paint the decorators
-            for (const nextDecorator of this._decorators)
-            {
-                nextDecorator.paintForeground(canvas, x, y, width, height, this.state, this.style);
-            }
         }
     }
 
@@ -89,7 +75,7 @@ class OrgChartNodeShapeBase extends RectangleShape
     {
         // Create the text shape for the label
         // It makes no sense to me that we need to specifiy the X,Y of the bounds to be the center of the box
-        const fontFamily = style.fontFamily ? style.fontFamily : OrgChartNodeShapeBase._DEFAULT_FONT_FAMILY;
+        const fontFamily = style.fontFamily ? style.fontFamily : OrgChartNodeShapeConstants.DEFAULT_FONT_FAMILY;
         const fontSize = style.fontSize ? style.fontSize : 0;
         const fontStyle = constants.FONT.BOLD;
         const fontColor = (style as OrgChartMaxGraphThemeCellStateStyle).cellHeaderFontColor
@@ -120,21 +106,6 @@ class OrgChartNodeShapeBase extends RectangleShape
         return this._baseRoundedCornerRadius;
     }
 
-    paintBackground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number): void
-    {
-        super.paintBackground(canvas, x, y, width, height);
-
-        // state is optional - why?!
-        if ((this.state) && (this.style))
-        {
-            // Paint the decorators
-            for (const nextDecorator of this._decorators)
-            {
-                nextDecorator.paintBackground(canvas, x, y, width, height, this.state, this.style);
-            }
-        }
-    }
-
     private static _getSizeForString(text: string, fontSize: number, fontFamily: string, fontStyle: number): number
     {
         const div = document.createElement("div");
@@ -163,6 +134,7 @@ class OrgChartNodeShapeBase extends RectangleShape
 
     static _configureStyle(styleToConfigure: CellStateStyle): void
     {
+        // FIXME - Broken!!!
         const rowHeight = OrgChartNodeShapeBase._calculateRowHeight(styleToConfigure);
         styleToConfigure.spacingTop = rowHeight;
     }

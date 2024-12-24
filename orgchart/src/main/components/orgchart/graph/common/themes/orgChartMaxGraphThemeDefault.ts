@@ -4,6 +4,7 @@ import {type OrgEntityColorTheme, OrgEntityTypes} from "orgplanner-common/model"
 import type {MaxGraphTheme} from "./maxGraphTheme";
 import {OrgChartLeafEdgeStyle} from "./orgChartLeafEdgeStyle";
 import {OrgChartNodeShapeDefault} from "./shape/orgChartNodeShapeDefault";
+import {NoLabelOrgChartShape} from "./shape/noLabelOrgChartShape";
 
 type CellStateStyleExtension = {
     cellHeaderFontColor?: string;
@@ -26,7 +27,7 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.perimeter = Perimeter.RectanglePerimeter;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.rounded = true;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.fillColor = "#ffffff";
-        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.arcSize = 5;
+        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.arcSize = 10;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.autoSize = true;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.strokeWidth = 2;
         // defaultCellStyle.strokeColor = '#CFD7F2';
@@ -75,6 +76,8 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
 
         //@ts-expect-error - constructor madness in the Shape hierachy.
         CellRenderer.registerShape("orgChartNodeShape", OrgChartNodeShapeDefault);
+        //@ts-expect-error - constructor madness in the Shape hierachy.
+        CellRenderer.registerShape("noLabelRectagle", NoLabelOrgChartShape);
 
         // Put edge style in registry
         StyleRegistry.putValue(OrgChartMaxGraphThemeDefault.leafEdgeStyle,
@@ -95,7 +98,18 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         this.nodeTypeToStyleMap.set("ic", icStyle)
 
         const teamStyle = Object.assign({}, OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
-        teamStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.TEAM).primary;
+        const teamEntity = this.colorTheme.getColorAssignment(OrgEntityTypes.TEAM);
+        const teamColor = teamEntity.primary;
+        teamStyle.strokeColor = teamColor;
+        teamStyle.fillColor = teamColor;
+        teamStyle.fontColor = teamEntity.textOnPrimary;
+        teamStyle.fontStyle = constants.FONT.BOLD;
+        teamStyle.spacingTop = 0; // FIXME - This is set by the
+                                  // OrgChartNodeShapeDefault._configureStyle(OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
+                                  // above.  It shouldn't be, since we're now using different node shapes!
+        teamStyle.arcSize = 20; // FIXME - Need to look at shapes and figure out why arcsize for team needs to be double
+                                // that of the employees
+        teamStyle.shape = "noLabelRectagle";
         this.nodeTypeToStyleMap.set("team", teamStyle)
 
         const defaultEdgeStyle = Object.assign({}, OrgChartMaxGraphThemeDefault.DEFAULT_EDGE_STYLE);

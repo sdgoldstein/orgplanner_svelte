@@ -20,7 +20,10 @@ class ReadOnlyOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
     getStyleForNodeType(nodeType: string): CellStateStyle
     {
         const cellStateToReturn = super.getStyleForNodeType(nodeType);
-        cellStateToReturn.shape = "readOnlyOrgChartNodeShape";
+        if (nodeType !== "team")
+        {
+            cellStateToReturn.shape = "readOnlyOrgChartNodeShape";
+        }
         return cellStateToReturn;
     }
 }

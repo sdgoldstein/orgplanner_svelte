@@ -341,7 +341,7 @@ class LeafWrapperNodeMetadata extends BaseNodeLayoutMetadata
 
     private getNumberOfRowsOccupied()
     {
-        const singleChildVerticalSpace = this.height + this._verticalSpacing / 4;
+        const singleChildVerticalSpace = this.height + this._verticalSpacing / 2;
         return Math.ceil((singleChildVerticalSpace * this.childNodes.length) / (this.height + this._verticalSpacing));
     }
 }
