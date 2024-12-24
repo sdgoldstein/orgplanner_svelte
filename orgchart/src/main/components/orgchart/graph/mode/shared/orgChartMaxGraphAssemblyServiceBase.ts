@@ -271,9 +271,16 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
             const insertedEdge =
                 this._graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
             this._augmentEdgeTemp(insertedEdge);
-        }
 
-        // FIXME - This does not account for edges from children to their Teams
+            // Create edge from teams their manager's team.  This enables removing managers from the chart
+            const parentTeamCell = this._graph.model.getCell(managerCell.value.orgEntity.team.id);
+            if (parentTeamCell)
+            {
+                const insertedEdge =
+                    this._graph.insertEdge(parent, team.id + parentTeamCell.value.id, "", parentTeamCell, cellToReturn);
+                this._augmentEdgeTemp(insertedEdge);
+            }
+        }
 
         return cellToReturn;
     }
@@ -349,9 +356,13 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
          * following are true:
          *  - The underlying isVisible function returns true
          *  - The source vertex and target vertices are both visible
-         *  - The target only has one incoming edge
-         *  - The target only has multiple incomong edges, but only one source is visible
-         *  - The target has multiple incoming edges, and the source is a Team
+         *  -   The target only has one incoming edge
+         *      OR
+         *  -   The target only has multiple incomong edges, but only one source is visible
+         *      OR
+         *  -   The target has multiple incoming edges, and the source is a Team and the target is an IC
+         *  -   OR
+         *  -   The target has multiple incoming edges, and the source is a Manager and the target is an Team
          */
         insertedEdge.isVisibleOriginal = insertedEdge.isVisible;
         insertedEdge.isVisible = () => {
@@ -385,8 +396,16 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
                     }
                     else if (numVisibleSources > 1)
                     {
-                        // The target has multiple incoming edges, and the source is a Team
-                        visibilityToReturn = edgeSource.getValue().getVertexType() === VertexType.TEAM;
+                        /*
+                            The target has multiple incoming edges, and the source type is not equal to the target type
+                           AND the target is not an IC OR The target has multiple incoming edges, and the source is a
+                           Team and the target is a IC
+                         */
+                        const targetVertexType = edgeTarget.getValue().getVertexType();
+                        const sourceVertexType = edgeSource.getValue().getVertexType();
+                        visibilityToReturn =
+                            (((sourceVertexType != targetVertexType) && (targetVertexType != VertexType.IC)) ||
+                             ((sourceVertexType === VertexType.TEAM) && (targetVertexType === VertexType.IC)));
                     }
                 }
                 else
