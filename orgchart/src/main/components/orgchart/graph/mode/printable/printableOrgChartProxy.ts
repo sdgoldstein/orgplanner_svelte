@@ -15,6 +15,8 @@ class PrintableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy
             throw new Error("No chart container set");
         }
 
+        // Recreate and redraw on every update?  Not efficient.  FIXME - Look at editable version and try to optimize?
+        this.chartContainer.innerHTML = "";
         const orgChartTheme = new PrintableOrgChartMaxGraphTheme(orgChartProps.colorTheme);
         const visibiltyState = new OrgChartEntityVisibleStateImpl(orgChartProps.propertyDescriptors);
         const graph = new PrintableOrgChartMaxGraph(this.chartContainer, orgChartProps.orgStructure, orgChartTheme,
