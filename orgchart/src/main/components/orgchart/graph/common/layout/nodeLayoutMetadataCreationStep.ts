@@ -38,46 +38,48 @@ class NodeLayoutMetadataCreationStep
         const outgoingEdges = layout.graph.getEdges(cell, null, false, true, false, false);
         for (const nextEdge of outgoingEdges)
         {
-            const nextChild = nextEdge.getTerminal(false);
-            if ((nextChild) && (!layout.isVertexIgnored(nextChild)) && (nextChild.isVisible()))
+            if (nextEdge.isVisible())
             {
-                console.trace(`Creating node metadata for child: ${nextChild.value}`);
-
-                const nextChildNodeMetadata = this.createNodeMetadata(nextChild);
-
-                if (this.isLeafNode(nextChildNodeMetadata))
+                const nextChild = nextEdge.getTerminal(false);
+                if ((nextChild) && (!layout.isVertexIgnored(nextChild)) && (nextChild.isVisible()))
                 {
-                    console.trace(`Child, ${nextChild.value}, is a leaf node`);
+                    console.trace(`Creating node metadata for child: ${nextChild.value}`);
 
-                    if (leafNodeMetadata == null)
+                    const nextChildNodeMetadata = this.createNodeMetadata(nextChild);
+
+                    if (this.isLeafNode(nextChildNodeMetadata))
                     {
-                        console.trace(`Creating Leaf Node Meta Data for ${cell.value}`);
+                        console.trace(`Child, ${nextChild.value}, is a leaf node`);
 
-                        // FIXME - Is this right?  Why do we put the nextChild as the cell of the leadnode?  What other
-                        // cell would we use?
-                        leafNodeMetadata = new LeafWrapperNodeMetadata(nextChild, layout.getVertexBounds(nextChild),
-                                                                       layout.layoutConfiguration.verticalSpacing);
-                        nodeMetadata.prependChildNode(leafNodeMetadata);
+                        if (leafNodeMetadata == null)
+                        {
+                            console.trace(`Creating Leaf Node Meta Data for ${cell.value}`);
+
+                            // FIXME - Is this right?  Why do we put the nextChild as the cell of the leadnode?  What
+                            // other cell would we use?
+                            leafNodeMetadata = new LeafWrapperNodeMetadata(nextChild, layout.getVertexBounds(nextChild),
+                                                                           layout.layoutConfiguration.verticalSpacing);
+                            nodeMetadata.prependChildNode(leafNodeMetadata);
+                        }
+
+                        console.trace(`Adding child, ${nextChild.value}, as leaf to, ${cell.value}`);
+
+                        leafNodeMetadata.addChildNode(nextChildNodeMetadata);
                     }
+                    else
+                    {
+                        console.trace(`Adding child, ${nextChild.value}, to, ${cell.value}`);
 
-                    console.trace(`Adding child, ${nextChild.value}, as leaf to, ${cell.value}`);
-
-                    leafNodeMetadata.addChildNode(nextChildNodeMetadata);
+                        // Add child node
+                        nodeMetadata.addChildNode(nextChildNodeMetadata);
+                    }
                 }
                 else
                 {
-                    console.trace(`Adding child, ${nextChild.value}, to, ${cell.value}`);
+                    console.trace(`Found hidden child to ${cell.value}`);
 
-                    // Add child node
-                    nodeMetadata.addChildNode(nextChildNodeMetadata);
+                    nodeMetadata.hasHiddenChildren = true;
                 }
-            }
-
-            else
-            {
-                console.trace(`Found hidden child to ${cell.value}`);
-
-                nodeMetadata.hasHiddenChildren = true;
             }
         }
     }

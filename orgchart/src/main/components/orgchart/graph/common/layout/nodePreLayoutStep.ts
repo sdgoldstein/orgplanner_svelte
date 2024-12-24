@@ -97,7 +97,13 @@ class NodePreLayoutStep
             currentPosition[1] =
                 currentPosition[1] + nextChildNode.height + this.layout.layoutConfiguration.verticalSpacing / 2;
 
-            const childCellEdge = childCell.edges[0];
+            // FIXME - This is a hack.  Need to find the edge that is visible.  A child should just have two edges, with
+            // one being visible.  This may change in the future, so the logic here is a bit of a hack
+            let childCellEdge = childCell.edges[0];
+            if (!childCellEdge.isVisible())
+            {
+                childCellEdge = childCell.edges[1];
+            }
             const edgeCellStyle = childCellEdge.style;
 
             edgeCellStyle.edgeStyle = leafEdgeStyle;

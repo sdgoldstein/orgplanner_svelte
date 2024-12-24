@@ -51,13 +51,13 @@ class ReadOnlyOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
             throw new Error("No chart container set");
         }
 
-        if (!this._currentGraph)
-        {
-            const orgChartTheme = new ReadOnlyOrgChartMaxGraphTheme(orgChartProps.colorTheme);
-            const visibiltyState = new OrgChartEntityVisibleStateImpl(orgChartProps.propertyDescriptors);
-            this._currentGraph = new ReadOnlyOrgChartMaxGraph(this.chartContainer, orgChartProps.orgStructure,
-                                                              orgChartTheme, visibiltyState);
-        }
+        // Recreate and redraw on every update?  Not efficient.  FIXME - Look at editable version and try to optimize?
+        this.chartContainer.innerHTML = "";
+        const orgChartTheme = new ReadOnlyOrgChartMaxGraphTheme(orgChartProps.colorTheme);
+        const visibiltyState = new OrgChartEntityVisibleStateImpl(orgChartProps.propertyDescriptors);
+        this._currentGraph = new ReadOnlyOrgChartMaxGraph(this.chartContainer, orgChartProps.orgStructure,
+                                                          orgChartTheme, visibiltyState);
+
         this._currentGraph.renderGraph();
     };
 
