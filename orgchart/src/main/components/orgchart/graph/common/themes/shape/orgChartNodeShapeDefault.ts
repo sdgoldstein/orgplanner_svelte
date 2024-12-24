@@ -1,10 +1,9 @@
-import {AbstractCanvas2D, Cell, Rectangle, SvgCanvas2D} from "@maxgraph/core";
-
-import {OrgPlannerChartEmployeeVertex, type OrgPlannerChartVertex} from "../../core/orgPlannerChartModel";
+import {AbstractCanvas2D, Rectangle, SvgCanvas2D} from "@maxgraph/core";
 
 import {OrgChartNodeShapeBase} from "./orgChartNodeShapeBase";
 import {ToggleSubtreeOveralyShapeDecorator} from "./toggleSubtreeOverlayShapeDecorator";
 
+// FIXME - turn these into Decorators
 class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
 {
     editButtonBounds: Rectangle|undefined;
@@ -69,38 +68,6 @@ class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
             new Rectangle(deleteButtonXPos - buttonWidth / 2, buttonYPos - size / 2, buttonWidth, size);
     }
 
-    private _paintToggleSubtreeButton(canvas: AbstractCanvas2D, x: number, width: number, y: number, height: number)
-    {
-        const radius = this._getBaseRoundedCornerRadius(height) / 2;
-
-        let size = height / 8;
-
-        // state is optional - why?!
-        if (this.state)
-        {
-            const currentCell: Cell = this.state.cell;
-            const currentCellValue: OrgPlannerChartVertex = currentCell.value as OrgPlannerChartVertex;
-            // FIXME - Need to all determine if this call HAS children
-            if (currentCellValue.canBeParent() && this._hasChildren(currentCell))
-            {
-                this._paintButton(canvas, x + width / 2, y + height, size, size, radius, false);
-
-                canvas.setStrokeWidth(1);
-                canvas.begin();
-                canvas.moveTo(x + width / 2 - size / 4, y + height);
-                canvas.lineTo(x + width / 2 + size / 4, y + height);
-
-                // If collapsed, draw "+"
-                if (currentCellValue.hasProperty("collapsed") && currentCellValue.getProperty("collapsed") == "true")
-                {
-                    canvas.moveTo(x + width / 2, y + height - size / 4);
-                    canvas.lineTo(x + width / 2, y + height + size / 4);
-                }
-                canvas.fillAndStroke();
-            }
-        }
-    }
-
     private _paintButton(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number, radius: number,
                          filled: boolean)
     {
@@ -120,24 +87,6 @@ class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
         }
 
         canvas.restore();
-    }
-
-    private _hasChildren(cell: Cell): boolean
-    {
-        let valueToReturn = false;
-
-        const edgeCount = cell.getEdgeCount();
-        for (let i = 0; i < edgeCount && !valueToReturn; i++)
-        {
-            const nextEdge = cell.getEdgeAt(i);
-            // If the next edge starts at this cell and there exists a cell at the edge end
-            if ((nextEdge.getTerminal(true) === cell) && nextEdge.getTerminal(false))
-            {
-                valueToReturn = true;
-            }
-        }
-
-        return valueToReturn;
     }
 }
 

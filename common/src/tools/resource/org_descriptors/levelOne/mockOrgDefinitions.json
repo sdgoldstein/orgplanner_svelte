@@ -42,6 +42,25 @@
                     "ics": 10
                 }
             ]
+        },
+        {
+            "name": "level_1_teams_1_ics_1",
+            "levels": [
+                {
+                    "teams": 1,
+                    "ics": 1
+                }
+            ]
+        },
+        {
+            "name": "level_1_managers_teams_3_ics_10",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                }
+            ]
         }
     ]
 }

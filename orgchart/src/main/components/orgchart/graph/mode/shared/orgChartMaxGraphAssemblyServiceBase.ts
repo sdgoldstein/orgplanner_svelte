@@ -344,11 +344,61 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     private _augmentEdgeTemp(insertedEdge: Cell)
     {
+        /*
+         *  This is overly complicated.  Wish we had a better way to do this.  An edge is visible if all of the
+         * following are true:
+         *  - The underlying isVisible function returns true
+         *  - The source vertex and target vertices are both visible
+         *  - The target only has one incoming edge
+         *  - The target only has multiple incomong edges, but only one source is visible
+         *  - The target has multiple incoming edges, and the source is a Team
+         */
         insertedEdge.isVisibleOriginal = insertedEdge.isVisible;
         insertedEdge.isVisible = () => {
-            return (insertedEdge.source === null || insertedEdge.source.isVisible()) &&
-                   (insertedEdge.target === null || insertedEdge.target.isVisible()) &&
-                   insertedEdge.isVisibleOriginal();
+            let visibilityToReturn = false;
+
+            const edgeTarget = insertedEdge.target;
+            const edgeSource = insertedEdge.source;
+            if ((edgeTarget !== null && edgeTarget.isVisible()) && (edgeSource !== null && edgeSource.isVisible()))
+            {
+                const targetEdges: Cell[] = edgeTarget.getEdges(true, false);
+                if (targetEdges.length === 1)
+                {
+                    visibilityToReturn = true;
+                }
+                else if (targetEdges.length > 1)
+                {
+                    let numVisibleSources = 0;
+                    for (const nextEdge of targetEdges)
+                    {
+                        if (nextEdge.source !== null && nextEdge.source.isVisible())
+                        {
+                            numVisibleSources++;
+                        }
+                    }
+
+                    if (numVisibleSources === 1)
+                    {
+                        // The target has multiple incoming edges, but only one sources is visible.  It could be a team
+                        // or a manager, doesn't matter
+                        visibilityToReturn = true;
+                    }
+                    else if (numVisibleSources > 1)
+                    {
+                        // The target has multiple incoming edges, and the source is a Team
+                        visibilityToReturn = edgeSource.getValue().getVertexType() === VertexType.TEAM;
+                    }
+                }
+                else
+                {
+                    throw new Error("Target has no target edges.  Inconsistent state");
+                }
+            }
+
+            // Don't forget to check th eunderlying edge visibility
+            visibilityToReturn &&= insertedEdge.isVisibleOriginal();
+
+            return visibilityToReturn
         }
     }
 }

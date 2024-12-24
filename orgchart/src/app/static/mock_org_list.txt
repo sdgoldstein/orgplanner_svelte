@@ -3,6 +3,8 @@ levelOne/level_1_ics_10.json
 levelOne/level_1_managers_1_ics_10.json
 levelOne/level_1_managers_2_ics_10.json
 levelOne/level_1_managers_3_ics_10.json
+levelOne/level_1_teams_1_ics_1.json
+levelOne/level_1_managers_teams_3_ics_10.json
 levelThree/level_3_managers_2_ics_1.json
 levelThree/level_3_managers_2_ics_11.json
 levelThree/level_3_managers_2_ics_21.json

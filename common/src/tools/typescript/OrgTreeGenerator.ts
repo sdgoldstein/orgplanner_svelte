@@ -20,6 +20,7 @@ interface OrgTreeLevel
 {
     managers: number;
     ics: number;
+    teams: number;
 }
 
 interface OrgTreeDescriptor
@@ -61,24 +62,52 @@ class OrgTreeGenerator
     }
 
     buildNextLevel(newOrgStrTreeBasedOrgStructure: TreeBasedOrgStructure, levelIterator: IterableIterator<OrgTreeLevel>,
-                   managerIds: string[]): void
+                   previousLevelManagerIds: string[]): void
     {
         const nextLevelResult: IteratorResult<OrgTreeLevel> = levelIterator.next();
         if (nextLevelResult && ((nextLevelResult.done === false) || (nextLevelResult.value)))
         {
             const nextLevel: OrgTreeLevel = nextLevelResult.value;
-            const numManagers = managerIds.length;
+            const numManagers = previousLevelManagerIds.length;
+
+            const managerIdToTeamIdMap: Map<string, string[]> = new Map<string, string[]>();
+            for (let i = 0; i < nextLevel.teams; i++)
+            {
+                const managerId = previousLevelManagerIds[i % numManagers];
+                const newTeamId: string = this.addRandomTeam(newOrgStrTreeBasedOrgStructure, managerId);
+                let teamIdsArray = managerIdToTeamIdMap.get(managerId);
+                if (teamIdsArray === undefined)
+                {
+                    teamIdsArray = [ newTeamId ];
+                    managerIdToTeamIdMap.set(managerId, teamIdsArray);
+                }
+                else
+                {
+                    teamIdsArray.push(newTeamId);
+                }
+            }
+
             for (let i = 0; i < nextLevel.ics; i++)
             {
-                const managerId = managerIds[i % numManagers];
-                this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, false);
+                const managerId = previousLevelManagerIds[i % numManagers];
+                const teamIdsForManager = managerIdToTeamIdMap.get(managerId);
+                const teamId = ((teamIdsForManager !== undefined) && (teamIdsForManager.length > 0))
+                                   ? teamIdsForManager[i % teamIdsForManager.length]
+                                   : TeamConstants.NO_TEAM_ID;
+
+                this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, teamId, false);
             }
 
             const nextManagerIds: string[] = [];
             for (let i = 0; i < nextLevel.managers; i++)
             {
-                const managerId = managerIds[i % numManagers];
-                const newManagerId: string = this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, true);
+                const managerId = previousLevelManagerIds[i % numManagers];
+                const teamIdsForManager = managerIdToTeamIdMap.get(managerId);
+                const teamId = ((teamIdsForManager !== undefined) && (teamIdsForManager.length > 0))
+                                   ? teamIdsForManager[i % teamIdsForManager.length]
+                                   : TeamConstants.NO_TEAM_ID;
+                const newManagerId: string =
+                    this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, teamId, true);
                 nextManagerIds.push(newManagerId);
             }
 
@@ -86,13 +115,13 @@ class OrgTreeGenerator
         }
     }
 
-    addRandomEmployee(newOrgStructure: TreeBasedOrgStructure, managerId: string, isManager: boolean): string
+    addRandomEmployee(newOrgStructure: TreeBasedOrgStructure, managerId: string, teamId: string,
+                      isManager: boolean): string
     {
         const id = this.randomString(OrgTreeGenerator.ID_LENGTH);
         const name =
             this.randomString(OrgTreeGenerator.OTHER_LENGTH) + " " + this.randomString(OrgTreeGenerator.OTHER_LENGTH);
         const title = this.randomString(OrgTreeGenerator.TITLE_LENGTH);
-        const teamId = TeamConstants.NO_TEAM_ID;
         const mobilePhone = "999-999-9999";
         const workCity = this.randomChoice<string>([ "San Francisco, CA", "Austin, TX", "New York, NY" ]);
 
@@ -103,6 +132,15 @@ class OrgTreeGenerator
 
         const employeeAdded = newOrgStructure.importEmployee(id, name, title, managerId, teamId, isManager, properties);
         return employeeAdded.id;
+    }
+
+    addRandomTeam(newOrgStructure: TreeBasedOrgStructure, managerId: string): string
+    {
+        const id = this.randomString(OrgTreeGenerator.ID_LENGTH);
+        const name = this.randomString(OrgTreeGenerator.TITLE_LENGTH);
+        const teamAdded = newOrgStructure.importTeam(id, name, managerId);
+
+        return teamAdded.id;
     }
 
     randomString(length: number): string
