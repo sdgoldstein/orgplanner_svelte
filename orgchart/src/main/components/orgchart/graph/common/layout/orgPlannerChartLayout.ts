@@ -24,7 +24,7 @@ class OrgPlannerChartLayout extends GraphLayout
      *
      * @param graph The graph to layout
      */
-    constructor(graph: Graph, private _rootCellCallback: () => Cell)
+    constructor(graph: Graph, private _rootCellCallback: () => Cell | null)
     {
         super(graph);
         this._layoutConfiguration = new DefaultLayoutConfiguration();
@@ -41,7 +41,7 @@ class OrgPlannerChartLayout extends GraphLayout
 
         // FIXME - This is a hack to get the root cell.  Is there a better way?
         // Should create a "TreeGraph interface that as a getRootCell method"
-        const root: Cell = this._rootCellCallback();
+        const root: Cell|null = this._rootCellCallback();
 
         if (root)
         {

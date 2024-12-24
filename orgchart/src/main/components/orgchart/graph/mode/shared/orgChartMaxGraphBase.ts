@@ -183,11 +183,11 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
      */
     protected rehydrate(): void
     {
-        this.batchUpdate(() => {
-            const parent = this.getDefaultParent();
-            this.removeCells(this.getChildCells(parent, true, true), true);
-            this.populateGraph();
-        });
+        //  Need to do this in two passes.  First, remove all cells, then re-add them.  Otherwise, they're not removed
+        //  when repopulating the graph, leading to duplicates and issues
+        this.batchUpdate(() => { this.getDataModel().clear(); });
+
+        this.batchUpdate(() => { this.populateGraph(); });
     }
 
     requestUpdate(updatedOrgStructure?: OrgStructure, updatedColorTheme?: OrgEntityColorTheme,
@@ -268,7 +268,14 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     public renderGraph(): void
     {
-        this._layout = new OrgPlannerChartLayout(this, () => {return this.rootCell});
+        this._layout = new OrgPlannerChartLayout(this, () => {
+            let valueToReturn = this.model.getCell(this._orgStructure.rootTeam.id);
+            if ((valueToReturn === null) || !valueToReturn.isVisible())
+            {
+                valueToReturn = this.model.getCell(this._orgStructure.orgLeader.id);
+            }
+            return valueToReturn;
+        });
 
         // let layout = new CompactTreeLayout(this);
         const layoutMgr = new OrgPlannerChartLayoutManager(this, this._layout);
