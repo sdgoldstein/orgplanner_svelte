@@ -1,4 +1,4 @@
-import {Cell, EventObject, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
+import {Cell, CellState, EventObject, Graph, GraphLayout, LayoutManager, VertexHandler} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
 import {

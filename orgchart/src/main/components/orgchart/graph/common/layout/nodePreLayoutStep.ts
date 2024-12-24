@@ -95,7 +95,7 @@ class NodePreLayoutStep
             nextChildNode.relativeY = currentPosition[1];
 
             currentPosition[1] =
-                currentPosition[1] + nextChildNode.height + this.layout.layoutConfiguration.verticalSpacing / 4;
+                currentPosition[1] + nextChildNode.height + this.layout.layoutConfiguration.verticalSpacing / 2;
 
             const childCellEdge = childCell.edges[0];
             const edgeCellStyle = childCellEdge.style;

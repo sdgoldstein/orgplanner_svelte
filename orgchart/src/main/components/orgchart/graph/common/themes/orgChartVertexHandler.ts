@@ -11,6 +11,8 @@ class OrgChartVertexHandler extends VertexHandler
     {
         return false;
     }
+
+    // THIS IS WHERE WE WOULD CHANGE SELECTION COLOR AND SHAPE
 }
 
 export {OrgChartVertexHandler};
