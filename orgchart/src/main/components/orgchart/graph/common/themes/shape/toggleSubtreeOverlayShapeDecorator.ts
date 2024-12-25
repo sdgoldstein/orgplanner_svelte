@@ -1,19 +1,17 @@
 import type {AbstractCanvas2D, Cell, CellState, CellStateStyle} from "@maxgraph/core";
 import type {OrgChartNodeShapeDecorator} from "./orgChartNodeShapeDecorator";
 import type {OrgPlannerChartVertex} from "../../core/orgPlannerChartModel";
+import {OverlayButtonNodeShapeDecorator} from "./overlayButtonNodeShapeDecorator";
 
-class ToggleSubtreeOveralyShapeDecorator implements OrgChartNodeShapeDecorator
+class ToggleSubtreeOveralyShapeDecorator extends OverlayButtonNodeShapeDecorator implements OrgChartNodeShapeDecorator
 {
-    private _baseRoundedCornerRadius: number = -1;
-
     paintBackground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number, cellState: CellState,
                     cellStyle: CellStateStyle): void
     {
-        const radius = this._getBaseRoundedCornerRadius(height, cellStyle) / 2;
+        const radius = this._getBaseRoundedCornerRadius(width, height, cellStyle) / 2;
 
-        let size = height / 8;
+        const size = 10; // Need a better way to determine this
 
-        // state is optional - why?!
         const currentCell: Cell = cellState.cell;
         const currentCellValue: OrgPlannerChartVertex = currentCell.value as OrgPlannerChartVertex;
         // FIXME - Need to all determine if this call HAS children
@@ -34,45 +32,6 @@ class ToggleSubtreeOveralyShapeDecorator implements OrgChartNodeShapeDecorator
             }
             canvas.fillAndStroke();
         }
-    }
-
-    paintForeground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number, cellState: CellState,
-                    cellStyle: CellStateStyle): void
-    {
-        // TODO
-    }
-
-    private _paintButton(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number, radius: number,
-                         filled: boolean)
-    {
-        canvas.save();
-
-        canvas.setStrokeWidth(1);
-        canvas.setStrokeAlpha(0.5);
-        canvas.roundrect(x - width / 2, y - height / 2, width, height, radius, radius);
-        canvas.fillAndStroke();
-
-        if (filled)
-        {
-            canvas.setFillColor(canvas.state.strokeColor);
-            canvas.setStrokeColor(canvas.state.fillColor);
-            canvas.roundrect(x - width / 2, y - height / 2, width, height, radius, radius);
-            canvas.fillAndStroke();
-        }
-
-        canvas.restore();
-    }
-
-    protected _getBaseRoundedCornerRadius(height: number, cellStyle: CellStateStyle): number
-    {
-        // Calcualte it once and cache it.  It's therefore consistent and faster
-        if (this._baseRoundedCornerRadius == -1)
-        {
-            const f = (cellStyle.arcSize ?? 0.15 * 100) / 100;
-            this._baseRoundedCornerRadius = height * f;
-        }
-
-        return this._baseRoundedCornerRadius;
     }
 
     private _hasChildren(cell: Cell): boolean

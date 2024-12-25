@@ -27,7 +27,7 @@ class OrgChartNodeShapeDefault extends OrgChartNodeShapeBase
 
     private _paintActionButtons(height: number, canvas: AbstractCanvas2D, x: number, width: number, y: number)
     {
-        const radius = this._getBaseRoundedCornerRadius(height);
+        const radius = this._getBaseRoundedCornerRadius(width, height, this.style!);
 
         const size = height / 5;
         const buttonWidth = size;

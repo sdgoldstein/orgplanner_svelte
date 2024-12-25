@@ -28,6 +28,8 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.rounded = true;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.fillColor = "#ffffff";
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.arcSize = 10;
+        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.absoluteArcSize = true;
+
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.autoSize = true;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.strokeWidth = 2;
         // defaultCellStyle.strokeColor = '#CFD7F2';
@@ -104,11 +106,10 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         teamStyle.fillColor = teamColor;
         teamStyle.fontColor = teamEntity.textOnPrimary;
         teamStyle.fontStyle = constants.FONT.BOLD;
-        teamStyle.spacingTop = 0; // FIXME - This is set by the
-                                  // OrgChartNodeShapeDefault._configureStyle(OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
-                                  // above.  It shouldn't be, since we're now using different node shapes!
-        teamStyle.arcSize = 20; // FIXME - Need to look at shapes and figure out why arcsize for team needs to be double
-                                // that of the employees
+        teamStyle.spacingTop =
+            0; // FIXME - This is set by the
+               // OrgChartNodeShapeDefault._configureStyle(OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
+               // above.  It shouldn't be, since we're now using different node shapes!
         teamStyle.shape = "noLabelRectagle";
         this.nodeTypeToStyleMap.set("team", teamStyle)
 

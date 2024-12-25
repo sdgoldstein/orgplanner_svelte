@@ -35,7 +35,7 @@ class OrgChartNodeShapeBase extends DecoratedRectangleMaxGraphShape
             // Figure out the row height - used to determine the height of the row with the employee name
             const rowHeight = OrgChartNodeShapeBase._calculateRowHeight(this.state.style);
 
-            const radius = this._getBaseRoundedCornerRadius(height);
+            const radius = this._getBaseRoundedCornerRadius(width, height, this.style);
 
             // Draw the filled area at the top of the shape.  It traces around the outline and then asks to fill
             this._paintForegroundFilledTitleBox(canvas, x, y, width, rowHeight, radius);
@@ -94,13 +94,13 @@ class OrgChartNodeShapeBase extends DecoratedRectangleMaxGraphShape
         nameTextShape.paint(canvas);
     }
 
-    protected _getBaseRoundedCornerRadius(height: number)
+    protected _getBaseRoundedCornerRadius(width: number, height: number, style: CellStateStyle)
     {
         // Calcualte it once and cache it.  It's therefore consistent and faster
         if (this._baseRoundedCornerRadius == -1)
         {
-            const f = (this.style?.arcSize ?? 0.15 * 100) / 100;
-            this._baseRoundedCornerRadius = height * f;
+            this._baseRoundedCornerRadius =
+                Math.min(width / 2, Math.min(height / 2, (style.arcSize ?? constants.LINE_ARCSIZE) / 2));
         }
 
         return this._baseRoundedCornerRadius;
@@ -135,6 +135,7 @@ class OrgChartNodeShapeBase extends DecoratedRectangleMaxGraphShape
     static _configureStyle(styleToConfigure: CellStateStyle): void
     {
         // FIXME - Broken!!!
+        // Probabaly should override getPreferredSizeForCell in the graph to set the size of the cell
         const rowHeight = OrgChartNodeShapeBase._calculateRowHeight(styleToConfigure);
         styleToConfigure.spacingTop = rowHeight;
     }

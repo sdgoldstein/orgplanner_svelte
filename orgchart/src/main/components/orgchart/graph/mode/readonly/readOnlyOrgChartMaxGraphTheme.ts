@@ -2,7 +2,7 @@ import {CellRenderer, type CellStateStyle} from "@maxgraph/core";
 import {type OrgEntityColorTheme} from "orgplanner-common/model";
 
 import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
-import {ReadOnlyOrgChartNodeShape} from "./readOnlyOrgChartNodeShape";
+import {ReadOnlyOrgChartNodeShape, ReadOnlyNoLabelOrgChartShape} from "./readOnlyOrgChartNodeShape";
 
 class ReadOnlyOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
 {
@@ -10,6 +10,8 @@ class ReadOnlyOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
     {
         //@ts-expect-error - constructor madness in the Shape hierachy.
         CellRenderer.registerShape("readOnlyOrgChartNodeShape", ReadOnlyOrgChartNodeShape);
+        //@ts-expect-error - constructor madness in the Shape hierachy.
+        CellRenderer.registerShape("readOnlyNoLabelRectagle", ReadOnlyNoLabelOrgChartShape);
     }
 
     constructor(colorTheme: OrgEntityColorTheme)
@@ -23,6 +25,10 @@ class ReadOnlyOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
         if (nodeType !== "team")
         {
             cellStateToReturn.shape = "readOnlyOrgChartNodeShape";
+        }
+        else
+        {
+            cellStateToReturn.shape = "readOnlyNoLabelRectagle";
         }
         return cellStateToReturn;
     }
