@@ -22,6 +22,13 @@ class ReadOnlyOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
 
         return cellToReturn;
     }
+
+    configureBaseOptions(): void
+    {
+        super.configureBaseOptions();
+
+        this.graph.setCellsMovable(false);
+    }
 }
 
 export {ReadOnlyOrgChartMaxGraphAssemblyService};

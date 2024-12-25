@@ -46,6 +46,16 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
         this._graph = graph;
     }
 
+    protected get graph(): Graph
+    {
+        if (!this._graph)
+        {
+            throw new Error("Graph has not be inserted");
+        }
+
+        return this._graph;
+    }
+
     createToggleSubtreeOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
         const transaprentImage = new ImageBox("transparent.png", 9, 9);
@@ -58,17 +68,13 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     addToggleSubtreeOverlay(managerCell: Cell): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
 
         if (!this._toggleSubtreeOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this._graph.addCellOverlay(managerCell, this._toggleSubtreeOverlay);
+        this.graph.addCellOverlay(managerCell, this._toggleSubtreeOverlay);
     }
 
     createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
@@ -83,17 +89,12 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     addEditButtonOverlay(cell: Cell): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
-
         if (!this._editButtonOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this._graph.addCellOverlay(cell, this._editButtonOverlay);
+        this.graph.addCellOverlay(cell, this._editButtonOverlay);
     }
 
     createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
@@ -108,17 +109,13 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     addDeleteButtonOverlay(cell: Cell): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
 
         if (!this._deleteButtonOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this._graph.addCellOverlay(cell, this._deleteButtonOverlay);
+        this.graph.addCellOverlay(cell, this._deleteButtonOverlay);
     }
 
     init(configuration: ServiceConfiguration): void
@@ -128,28 +125,20 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     configureBaseOptions(): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
 
-        this._graph.setAutoSizeCells(true);
-        this._graph.autoSizeCellsOnAdd = true;
-        this._graph.setHtmlLabels(true);
-        this._graph.keepEdgesInBackground = true;
+        this.graph.setAutoSizeCells(true);
+        this.graph.autoSizeCellsOnAdd = true;
+        this.graph.setHtmlLabels(true);
+        this.graph.keepEdgesInBackground = true;
 
         // Can only have one edge between each node
-        this._graph.multigraph = false;
+        this.graph.multigraph = false;
     }
 
     applyTheme(theme: MaxGraphTheme): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
 
-        const graphStylesheet = this._graph.getStylesheet();
+        const graphStylesheet = this.graph.getStylesheet();
 
         // Creates the default style for vertices
 
@@ -166,12 +155,8 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
 
     updateStyle(vertex: Cell): void
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
 
-        const graphStylesheet = this._graph.getStylesheet();
+        const graphStylesheet = this.graph.getStylesheet();
 
         const newICStyle: CellStateStyle|undefined = graphStylesheet.styles.get("ic");
         const newManagerStyle: CellStateStyle|undefined = graphStylesheet.styles.get("manager");
@@ -181,7 +166,7 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
             throw new Error("Style not found");
         }
 
-        const cellState = this._graph.view.getState(vertex, false);
+        const cellState = this.graph.view.getState(vertex, false);
         if (cellState)
         {
             const cellValue: OrgPlannerChartVertex = vertex.value;
@@ -215,12 +200,7 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
     {
         let cellToReturn;
 
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
-
-        const graphStylesheet = this._graph.getStylesheet();
+        const graphStylesheet = this.graph.getStylesheet();
 
         const orgChartManager = new OrgPlannerChartManagerVertex(manager);
         // FIX ME - Last Param
@@ -233,12 +213,7 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
     {
         let cellToReturn;
 
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
-
-        const graphStylesheet = this._graph.getStylesheet();
+        const graphStylesheet = this.graph.getStylesheet();
         const orgChartEmployee = new OrgPlannerChartICVertex(ic);
 
         // FIX ME = Last param
@@ -251,33 +226,27 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
     {
         let cellToReturn;
 
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
-
-        const graphStylesheet = this._graph.getStylesheet();
+        const graphStylesheet = this.graph.getStylesheet();
 
         const orgChartVertex = new OrgPlannerChartTeamVertex(team);
 
-        const parent = this._graph.getDefaultParent();
-        cellToReturn = this._graph.insertVertex(parent, team.id, orgChartVertex, 20, 20, 80, 30,
-                                                graphStylesheet.styles.get("team")!);
+        const parent = this.graph.getDefaultParent();
+        cellToReturn = this.graph.insertVertex(parent, team.id, orgChartVertex, 20, 20, 80, 30,
+                                               graphStylesheet.styles.get("team")!);
 
         // Create edge from manager to team
-        const managerCell = this._graph.model.getCell(team.managerId);
+        const managerCell = this.graph.model.getCell(team.managerId);
         if (managerCell)
         {
-            const insertedEdge =
-                this._graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
+            const insertedEdge = this.graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
             this._augmentEdgeTemp(insertedEdge);
 
             // Create edge from teams their manager's team.  This enables removing managers from the chart
-            const parentTeamCell = this._graph.model.getCell(managerCell.value.orgEntity.team.id);
+            const parentTeamCell = this.graph.model.getCell(managerCell.value.orgEntity.team.id);
             if (parentTeamCell)
             {
                 const insertedEdge =
-                    this._graph.insertEdge(parent, team.id + parentTeamCell.value.id, "", parentTeamCell, cellToReturn);
+                    this.graph.insertEdge(parent, team.id + parentTeamCell.value.id, "", parentTeamCell, cellToReturn);
                 this._augmentEdgeTemp(insertedEdge);
             }
         }
@@ -313,29 +282,23 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
     private _insertEmployeeNode(employee: Employee, orgChartVertex: OrgPlannerChartEmployeeVertex,
                                 cellStyleOverride: CellStateStyle): Cell
     {
-        if (!this._graph)
-        {
-            throw new Error("Graph has not be inserted");
-        }
-
-        const parent = this._graph.getDefaultParent();
-        const newCell =
-            this._graph.insertVertex(parent, employee.id, orgChartVertex, 20, 20, 80, 30, cellStyleOverride);
+        const parent = this.graph.getDefaultParent();
+        const newCell = this.graph.insertVertex(parent, employee.id, orgChartVertex, 20, 20, 80, 30, cellStyleOverride);
 
         // Create edge from manager to employee
-        const managerCell = this._graph.model.getCell(employee.managerId);
+        const managerCell = this.graph.model.getCell(employee.managerId);
         if (managerCell)
         {
             const insertedEdge =
-                this._graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
+                this.graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
             this._augmentEdgeTemp(insertedEdge);
         }
 
         // Create edge from teams to employee
-        const teamCell = this._graph.model.getCell(employee.team.id);
+        const teamCell = this.graph.model.getCell(employee.team.id);
         if (teamCell)
         {
-            const insertedEdge = this._graph.insertEdge(parent, employee.team.id + employee.id, "", teamCell, newCell);
+            const insertedEdge = this.graph.insertEdge(parent, employee.team.id + employee.id, "", teamCell, newCell);
             this._augmentEdgeTemp(insertedEdge);
         }
 
