@@ -9,8 +9,8 @@
     import type {
         OrgChartProxy,
         OrgChartProps,
-    } from "./graph/model/orgChartProxy";
-    import OrgChartProxyFactory from "./graph/model/orgChartProxyFactory";
+    } from "./orgChartProxy";
+    import OrgChartProxyFactory from "./orgChartProxyFactory";
 
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;

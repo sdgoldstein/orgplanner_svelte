@@ -17,7 +17,7 @@ import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraph
 import {
     OrgChartEntityVisibleStateImpl,
 } from "../../../orgChartViewState";
-import type {OrgChartProps, OrgChartProxy} from "../../model/orgChartProxy";
+import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
 import {OrgChartEvents} from "../../../OrgChartEvents";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import {

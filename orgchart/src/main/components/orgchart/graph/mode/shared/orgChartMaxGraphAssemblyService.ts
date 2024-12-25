@@ -1,8 +1,8 @@
 import type {Graph, Cell, EventObject} from "@maxgraph/core";
 import type {Service} from "@sphyrna/service-manager-ts";
 import type {Manager, IndividualContributor, Team} from "orgplanner-common/model";
-import type {MaxGraphTheme} from "../common/themes/maxGraphTheme";
-import type {OrgChartEntityVisibleState} from "../../orgChartViewState";
+import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
+import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
 interface OrgChartMaxGraphAssemblyService extends Service
 {

@@ -1,6 +1,6 @@
 import type {Cell} from "@maxgraph/core";
 import type {Manager, Team} from "orgplanner-common/model";
-import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
+import type {OrgChartMaxGraphAssemblyService} from "../shared/orgChartMaxGraphAssemblyService";
 import {OrgChartMaxGraphAssemblyServiceBase} from "../shared/orgChartMaxGraphAssemblyServiceBase";
 
 class ReadOnlyOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblyServiceBase implements

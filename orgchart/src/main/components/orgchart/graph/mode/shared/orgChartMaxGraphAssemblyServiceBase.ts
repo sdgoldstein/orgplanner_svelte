@@ -31,7 +31,7 @@ import {
     EditButtonCellOverlay,
     DeleteButtonCellOverlay
 } from "../../common/themes/shape/orgChartCellOverlay";
-import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
+import type {OrgChartMaxGraphAssemblyService} from "./orgChartMaxGraphAssemblyService";
 
 class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChartMaxGraphAssemblyService
 {

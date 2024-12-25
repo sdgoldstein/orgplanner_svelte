@@ -1,7 +1,7 @@
 import {OrgChartEntityVisibleStateImpl} from "@src/components/orgchart/orgChartViewState";
 import {PubSubManager} from "orgplanner-common/jscore";
 
-import type {OrgChartProxy} from "../../model/orgChartProxy";
+import type {OrgChartProxy} from "../../../orgChartProxy";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import type {OrgChartProps} from "../editable/editableOrgChartProxy";
 import {ReadOnlyOrgChartMaxGraph} from "./readOnlyOrgChartMaxGraph";

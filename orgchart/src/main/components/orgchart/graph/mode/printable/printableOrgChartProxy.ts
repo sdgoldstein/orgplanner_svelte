@@ -3,7 +3,7 @@ import {OrgChartEntityVisibleStateImpl} from "../../../orgChartViewState";
 import {PrintableOrgChartMaxGraph} from "./printableOrgChartMaxGraph";
 import {PrintableOrgChartMaxGraphTheme} from "./printableOrgChartMaxGraphTheme";
 
-import type {OrgChartProps, OrgChartProxy} from "../../model/orgChartProxy";
+import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 
 class PrintableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy

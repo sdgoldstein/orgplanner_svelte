@@ -1,7 +1,7 @@
 import {OrgChartEvents} from "@src/components/orgchart/OrgChartEvents";
 import type {ViewToggableEntity, ViewToggableEntityToggledEvent} from "@src/components/orgchart/orgChartViewState";
 import type {PubSubEvent, PubSubListener} from "orgplanner-common/jscore";
-import type {OrgChartMaxGraph} from "../../model/orgChartMaxGraph";
+import type {OrgChartMaxGraph} from "../../common/core/orgChartMaxGraph";
 
 interface EntityViewToggableOrgChartMaxGraph extends OrgChartMaxGraph
 {

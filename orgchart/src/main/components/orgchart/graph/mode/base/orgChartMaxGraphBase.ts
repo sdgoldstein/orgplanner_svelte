@@ -1,4 +1,4 @@
-import {Cell, CellState, EventObject, Graph, GraphLayout, LayoutManager, VertexHandler} from "@maxgraph/core";
+import {Cell, Graph, GraphLayout, LayoutManager} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
 import {
@@ -23,8 +23,7 @@ import {OrgPlannerChartLayout} from "../../common/layout/orgPlannerChartLayout";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
 import type {OrgChartMaxGraph} from "../../common/core/orgChartMaxGraph";
-import type {OrgChartMaxGraphAssemblyService} from "./orgChartMaxGraphAssemblyService";
-import type {EntityViewToggableOrgChartMaxGraph} from "./viewToggableEntityEventHandler";
+import type {OrgChartMaxGraphAssemblyService} from "../shared/orgChartMaxGraphAssemblyService";
 
 // FIXME - Prefer composition to inheritance?  The entire mode design is based on inheritance - is there a way to make
 // it use composition instead with decorators to incerease sharing nad make it more flexible?  Difficult due to the
@@ -112,8 +111,7 @@ class OrgChartBuildingVisitor implements OrgStructureVisitor
  * other actions/logic it handles directly.  It also is responsible for directly updated the underlying orgstructure
  * when changs occur
  */
-abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, PubSubListener,
-                                                             EntityViewToggableOrgChartMaxGraph
+abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, PubSubListener
 {
     // @ts-ignore: _isUpdating is declared but its value is never read - FIXME
     private _isUpdating: boolean = false;
@@ -140,9 +138,6 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
         assemblyService.insertGraph(this);
         assemblyService.configureBaseOptions();
         assemblyService.applyTheme(this._graphTheme);
-
-        assemblyService.createToggleSubtreeOverlay(
-            (sender: EventTarget, event: EventObject) => { this.toggleSubtree(event.getProperty("cell") as Cell); });
     }
 
     protected traverse(chartVisitor: OrgPlannerChartVisitor, startCell: Cell): void
@@ -183,11 +178,11 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
      */
     protected rehydrate(): void
     {
-        //  Need to do this in two passes.  First, remove all cells, then re-add them.  Otherwise, they're not removed
-        //  when repopulating the graph, leading to duplicates and issues
-        this.batchUpdate(() => { this.getDataModel().clear(); });
-
-        this.batchUpdate(() => { this.populateGraph(); });
+        this.batchUpdate(() => {
+            const parent = this.getDefaultParent();
+            this.removeCells(this.getChildCells(parent, true, true), true);
+            this.populateGraph();
+        });
     }
 
     requestUpdate(updatedOrgStructure?: OrgStructure, updatedColorTheme?: OrgEntityColorTheme,
@@ -268,14 +263,7 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     public renderGraph(): void
     {
-        this._layout = new OrgPlannerChartLayout(this, () => {
-            let valueToReturn = this.model.getCell(this._orgStructure.rootTeam.id);
-            if ((valueToReturn === null) || !valueToReturn.isVisible())
-            {
-                valueToReturn = this.model.getCell(this._orgStructure.orgLeader.id);
-            }
-            return valueToReturn;
-        });
+        this._layout = new OrgPlannerChartLayout(this, () => {return this.rootCell});
 
         // let layout = new CompactTreeLayout(this);
         const layoutMgr = new OrgPlannerChartLayoutManager(this, this._layout);
@@ -433,54 +421,6 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
             },
             edge : null,
             visited : null
-        });
-    }
-
-    private toggleSubtree(cell: Cell): void
-    {
-        let isCollapsed = false;
-        const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
-        if (orgChartVertext.hasProperty("collapsed"))
-        {
-            isCollapsed = (orgChartVertext.getProperty("collapsed") == "true");
-        }
-        this.showHideSubtree(cell, isCollapsed);
-    }
-
-    protected showHideSubtree(cell: Cell, show: boolean): void
-    {
-        this.batchUpdate(() => {
-            const cells: Cell[] = [];
-
-            this.traverse({
-                visitEnter(cellToVisit: Cell) {
-                    if (cellToVisit != cell)
-                    {
-                        cells.push(cellToVisit);
-
-                        // HACK - FIX ME - The only state we have to determine if the cell is expanded or not is the
-                        // overlays
-                        // const overLays = savedGraph.getCellOverlays(cellToVisit);
-
-                        // If we're expanding and the vertex collapsed, don't expand it - FIXME
-                        /*if ((overLays != null) && show && (overLays[0] == savedGraph._collapsedOverlay))
-                        {
-                            valueToReturn = false;
-                        }*/
-                    }
-                },
-                visitLeave(cell: Cell) {
-
-                },
-            },
-                          cell);
-
-            this.toggleCells(show, cells, true);
-
-            const orgChartVertext: OrgPlannerChartVertex = cell.value as OrgPlannerChartVertex;
-            orgChartVertext.setProperty("collapsed", (!show).toString());
-            // Is this the best way to force a redraw?
-            this.refresh(cell);
         });
     }
 

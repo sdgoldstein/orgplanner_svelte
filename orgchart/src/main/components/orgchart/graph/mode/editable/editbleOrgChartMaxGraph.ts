@@ -20,7 +20,7 @@ import {
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
 import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
-import type {OrgChartMaxGraphAssemblyService} from "../../model/orgChartMaxGraphAssemblyService";
+import type {OrgChartMaxGraphAssemblyService} from "../shared/orgChartMaxGraphAssemblyService";
 import {
     DeleteEntityCellActionEvent,
     EditEntityCellActionEvent,
@@ -30,7 +30,7 @@ import {EditableOrgChartMaxGraphAssemblyService} from "./editableOrgChartMaxGrap
 import {
     type EntityViewToggableOrgChartMaxGraph,
 } from "../shared/viewToggableEntityEventHandler";
-import type {OrgChartMaxGraph} from "../../model/orgChartMaxGraph";
+import type {OrgChartMaxGraph} from "../../common/core/orgChartMaxGraph";
 
 /**
  * The org chart graph visual component.
