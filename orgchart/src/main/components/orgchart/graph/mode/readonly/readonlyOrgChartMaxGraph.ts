@@ -3,6 +3,8 @@ import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
 import {ReadOnlyOrgChartMaxGraphAssemblyService} from "./readOnlyOrgChartMaxGraphAssemblyService";
+import type {CellState, VertexHandler} from "@maxgraph/core";
+import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
 
 /**
  * The org chart graph visual component.
@@ -18,6 +20,11 @@ class ReadOnlyOrgChartMaxGraph extends OrgChartMaxGraphBase
                 visibilityState: OrgChartEntityVisibleState)
     {
         super(element, orgStructure, theme, visibilityState, new ReadOnlyOrgChartMaxGraphAssemblyService());
+    }
+
+    createVertexHandler(state: CellState): VertexHandler
+    {
+        return new OrgChartVertexHandler(state);
     }
 }
 
