@@ -13,9 +13,7 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run && npm run test:e2e",
 		"test:e2e": "playwright test",
-		"buildTools": "tsc --project src/tools/tsconfig.json",
-		"generateOrgs": "npx tsx src/tools/typescript/runGenerateOrgTree.ts",
-		"orgChartUITest": "npx http-server src/tools -p 3000"
+		"buildTools": "tsc --project src/tools/tsconfig.json"
 	},
 	"peerDependencies": {
 		"svelte": "^5.0.0"

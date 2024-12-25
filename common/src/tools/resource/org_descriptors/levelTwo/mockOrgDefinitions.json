@@ -73,6 +73,79 @@
                     "ics": 10
                 }
             ]
+        },
+        {
+            "name": "level_2_managers_6_teams_3_ics_20_A",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 3,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_2_managers_6_teams_3_ics_20_B",
+            "levels": [
+                {
+                    "managers": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_2_managers_6_teams_4_ics_20_A",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 3,
+                    "teams": 1,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_2_managers_6_teams_4_ics_20_B",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 1,
+                    "ics": 10
+                },
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_2_managers_6_teams_6_ics_20",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                }
+            ]
         }
     ]
 }

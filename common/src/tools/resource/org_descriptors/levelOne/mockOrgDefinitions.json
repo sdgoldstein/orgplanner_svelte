@@ -53,7 +53,27 @@
             ]
         },
         {
-            "name": "level_1_managers_teams_3_ics_10",
+            "name": "level_1_managers_1_teams_3_ics_10",
+            "levels": [
+                {
+                    "managers": 1,
+                    "teams": 3,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_1_managers_3_teams_1_ics_10",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 1,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_1_managers_3_teams_3_ics_10",
             "levels": [
                 {
                     "managers": 3,

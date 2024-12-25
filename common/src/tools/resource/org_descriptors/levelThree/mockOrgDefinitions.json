@@ -128,6 +128,44 @@
                     "ics": 10
                 }
             ]
+        },
+        {
+            "name": "level_3_managers_39_teams_39_ics_30",
+            "levels": [
+                {
+                    "managers": 3,
+                    "teams": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 9,
+                    "teams": 9,
+                    "ics": 10
+                },
+                {
+                    "managers": 27,
+                    "teams": 27,
+                    "ics": 10
+                }
+            ]
+        },
+        {
+            "name": "level_3_managers_39_teams_9_ics_30",
+            "levels": [
+                {
+                    "managers": 3,
+                    "ics": 10
+                },
+                {
+                    "managers": 9,
+                    "teams": 9,
+                    "ics": 10
+                },
+                {
+                    "managers": 27,
+                    "ics": 10
+                }
+            ]
         }
     ]
 }

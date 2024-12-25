@@ -4,7 +4,9 @@ levelOne/level_1_managers_1_ics_10.json
 levelOne/level_1_managers_2_ics_10.json
 levelOne/level_1_managers_3_ics_10.json
 levelOne/level_1_teams_1_ics_1.json
-levelOne/level_1_managers_teams_3_ics_10.json
+levelOne/level_1_managers_1_teams_3_ics_10.json
+levelOne/level_1_managers_3_teams_1_ics_10.json
+levelOne/level_1_managers_3_teams_3_ics_10.json
 levelThree/level_3_managers_2_ics_1.json
 levelThree/level_3_managers_2_ics_11.json
 levelThree/level_3_managers_2_ics_21.json
@@ -13,9 +15,16 @@ levelThree/level_3_managers_3_ics_30.json
 levelThree/level_3_managers_5_ics_30.json
 levelThree/level_3_managers_13_ics_30.json
 levelThree/level_3_managers_39_ics_30.json
+levelThree/level_3_managers_39_teams_39_ics_30.json
+levelThree/level_3_managers_39_teams_9_ics_30.json
 levelTwo/level_2_managers_1_ics_1.json
 levelTwo/level_2_managers_1_ics_11.json
 levelTwo/level_2_managers_1_ics_20.json
 levelTwo/level_2_managers_2_ics_20.json
 levelTwo/level_2_managers_4_ics_20.json
 levelTwo/level_2_managers_6_ics_20.json
+levelTwo/level_2_managers_6_teams_3_ics_20_A.json
+levelTwo/level_2_managers_6_teams_3_ics_20_B.json
+levelTwo/level_2_managers_6_teams_4_ics_20_A.json
+levelTwo/level_2_managers_6_teams_4_ics_20_B.json
+levelTwo/level_2_managers_6_teams_6_ics_20.json
