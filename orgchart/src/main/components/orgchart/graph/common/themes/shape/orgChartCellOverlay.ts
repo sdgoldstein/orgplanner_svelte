@@ -1,5 +1,7 @@
 import {CellOverlay, ImageBox, Point, type AlignValue, type VAlignValue, CellState, Rectangle} from "@maxgraph/core";
-import {OrgChartNodeShapeDefault} from "./orgChartNodeShapeDefault";
+
+// FIXME - Note the bound have to match what's in the ModifyButtonsOverlayDecorator.  MaxGraph only supports image
+// overalays, so we need to put in transparent image and then the shape paints under it
 
 interface OrgChartCellOverlay
 {
@@ -22,6 +24,13 @@ class EditButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgCha
     {
         super("EditButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
     }
+
+    getBounds(state: CellState): Rectangle
+    {
+        const size = 20; // Need a better way to determine this.  Matches the ModifyButtonsOverlayDecorator
+
+        return new Rectangle(state.x + state.width - size - 5, state.y + state.height - size / 3, size, size);
+    }
 }
 
 class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
@@ -30,6 +39,13 @@ class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgC
                 cursor?: string)
     {
         super("DeleteButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
+    }
+
+    getBounds(state: CellState): Rectangle
+    {
+        const size = 20; // Need a better way to determine this.  Matches the ModifyButtonsOverlayDecorator
+
+        return new Rectangle(state.x + state.width - 2 * size - 10, state.y + state.height - size / 3, size, size);
     }
 }
 

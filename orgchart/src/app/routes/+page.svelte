@@ -31,9 +31,12 @@
         PubSubManager,
         SERIALIZATION_SERVICE_NAME,
         SerializationFormat,
+        type PubSubEvent,
+        type PubSubListener,
         type SerializationService,
     } from "orgplanner-common/jscore";
     import { ChevronLeft, ChevronRight } from "lucide-svelte";
+    import { OrgChartEvents } from "@src/components/orgchart/OrgChartEvents";
 
     let { data }: { data: PageData } = $props();
 
@@ -137,6 +140,25 @@
     $effect(() => {
         loadSelectedOrg({ ...selectedOrg, disabled: false });
     });
+
+    class TestListener implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            alert(`Event ${eventName} received`);
+        }
+    }
+    const testListener = new TestListener();
+    PubSubManager.instance.registerListener(
+        OrgChartEvents.DELETE_ENTITY_CELL_ACTION,
+        testListener,
+    );
+    PubSubManager.instance.registerListener(
+        OrgChartEvents.EDIT_ENTITY_CELL_ACTION,
+        testListener,
+    );
+    PubSubManager.instance.registerListener(
+        OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT,
+        testListener,
+    );
 </script>
 
 <Form id="orglist_form">
