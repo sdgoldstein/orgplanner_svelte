@@ -25,6 +25,7 @@ import {
     type EntityViewToggableOrgChartMaxGraph,
     type EntityViewToggableOrgChartProxy
 } from "../shared/viewToggableEntityEventHandler";
+import {EditableOrgChartMaxGraphTheme} from "./editableOrgChartMaxGraphTheme";
 
 /**
  * This is a class used by all clients/external logic of the orgchart to make orgchat changes, whether by event or
@@ -125,7 +126,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
                     if (orgChartProps.colorTheme != this._colorTheme)
                     {
                         this._colorTheme = orgChartProps.colorTheme;
-                        savedCurrentGraph.graphTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
+                        savedCurrentGraph.graphTheme = new EditableOrgChartMaxGraphTheme(this._colorTheme);
                     }
                 })
             }
@@ -141,7 +142,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         this._orgStructure = orgChartProps.orgStructure;
         this._colorTheme = orgChartProps.colorTheme;
 
-        const orgChartTheme = new OrgChartMaxGraphThemeDefault(this._colorTheme);
+        const orgChartTheme = new EditableOrgChartMaxGraphTheme(this._colorTheme);
         const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);
         this._currentGraph =
             new EditableOrgChartMaxGraph(this.chartContainer, this._orgStructure, orgChartTheme, visibiltyState);

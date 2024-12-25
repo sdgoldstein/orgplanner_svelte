@@ -2,19 +2,16 @@ import {CellRenderer, type CellStateStyle} from "@maxgraph/core";
 import {type OrgEntityColorTheme} from "orgplanner-common/model";
 
 import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
-import {PrintableOrgChartNodeShape} from "./printableOrgChartNodeShape";
-import {NoLabelOrgChartShape} from "../../common/themes/shape/noLabelOrgChartShape";
+import {EditableNoLabelOrgChartShape, EditableOrgChartNodeShape} from "./editableOrgChartNodeShape";
 
-class PrintableOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
+class EditableOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
 {
     static
     {
-
         //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("printableOrgChartNodeShape", PrintableOrgChartNodeShape);
-
+        CellRenderer.registerShape("EditableOrgChartNodeShape", EditableOrgChartNodeShape);
         //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("noLabelRectagle", NoLabelOrgChartShape);
+        CellRenderer.registerShape("EditableNoLabelRectagle", EditableNoLabelOrgChartShape);
     }
 
     constructor(colorTheme: OrgEntityColorTheme)
@@ -27,14 +24,14 @@ class PrintableOrgChartMaxGraphTheme extends OrgChartMaxGraphThemeDefault
         const cellStateToReturn = super.getStyleForNodeType(nodeType);
         if (nodeType !== "team")
         {
-            cellStateToReturn.shape = "printableOrgChartNodeShape";
+            cellStateToReturn.shape = "EditableOrgChartNodeShape";
         }
         else
         {
-            cellStateToReturn.shape = "noLabelRectagle";
+            cellStateToReturn.shape = "EditableNoLabelRectagle";
         }
         return cellStateToReturn;
     }
 }
 
-export {PrintableOrgChartMaxGraphTheme};
+export {EditableOrgChartMaxGraphTheme};

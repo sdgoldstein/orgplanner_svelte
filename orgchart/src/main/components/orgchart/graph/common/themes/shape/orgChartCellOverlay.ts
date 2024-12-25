@@ -22,11 +22,6 @@ class EditButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgCha
     {
         super("EditButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
     }
-
-    getBounds(state: CellState): Rectangle
-    {
-        return (state.shape as OrgChartNodeShapeDefault).editButtonBounds!;
-    }
 }
 
 class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
@@ -35,11 +30,6 @@ class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgC
                 cursor?: string)
     {
         super("DeleteButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
-    }
-
-    getBounds(state: CellState): Rectangle
-    {
-        return (state.shape as OrgChartNodeShapeDefault).deleteButtonBounds!;
     }
 }
 

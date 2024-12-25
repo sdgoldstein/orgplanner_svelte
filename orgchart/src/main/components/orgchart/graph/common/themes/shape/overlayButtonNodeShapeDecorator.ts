@@ -22,7 +22,7 @@ abstract class OverlayButtonNodeShapeDecorator implements OrgChartNodeShapeDecor
 
         if (filled)
         {
-            canvas.setFillColor(canvas.state.fillColor);
+            canvas.setFillColor(canvas.state.strokeColor);
         }
         else
         {

@@ -1,10 +1,9 @@
-import {CellRenderer, type CellStateStyle, constants, Perimeter, StyleRegistry} from "@maxgraph/core";
+import {type CellStateStyle, constants, Perimeter, StyleRegistry} from "@maxgraph/core";
 import {type OrgEntityColorTheme, OrgEntityTypes} from "orgplanner-common/model";
 
 import type {MaxGraphTheme} from "./maxGraphTheme";
 import {OrgChartLeafEdgeStyle} from "./orgChartLeafEdgeStyle";
 import {OrgChartNodeShapeDefault} from "./shape/orgChartNodeShapeDefault";
-import {NoLabelOrgChartShape} from "./shape/noLabelOrgChartShape";
 
 type CellStateStyleExtension = {
     cellHeaderFontColor?: string;
@@ -44,7 +43,6 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.align = constants.ALIGN.CENTER;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.verticalAlign = constants.ALIGN.MIDDLE;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.foldable = true;
-        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.shape = "orgChartNodeShape";
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.rotatable = false;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.resizable = false;
         OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.deletable = true;
@@ -76,11 +74,6 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
         // DEFAULT_EDGE_STYLE[mxClient.mxConstants.STYLE_EDGE] = mxClient.mxConstants.EDGESTYLE_SEGMENT;
         // DEFAULT_EDGE_STYLE[mxClient.mxConstants.STYLE_ROUNDED] = 1;
 
-        //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("orgChartNodeShape", OrgChartNodeShapeDefault);
-        //@ts-expect-error - constructor madness in the Shape hierachy.
-        CellRenderer.registerShape("noLabelRectagle", NoLabelOrgChartShape);
-
         // Put edge style in registry
         StyleRegistry.putValue(OrgChartMaxGraphThemeDefault.leafEdgeStyle,
                                OrgChartLeafEdgeStyle.orgChartLeafEdgeStyleFun)
@@ -110,7 +103,6 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
             0; // FIXME - This is set by the
                // OrgChartNodeShapeDefault._configureStyle(OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
                // above.  It shouldn't be, since we're now using different node shapes!
-        teamStyle.shape = "noLabelRectagle";
         this.nodeTypeToStyleMap.set("team", teamStyle)
 
         const defaultEdgeStyle = Object.assign({}, OrgChartMaxGraphThemeDefault.DEFAULT_EDGE_STYLE);
