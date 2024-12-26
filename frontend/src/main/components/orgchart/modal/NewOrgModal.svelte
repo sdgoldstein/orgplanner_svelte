@@ -1,16 +1,23 @@
-
-
 <script module lang="ts">
-    import { AppDynamicColorThemeColorSelector, tempgetDynamicColorTheme, type OrgPlannerColorThemableComponentProps } from "@src/components/theme";
+    import {
+        AppDynamicColorThemeColorSelector,
+        tempgetDynamicColorTheme,
+        type OrgPlannerColorThemableComponentProps,
+    } from "@src/components/theme";
 
-interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
+    interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
         open: boolean;
         class?: string;
     }
 </script>
 
 <script lang="ts">
-    import { SubmitCancelModal, Input, Label } from '@sphyrna/uicomponents';
+    import {
+        SubmitCancelModal,
+        Input,
+        Label,
+        zExtended,
+    } from "@sphyrna/uicomponents";
     import { CreateNewOrgEvent } from "@src/components/app/orgPlannerAppEvents";
     import { PubSubManager } from "orgplanner-common/jscore";
 
@@ -27,15 +34,21 @@ interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
         PubSubManager.instance.fireEvent(eventToFire);
     }
 
-    let { open = $bindable(), appDynamicColorTheme, ...restProps }: NewOrgeModalProps = $props();
-    
-    const colorVariant=AppDynamicColorThemeColorSelector.PRIMARY.toString();
-    const dynamicColorTheme=$derived(tempgetDynamicColorTheme(appDynamicColorTheme));
+    let {
+        open = $bindable(),
+        appDynamicColorTheme,
+        ...restProps
+    }: NewOrgeModalProps = $props();
+
+    const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
+    const dynamicColorTheme = $derived(
+        tempgetDynamicColorTheme(appDynamicColorTheme),
+    );
 </script>
 
 <SubmitCancelModal
     id="new_org_modal"
-    bind:open={open}
+    bind:open
     title="New Organization"
     description="Please enter a title for the new organization."
     actionButtonText="Create"

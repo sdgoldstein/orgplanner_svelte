@@ -52,7 +52,7 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
         // Add in all of the entity types
         this._viewState.set(OrgEntityTypes.MANAGER.name, true);
         this._viewState.set(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR.name, true);
-        this._viewState.set(OrgEntityTypes.TEAM.name, false);
+        this._viewState.set(OrgEntityTypes.TEAM.name, true);
 
         // Place holders for items that can be part of the label, but are fixed properties
         // FIXME - Should these be fixed?
