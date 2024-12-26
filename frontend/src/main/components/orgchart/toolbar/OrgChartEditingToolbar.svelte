@@ -61,6 +61,12 @@
     import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
     import type { OrgStructure } from "orgplanner-common/model";
     import { OrgPageEvents } from "@src/components/page/orgPageEvents";
+    import { Trash2 } from "lucide-svelte";
+    import { FileDown } from "lucide-svelte";
+    import { Cog } from "lucide-svelte";
+    import { Settings } from "lucide-svelte";
+    import { SlidersVertical } from "lucide-svelte";
+    import { SlidersVerticalIcon } from "lucide-svelte";
 
     let { orgStructure, appDynamicColorTheme }: OrgChartEditingToolbarProps =
         $props();
@@ -92,14 +98,15 @@
         }}><Users fill={appDynamicColorTheme.textOnPrimary} /></IconButton
     >
 
-    <OrgChartEditingToolbarButton
-        symbol="delete"
-        {appDynamicColorTheme}
+    <IconButton
+        id="delete_org_chart_toolbar_button"
+        dynamicColorTheme={dynamicColorThemeMap}
+        {colorVariant}
         onclick={() => {
             const eventToFire = new DeleteEmployeeToolbarEvent();
             PubSubManager.instance.fireEvent(eventToFire);
-        }}
-    ></OrgChartEditingToolbarButton>
+        }}><Trash2 strokeWidth=".18rem" /></IconButton
+    >
 
     <!--FIXME <OrgChartEditingToolbarButton symbol="undo" {appDynamicColorTheme}
     onclick={() => {
@@ -113,27 +120,31 @@
         PubSubManager.instance.fireEvent(eventToFire);
       }}
     ></OrgChartEditingToolbarButton>-->
-    <OrgChartEditingToolbarButton
+
+    <IconButton
         id="save_as_image_org_chart_toolbar_button"
-        symbol="image"
-        {appDynamicColorTheme}
+        dynamicColorTheme={dynamicColorThemeMap}
+        {colorVariant}
         onclick={() => {
             const eventToFire = new SaveAsImageToolbarEvent();
             PubSubManager.instance.fireEvent(eventToFire);
-        }}
-    ></OrgChartEditingToolbarButton>
+        }}><FileDown strokeWidth=".15rem" /></IconButton
+    >
+
     <!--FIXME<OrgChartEditingToolbarButton symbol="preview" {appDynamicColorTheme}
     onclick={() => {
                 const eventToFire = new CreateSnapshotToolbarEvent();
                 PubSubManager.instance.fireEvent(eventToFire);
       }}
     ></OrgChartEditingToolbarButton>-->
-    <OrgChartEditingToolbarButton
-        symbol="settings"
-        {appDynamicColorTheme}
+
+    <IconButton
+        id="save_as_image_org_chart_toolbar_button"
+        dynamicColorTheme={dynamicColorThemeMap}
+        {colorVariant}
         onclick={() => {
             const eventToFire = new ModifySettingsToolbarEvent();
             PubSubManager.instance.fireEvent(eventToFire);
-        }}
-    ></OrgChartEditingToolbarButton>
+        }}><Settings strokeWidth=".15rem" /></IconButton
+    >
 </ButtonBar>
