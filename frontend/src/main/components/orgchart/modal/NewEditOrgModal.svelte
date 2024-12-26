@@ -5,9 +5,9 @@
         type OrgPlannerColorThemableComponentProps,
     } from "@src/components/theme";
 
-    interface NewOrgeModalProps extends OrgPlannerColorThemableComponentProps {
+    interface NewEditOrgModalProps
+        extends OrgPlannerColorThemableComponentProps {
         open: boolean;
-        class?: string;
     }
 </script>
 
@@ -38,7 +38,7 @@
         open = $bindable(),
         appDynamicColorTheme,
         ...restProps
-    }: NewOrgeModalProps = $props();
+    }: NewEditOrgModalProps = $props();
 
     const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
     const dynamicColorTheme = $derived(

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { NavMenu, NavMenuItem } from "@sphyrna/uicomponents";
-    import NewOrgModal from "@src/components/orgchart/modal/NewOrgModal.svelte";
+    import NewEditOrgModal from "@src/components/orgchart/modal/NewEditOrgModal.svelte";
     import {
         AppDynamicColorThemeColorSelector,
         tempgetDynamicColorTheme,
@@ -38,4 +38,4 @@
     >
     <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}>Help</NavMenuItem>
 </NavMenu>
-<NewOrgModal {appDynamicColorTheme} bind:open />
+<NewEditOrgModal {appDynamicColorTheme} bind:open />

@@ -11,6 +11,7 @@ class OrgPageEvents
     public static readonly CREATE_SNAPSHOT_TOOLBAR_ACTION: string = "CREATE_SNAPSHOT_TOOLBAR_ACTION";
     public static readonly MODIFY_SETTINGS_TOOLBAR_ACTION: string = "MODIFY_SETTINGS_TOOLBAR_ACTION";
     public static readonly SAVE_AS_IMAGE_TOOLBAR_ACTION: string = "SAVE_AS_IMAGE_TOOLBAR_ACTION";
+    public static readonly ADD_TEAM_TOOLBAR_ACTION: string = "ADD_TEAM_TOOLBAR_ACTION";
 
     /**
      * CRUD Events
