@@ -13,12 +13,21 @@ class OrgChartEvents
      * State Change Events
      */
     public static readonly ORG_CHART_SELECTION_CHANGED_EVENT: string = "ORG_CHART_SELECTION_CHANGED";
+
+    /**
+     * Control Events
+     */
     public static readonly VIEW_TOGGABLE_ENTITY_TOGGLED = "VIEW_TOGGABLE_ENTITY_TOGGLED";
 
     /**
-     * Other Events
+     * Drag&Drop Events
      */
+    public static readonly DROP_MOUSE_EVENT: string = "DROP_MOUSE_EVENT";
+
     // public static readonly SAVE_AS_IMAGE: string = "SAVE_AS_IMAGE";
+    /**
+     *
+     */
 }
 
 class OrgChartSelectionChangedEvent extends BasePubSubEvent
@@ -45,6 +54,14 @@ class DeleteEntityCellActionEvent extends BasePubSubEvent
     }
 }
 
+class DropMouseEvent extends BasePubSubEvent
+{
+    constructor(public sourceEntityt: OrgEntity, public targetEntity: OrgEntity)
+    {
+        super(OrgChartEvents.DROP_MOUSE_EVENT);
+    }
+}
+
 /*
 class SaveAsImageEvent extends BasePubSubEvent
 {
@@ -59,4 +76,5 @@ export {
     OrgChartSelectionChangedEvent,
     EditEntityCellActionEvent,
     DeleteEntityCellActionEvent,
+    DropMouseEvent
 };

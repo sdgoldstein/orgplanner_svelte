@@ -38,6 +38,12 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
 
         return cellToReturn;
     }
+
+    configureBaseOptions(): void
+    {
+        super.configureBaseOptions();
+        this.graph.setDropEnabled(true);
+    }
 }
 
 export {EditableOrgChartMaxGraphAssemblyService};

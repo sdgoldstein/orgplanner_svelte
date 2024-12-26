@@ -159,6 +159,10 @@
         OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT,
         testListener,
     );
+    PubSubManager.instance.registerListener(
+        OrgChartEvents.DROP_MOUSE_EVENT,
+        testListener,
+    );
 </script>
 
 <Form id="orglist_form">

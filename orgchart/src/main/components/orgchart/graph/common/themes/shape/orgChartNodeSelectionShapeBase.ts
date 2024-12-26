@@ -38,6 +38,7 @@ class OrgChartNodeSelectionShapeBase extends DecoratedRectangleMaxGraphShape
         canvas.quadTo(startX, startY, startX + radius, startY);
         canvas.lineTo(startX + radius + lineLength, startY);
 
+        // Top Line
         canvas.moveTo(startX + width / 2 + gap - lineLength, startY);
         canvas.lineTo(startX + width / 2 + gap + lineLength, startY);
 
@@ -47,8 +48,9 @@ class OrgChartNodeSelectionShapeBase extends DecoratedRectangleMaxGraphShape
         canvas.quadTo(endX, startY, endX, startY + radius);
         canvas.lineTo(endX, startY + radius + lineLength);
 
-        canvas.moveTo(endX, startY + height / 2 + gap - lineLength);
-        canvas.lineTo(endX, startY + height / 2 + gap + lineLength);
+        // Right Line
+        // canvas.moveTo(endX, startY + height / 2 + gap - lineLength);
+        // canvas.lineTo(endX, startY + height / 2 + gap + lineLength);
 
         // Bottom Right Corner
         canvas.moveTo(endX, endY - radius - lineLength);
@@ -56,6 +58,7 @@ class OrgChartNodeSelectionShapeBase extends DecoratedRectangleMaxGraphShape
         canvas.quadTo(endX, endY, endX - radius, endY);
         canvas.lineTo(endX - radius - lineLength, endY);
 
+        // Botton Line
         canvas.moveTo(startX + width / 2 + gap - lineLength, endY);
         canvas.lineTo(startX + width / 2 + gap + lineLength, endY);
 
@@ -65,8 +68,9 @@ class OrgChartNodeSelectionShapeBase extends DecoratedRectangleMaxGraphShape
         canvas.quadTo(startX, endY, startX, endY - radius);
         canvas.lineTo(startX, endY - radius - lineLength);
 
-        canvas.moveTo(startX, startY + height / 2 + gap - lineLength);
-        canvas.lineTo(startX, startY + height / 2 + gap + lineLength);
+        // Left Line
+        // canvas.moveTo(startX, startY + height / 2 + gap - lineLength);
+        // canvas.lineTo(startX, startY + height / 2 + gap + lineLength);
 
         canvas.fillAndStroke();
 

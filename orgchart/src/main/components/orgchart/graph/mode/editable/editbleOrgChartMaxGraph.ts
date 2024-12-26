@@ -31,6 +31,8 @@ import {
     type EntityViewToggableOrgChartMaxGraph,
 } from "../shared/viewToggableEntityEventHandler";
 import type {OrgChartMaxGraph} from "../../common/core/orgChartMaxGraph";
+import {OrgChartSelectionHandler} from "../../common/themes/orgChartSelectionHandler";
+import {OrgChartConnectionHandler} from "../../common/themes/orgChartConnectionHandler";
 
 /**
  * The org chart graph visual component.
@@ -45,7 +47,8 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     constructor(element: HTMLElement, orgStructure: OrgStructure, theme: MaxGraphTheme,
                 visibilityState: OrgChartEntityVisibleState)
     {
-        super(element, orgStructure, theme, visibilityState, new EditableOrgChartMaxGraphAssemblyService);
+        super(element, orgStructure, theme, visibilityState, new EditableOrgChartMaxGraphAssemblyService(),
+              [ OrgChartSelectionHandler, OrgChartConnectionHandler ]);
 
         /* fix to
          * https://stackoverflow.com/questions/66452387/error-in-mxgraph-firemouseevent-failed-to-execute-getcomputedstyle-on-windo
@@ -81,6 +84,9 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     {
         return new OrgChartVertexHandler(state);
     }
+
+    validateEdge: (edge: Cell, source: Cell, target: Cell) => string | null = (edge: Cell, source: Cell,
+                                                                               target: Cell) => { return null; }
 
     addEmployee(employeeToAdd: Employee): void
     {

@@ -1,4 +1,13 @@
-import {Cell, CellState, EventObject, Graph, GraphLayout, LayoutManager, VertexHandler} from "@maxgraph/core";
+import {
+    Cell,
+    EventObject,
+    getDefaultPlugins,
+    Graph,
+    GraphLayout,
+    LayoutManager,
+    SelectionHandler,
+    type GraphPluginConstructor
+} from "@maxgraph/core";
 
 import type {PubSubListener, PubSubEvent} from "orgplanner-common/jscore";
 import {
@@ -123,9 +132,11 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
 
     constructor(_element: HTMLElement, private _orgStructure: OrgStructure, private _graphTheme: MaxGraphTheme,
                 protected visibilityState: OrgChartEntityVisibleState,
-                protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService)
+                protected readonly orgChartMaxGraphAssemblyService: OrgChartMaxGraphAssemblyService,
+                pluginOverrides: GraphPluginConstructor[] = [])
     {
-        super(_element, new OrgPlannerChartModel(visibilityState));
+        super(_element, new OrgPlannerChartModel(visibilityState),
+              OrgChartMaxGraphBase._mergeWithDefaultPlugins(pluginOverrides));
 
         // FIXME - Need a mechanism to register services that the app does not know about, but are part of dependent
         // libraries
@@ -133,6 +144,22 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
         //           OrgChartMaxGraphAssemblyService;
 
         this.setup(this.orgChartMaxGraphAssemblyService);
+    }
+
+    private static _mergeWithDefaultPlugins(pluginOverrides: GraphPluginConstructor[]): GraphPluginConstructor[]
+    {
+        const pluginsToReturn = getDefaultPlugins();
+
+        pluginOverrides.forEach(nextPluginOverride => {
+            const index = pluginsToReturn.findIndex((nextDefaultPlugin: GraphPluginConstructor) =>
+                                                        (nextDefaultPlugin.pluginId === nextPluginOverride.pluginId));
+            if (index !== -1)
+            {
+                pluginsToReturn[index] = nextPluginOverride;
+            }
+        });
+
+        return pluginsToReturn;
     }
 
     protected setup(assemblyService: OrgChartMaxGraphAssemblyService): void
