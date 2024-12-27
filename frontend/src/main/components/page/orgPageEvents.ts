@@ -22,10 +22,7 @@ class OrgPageEvents
     public static readonly DELETE_EMPLOYEE: string = "DELETE_EMPLOYEE";
     public static readonly ADD_TEAM: string = "ADD_TEAM";
     public static readonly EDIT_TEAM: string = "EDIT_TEAM";
-
-    public static readonly EDIT_TEAM_ACTION: string = "EDIT_TEAM_ACTION";
-    public static readonly EDIT_EMPLOYEE_ACTION: string = "EDIT_EMPLOYEE_ACTION";
-    public static readonly DELETE_EMPLOYEE_ACTION: string = "DELETE_EMPLOYEE_ACTION";
+    public static readonly DELETE_TEAM: string = "DELETE_TEAM";
 
     /**
      * App State Change Events
@@ -55,28 +52,12 @@ class NewEmployeeEvent extends BasePubSubEvent
     }
 }
 
-class EditEmployeeActionEvent extends BasePubSubEvent
-{
-    constructor(public employeeToEdit: Employee)
-    {
-        super(OrgPageEvents.EDIT_EMPLOYEE_ACTION);
-    }
-}
-
 class EditEmployeeEvent extends BasePubSubEvent
 {
     constructor(public name: string, public title: string, public teamId: string,
                 public properties: OrgEntityPropertyBag, public employeeToEdit: Employee)
     {
         super(OrgPageEvents.EDIT_EMPLOYEE);
-    }
-}
-
-class DeleteEmployeeActionEvent extends BasePubSubEvent
-{
-    constructor(public employeeToDelete: Employee)
-    {
-        super(OrgPageEvents.DELETE_EMPLOYEE_ACTION);
     }
 }
 
@@ -104,11 +85,11 @@ class EditTeamEvent extends BasePubSubEvent
     }
 }
 
-class EditTeamActionEvent extends BasePubSubEvent
+class DeleteTeamEvent extends BasePubSubEvent
 {
-    constructor(public teamToEdit: Team)
+    constructor(public teamToDelete: Team)
     {
-        super(OrgPageEvents.EDIT_TEAM_ACTION);
+        super(OrgPageEvents.DELETE_TEAM);
     }
 }
 
@@ -124,12 +105,10 @@ export {
     OrgPageEvents,
     OrgPageSelectionChangedEvent,
     NewEmployeeEvent,
-    EditEmployeeActionEvent,
     EditEmployeeEvent,
-    DeleteEmployeeActionEvent,
     DeleteEmployeeEvent,
     SaveAsImageEvent,
-    EditTeamActionEvent,
     NewTeamEvent,
-    EditTeamEvent
+    EditTeamEvent,
+    DeleteTeamEvent
 };

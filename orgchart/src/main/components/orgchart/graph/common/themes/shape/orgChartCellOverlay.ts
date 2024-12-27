@@ -17,12 +17,12 @@ class DefaultOrgChartCellOverlay extends CellOverlay implements OrgChartCellOver
     }
 }
 
-class EditButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
+class EditEmployeeButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
 {
     constructor(image: ImageBox, tooltip?: string|null, align?: AlignValue, verticalAlign?: VAlignValue, offset?: Point,
                 cursor?: string)
     {
-        super("EditButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
+        super("EditEmployeeButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
     }
 
     getBounds(state: CellState): Rectangle
@@ -33,12 +33,12 @@ class EditButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgCha
     }
 }
 
-class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
+class DeleteEmployeeButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
 {
     constructor(image: ImageBox, tooltip?: string|null, align?: AlignValue, verticalAlign?: VAlignValue, offset?: Point,
                 cursor?: string)
     {
-        super("DeleteButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
+        super("DeleteEmployeeButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
     }
 
     getBounds(state: CellState): Rectangle
@@ -49,5 +49,43 @@ class DeleteButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgC
     }
 }
 
-export {DefaultOrgChartCellOverlay, EditButtonCellOverlay, DeleteButtonCellOverlay};
+class EditTeamButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
+{
+    constructor(image: ImageBox, tooltip?: string|null, align?: AlignValue, verticalAlign?: VAlignValue, offset?: Point,
+                cursor?: string)
+    {
+        super("EditEmployeeButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
+    }
+
+    getBounds(state: CellState): Rectangle
+    {
+        const size = 20; // Need a better way to determine this.  Matches the ModifyButtonsOverlayDecorator
+
+        return new Rectangle(state.x + state.width - size - 5, state.y + state.height - size / 3, size, size);
+    }
+}
+
+class DeleteTeamButtonCellOverlay extends DefaultOrgChartCellOverlay implements OrgChartCellOverlay
+{
+    constructor(image: ImageBox, tooltip?: string|null, align?: AlignValue, verticalAlign?: VAlignValue, offset?: Point,
+                cursor?: string)
+    {
+        super("DeleteEmployeeButtonOverlay", image, tooltip, align, verticalAlign, offset, cursor);
+    }
+
+    getBounds(state: CellState): Rectangle
+    {
+        const size = 20; // Need a better way to determine this.  Matches the ModifyButtonsOverlayDecorator
+
+        return new Rectangle(state.x + state.width - 2 * size - 10, state.y + state.height - size / 3, size, size);
+    }
+}
+
+export {
+    DefaultOrgChartCellOverlay,
+    EditEmployeeButtonCellOverlay,
+    DeleteEmployeeButtonCellOverlay,
+    EditTeamButtonCellOverlay,
+    DeleteTeamButtonCellOverlay
+};
 export type{OrgChartCellOverlay};

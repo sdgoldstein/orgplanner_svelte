@@ -473,16 +473,20 @@ class Tree<K, V>
      *
      * @param {any[]} nodeKeys an array of keys of the nodes to ve removed
      */
-    removeNodes(nodeKeys: K[]): void
+    removeNodes(nodeKeys: K[]): Node<K, V>[]
     {
+        const nodesRemoved: Node<K, V>[] = [];
+
         nodeKeys.forEach((nextNodeId) => {
             if (this.nodeByKeyMap.has(nextNodeId))
             {
                 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
                 const nextNode: Node<K, V> = this.nodeByKeyMap.get(nextNodeId)!;
-                this.removeRecursively(nextNode);
+                nodesRemoved.push(...this.removeRecursively(nextNode));
             }
         });
+
+        return nodesRemoved;
     }
 
     /**
@@ -495,8 +499,10 @@ class Tree<K, V>
         return this.nodeByKeyMap.size === 0;
     }
 
-    private removeRecursively(nodeToRemove: Node<K, V>): void
+    private removeRecursively(nodeToRemove: Node<K, V>): Node<K, V>[]
     {
+        const nodesRemoved: Node<K, V>[] = [];
+
         const parentNode = nodeToRemove.parent;
         if (parentNode)
         {
@@ -504,13 +510,17 @@ class Tree<K, V>
         }
 
         this.nodeByKeyMap.delete(nodeToRemove.key);
+        nodesRemoved.push(nodeToRemove);
+
         const childNodesIterator = nodeToRemove.childrenIterator;
         let nextChildTuple = childNodesIterator.next();
         while (!nextChildTuple.done)
         {
-            this.removeRecursively(nextChildTuple.value);
+            nodesRemoved.push(...this.removeRecursively(nextChildTuple.value));
             nextChildTuple = childNodesIterator.next();
         }
+
+        return nodesRemoved;
     }
 
     /**

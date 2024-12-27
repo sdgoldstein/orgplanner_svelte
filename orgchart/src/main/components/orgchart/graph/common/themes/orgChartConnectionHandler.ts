@@ -1,5 +1,5 @@
 import {Cell, ConnectionHandler, Graph, InternalMouseEvent} from "@maxgraph/core";
-import {DropMouseEvent} from "@src/components/orgchart/OrgChartEvents";
+import {DropEntityOnEntityMouseEvent} from "@src/components/orgchart/OrgChartEvents";
 import {PubSubManager} from "orgplanner-common/jscore";
 
 class OrgChartConnectionHandler extends ConnectionHandler
@@ -15,7 +15,7 @@ class OrgChartConnectionHandler extends ConnectionHandler
         {
             const sourceEntity = source.getValue().orgEntity;
             const targetEntity = target.getValue().orgEntity;
-            const dropMouseEvent = new DropMouseEvent(sourceEntity, targetEntity);
+            const dropMouseEvent = new DropEntityOnEntityMouseEvent(sourceEntity, targetEntity);
             PubSubManager.instance.fireEvent(dropMouseEvent);
         }
     }

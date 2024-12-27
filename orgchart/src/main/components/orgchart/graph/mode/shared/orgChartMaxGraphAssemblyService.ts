@@ -11,10 +11,15 @@ interface OrgChartMaxGraphAssemblyService extends Service
     applyTheme(theme: MaxGraphTheme): void;
     updateStyle(vertex: Cell): void;
     createToggleSubtreeOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
-    createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createEditEmployeeButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createDeleteEmployeeButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createEditTeamButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
+    createDeleteTeamButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void;
     addToggleSubtreeOverlay(cell: Cell): void;
-    addEditButtonOverlay(cell: Cell): void;
+    addEditEmployeeButtonOverlay(cell: Cell): void;
+    addEditTeamButtonOverlay(cell: Cell): void;
+    addDeleteEmployeeButtonOverlay(cell: Cell): void;
+    addDeleteTeamButtonOverlay(cell: Cell): void;
     addManagerNode(manager: Manager): Cell;
     addICNode(ic: IndividualContributor): Cell;
     addTeamNode(team: Team): Cell;

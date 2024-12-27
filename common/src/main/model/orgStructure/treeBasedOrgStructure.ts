@@ -403,17 +403,66 @@ class TreeBasedOrgStructure implements OrgStructure
         }
     }
 
-    /**
-     * Remove the specified employeed from the org structure
-     *
-     * @param {Employee[]} employeesToRemove the employees to remove
-     */
     removeEmployees(employeesToRemove: Employee[]): void
     {
         const nodeIds: string[] = [];
         employeesToRemove.forEach((nextEmployee: Employee) => { nodeIds.push(nextEmployee.id); });
 
-        this.orgTree.removeNodes(nodeIds);
+        const nodesRemoved = this.orgTree.removeNodes(nodeIds);
+        nodesRemoved.forEach((nextNode: Node<string, Employee>) => {
+            this.employeeIdToEmployeesMap.delete(nextNode.key);
+
+            if (nextNode.value.isManager())
+            {
+                const managerId = nextNode.key;
+
+                // Move all teams managed by the manager to the org leader
+                const teamsForManagerId = this._managerIdToTeamsMap.get(managerId);
+                if (teamsForManagerId !== undefined)
+                {
+                    teamsForManagerId.forEach((nextTeam: Team) => { nextTeam.managerId = this.orgLeader.id; });
+                }
+
+                // Thats all we need to do.  All employees below the manager have been removed
+            }
+        });
+    }
+
+    removeTeams(teamsToRemove: Team[]): void
+    {
+        teamsToRemove.forEach((nextTeam: Team) => {
+            this._teamsIdToTeamsMap.delete(nextTeam.id);
+            const managerId = nextTeam.managerId;
+            const teamsForManagerId = this._managerIdToTeamsMap.get(managerId);
+            if (teamsForManagerId === undefined)
+            {
+                // This should never happen
+                // throw new Error("teamsForManagerId not found for manager while removing team");
+            }
+            else
+            {
+                const index = teamsForManagerId.findIndex((nextTeamdForManagerId: Team) =>
+                                                              nextTeamdForManagerId.id === nextTeam.id);
+                if (index !== -1)
+                {
+                    teamsForManagerId.splice(index, 1);
+                }
+                else
+                {
+                    // This should never happen
+                    // throw new Error("Team not found in teamsForManagerId array while removing team");
+                }
+            }
+
+            // // FIXME - This is ugly
+            const noTeamTeam = this.getTeam(TeamConstants.NO_TEAM_ID);
+            this.employeeIdToEmployeesMap.forEach((nextEmployee: Employee) => {
+                if (nextEmployee.team.id === nextTeam.id)
+                {
+                    nextEmployee.team = noTeamTeam
+                }
+            });
+        });
     }
 
     employeePropertyIterator(): IterableIterator<OrgEntityPropertyDescriptor>

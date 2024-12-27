@@ -6,8 +6,8 @@
     class OrgChartEditingToolbarEvents {
         public static readonly ADD_EMPLOYEE_TOOLBAR_ACTION: string =
             "ADD_EMPLOYEE_TOOLBAR_ACTION";
-        public static readonly DELETE_EMPLOYEE_TOOLBAR_ACTION: string =
-            "DELETE_EMPLOYEE_TOOLBAR_ACTION";
+        public static readonly DELETE_ENTITY_TOOLBAR_ACTION: string =
+            "DELETE_DELETE_TOOLBAR_ACTION";
         public static readonly CREATE_SNAPSHOT_TOOLBAR_ACTION: string =
             "CREATE_SNAPSHOT_TOOLBAR_ACTION";
         public static readonly MODIFY_SETTINGS_TOOLBAR_ACTION: string =
@@ -35,9 +35,9 @@
         }
     }
 
-    class DeleteEmployeeToolbarEvent extends BasePubSubEvent {
+    class DeleteEntityToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.DELETE_ENTITY_TOOLBAR_ACTION);
         }
     }
 
@@ -76,7 +76,6 @@
     } from "@src/components/theme";
     import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
     import type { OrgStructure } from "orgplanner-common/model";
-    import { OrgPageEvents } from "@src/components/page/orgPageEvents";
     import { Trash2 } from "lucide-svelte";
     import { FileDown } from "lucide-svelte";
     import { Settings } from "lucide-svelte";
@@ -116,7 +115,7 @@
         dynamicColorTheme={dynamicColorThemeMap}
         {colorVariant}
         onclick={() => {
-            const eventToFire = new DeleteEmployeeToolbarEvent();
+            const eventToFire = new DeleteEntityToolbarEvent();
             PubSubManager.instance.fireEvent(eventToFire);
         }}><Trash2 strokeWidth=".18rem" /></IconButton
     >

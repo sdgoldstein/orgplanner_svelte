@@ -1,5 +1,21 @@
 import {PrintableOrgChartProxy} from "./components/orgchart/graph/mode/printable/printableOrgChartProxy"
 import OrgChart from "./components/orgchart/OrgChart.svelte"
+import {
+    DeleteEmployeeCellActionEvent,
+    DeleteTeamCellActionEvent,
+    EditEmployeeCellActionEvent,
+    EditTeamCellActionEvent,
+    OrgChartEvents
+} from "./components/orgchart/OrgChartEvents"
 import {OrgChartMode} from "./components/orgchart/orgChartViewState"
 
-export {OrgChart, OrgChartMode, PrintableOrgChartProxy}
+export {
+    DeleteEmployeeCellActionEvent,
+    DeleteTeamCellActionEvent,
+    EditEmployeeCellActionEvent,
+    EditTeamCellActionEvent,
+    OrgChart,
+    OrgChartEvents,
+    OrgChartMode,
+    PrintableOrgChartProxy
+};

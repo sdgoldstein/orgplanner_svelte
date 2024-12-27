@@ -28,18 +28,22 @@ import {
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {
     DefaultOrgChartCellOverlay,
-    EditButtonCellOverlay,
-    DeleteButtonCellOverlay
+    EditEmployeeButtonCellOverlay,
+    DeleteEmployeeButtonCellOverlay,
+    EditTeamButtonCellOverlay,
+    DeleteTeamButtonCellOverlay
 } from "../../common/themes/shape/orgChartCellOverlay";
 import type {OrgChartMaxGraphAssemblyService} from "./orgChartMaxGraphAssemblyService";
 
 class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChartMaxGraphAssemblyService
 {
     private _toggleSubtreeOverlay?: CellOverlay;
-    private _editButtonOverlay?: CellOverlay;
-    private _deleteButtonOverlay?: CellOverlay
+    private _editEmployeeButtonOverlay?: CellOverlay;
+    private _deleteEmployeeButtonOverlay?: CellOverlay;
+    private _editTeamButtonOverlay?: CellOverlay;
+    private _deleteTeamButtonOverlay?: CellOverlay;
 
-        private _graph?: Graph;
+    private _graph?: Graph;
 
     insertGraph(graph: Graph): void
     {
@@ -77,45 +81,86 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
         this.graph.addCellOverlay(managerCell, this._toggleSubtreeOverlay);
     }
 
-    createEditButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    createEditEmployeeButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
         const transaprentImage = new ImageBox("transparent.png", 9, 9);
         // const transaprentImage = new ImageBox("square.png", 9, 9);
-        this._editButtonOverlay =
-            new EditButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
-        this._editButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
-        this._editButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+        this._editEmployeeButtonOverlay = new EditEmployeeButtonCellOverlay(
+            transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._editEmployeeButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._editEmployeeButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
     }
 
-    addEditButtonOverlay(cell: Cell): void
+    addEditEmployeeButtonOverlay(cell: Cell): void
     {
-        if (!this._editButtonOverlay)
+        if (!this._editEmployeeButtonOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this.graph.addCellOverlay(cell, this._editButtonOverlay);
+        this.graph.addCellOverlay(cell, this._editEmployeeButtonOverlay);
     }
 
-    createDeleteButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    createDeleteEmployeeButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
     {
         const transaprentImage = new ImageBox("transparent.png", 9, 9);
         // const transaprentImage = new ImageBox("square.png", 9, 9);
-        this._deleteButtonOverlay =
-            new DeleteButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
-        this._deleteButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
-        this._deleteButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+        this._deleteEmployeeButtonOverlay = new DeleteEmployeeButtonCellOverlay(
+            transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._deleteEmployeeButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._deleteEmployeeButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
     }
 
-    addDeleteButtonOverlay(cell: Cell): void
+    addDeleteEmployeeButtonOverlay(cell: Cell): void
     {
 
-        if (!this._deleteButtonOverlay)
+        if (!this._deleteEmployeeButtonOverlay)
         {
             throw new Error("Expanded Overlay has not been created");
         }
 
-        this.graph.addCellOverlay(cell, this._deleteButtonOverlay);
+        this.graph.addCellOverlay(cell, this._deleteEmployeeButtonOverlay);
+    }
+
+    createEditTeamButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    {
+        const transaprentImage = new ImageBox("transparent.png", 9, 9);
+        // const transaprentImage = new ImageBox("square.png", 9, 9);
+        this._editTeamButtonOverlay =
+            new EditTeamButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._editTeamButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._editTeamButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+    }
+
+    addEditTeamButtonOverlay(cell: Cell): void
+    {
+        if (!this._editTeamButtonOverlay)
+        {
+            throw new Error("Expanded Overlay has not been created");
+        }
+
+        this.graph.addCellOverlay(cell, this._editTeamButtonOverlay);
+    }
+
+    createDeleteTeamButtonOverlay(clickListener: (sender: EventTarget, event: EventObject) => void): void
+    {
+        const transaprentImage = new ImageBox("transparent.png", 9, 9);
+        // const transaprentImage = new ImageBox("square.png", 9, 9);
+        this._deleteTeamButtonOverlay =
+            new DeleteTeamButtonCellOverlay(transaprentImage, "Toggle", constants.ALIGN.RIGHT, constants.ALIGN.BOTTOM);
+        this._deleteTeamButtonOverlay.cursor = constants.CURSOR.TERMINAL_HANDLE;
+        this._deleteTeamButtonOverlay.addListener(InternalEvent.CLICK, clickListener);
+    }
+
+    addDeleteTeamButtonOverlay(cell: Cell): void
+    {
+
+        if (!this._deleteTeamButtonOverlay)
+        {
+            throw new Error("Expanded Overlay has not been created");
+        }
+
+        this.graph.addCellOverlay(cell, this._deleteTeamButtonOverlay);
     }
 
     init(configuration: ServiceConfiguration): void

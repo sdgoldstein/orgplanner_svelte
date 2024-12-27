@@ -9,21 +9,24 @@
 import {Cell, CellState, type CellStateStyle, EventObject, VertexHandler} from "@maxgraph/core";
 
 import {PubSubManager} from "orgplanner-common/jscore";
-import {OrgEntityTypes, type Employee, type OrgStructure, type Team} from "orgplanner-common/model";
+import {OrgEntityTypes, type Employee, type OrgEntity, type OrgStructure, type Team} from "orgplanner-common/model";
 
 import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex,
+    type OrgPlannerChartVertex,
 } from "../../common/core/orgPlannerChartModel";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
 import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
 import type {OrgChartMaxGraphAssemblyService} from "../shared/orgChartMaxGraphAssemblyService";
 import {
-    DeleteEntityCellActionEvent,
-    EditEntityCellActionEvent,
+    DeleteEmployeeCellActionEvent,
+    DeleteTeamCellActionEvent,
+    EditEmployeeCellActionEvent,
+    EditTeamCellActionEvent,
     OrgChartSelectionChangedEvent
 } from "../../../OrgChartEvents";
 import {EditableOrgChartMaxGraphAssemblyService} from "./editableOrgChartMaxGraphAssemblyService";
@@ -66,16 +69,29 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     {
         super.setup(orgChartMaxGraphBuilderService);
 
-        orgChartMaxGraphBuilderService.createDeleteButtonOverlay((sender: EventTarget, event: EventObject) => {
+        orgChartMaxGraphBuilderService.createDeleteEmployeeButtonOverlay((sender: EventTarget, event: EventObject) => {
             const cellToEdit = event.getProperty("cell") as Cell;
-            const employeeToDelete = (cellToEdit.value as OrgPlannerChartEmployeeVertex).employee;
-            const eventToFire = new DeleteEntityCellActionEvent(employeeToDelete);
+            const employeeToDelete = (cellToEdit.value as OrgPlannerChartEmployeeVertex).orgEntity;
+            const eventToFire = new DeleteEmployeeCellActionEvent(employeeToDelete);
             PubSubManager.instance.fireEvent(eventToFire);
         });
-        orgChartMaxGraphBuilderService.createEditButtonOverlay((sender: EventTarget, event: EventObject) => {
+        orgChartMaxGraphBuilderService.createEditEmployeeButtonOverlay((sender: EventTarget, event: EventObject) => {
             const cellToEdit = event.getProperty("cell") as Cell;
-            const employeeToEdit = (cellToEdit.value as OrgPlannerChartEmployeeVertex).employee;
-            const eventToFire = new EditEntityCellActionEvent(employeeToEdit);
+            const employeeToEdit = (cellToEdit.value as OrgPlannerChartEmployeeVertex).orgEntity;
+            const eventToFire = new EditEmployeeCellActionEvent(employeeToEdit);
+            PubSubManager.instance.fireEvent(eventToFire);
+        });
+
+        orgChartMaxGraphBuilderService.createDeleteTeamButtonOverlay((sender: EventTarget, event: EventObject) => {
+            const cellToEdit = event.getProperty("cell") as Cell;
+            const teamToDelete = (cellToEdit.value as OrgPlannerChartTeamVertex).orgEntity;
+            const eventToFire = new DeleteTeamCellActionEvent(teamToDelete);
+            PubSubManager.instance.fireEvent(eventToFire);
+        });
+        orgChartMaxGraphBuilderService.createEditTeamButtonOverlay((sender: EventTarget, event: EventObject) => {
+            const cellToEdit = event.getProperty("cell") as Cell;
+            const teamToEdit = (cellToEdit.value as OrgPlannerChartTeamVertex).orgEntity;
+            const eventToFire = new EditTeamCellActionEvent(teamToEdit);
             PubSubManager.instance.fireEvent(eventToFire);
         });
     }
@@ -165,15 +181,15 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
         });
     }
 
-    public employeesDeleted(employeesToRemove: Employee[])
+    public entitiesDeleted(entitiesToRemove: OrgEntity[])
     {
         this.batchUpdate(() => {
             const cellsToRemove: Cell[] = [];
-            employeesToRemove.forEach((nextEmployeeToRemove) => {
-                const vertex: Cell|null = this.model.getCell(nextEmployeeToRemove.id);
+            entitiesToRemove.forEach((nextEntityToRemove) => {
+                const vertex: Cell|null = this.model.getCell(nextEntityToRemove.id);
                 if (!vertex)
                 {
-                    throw new Error("Could not find cell for edited employee");
+                    throw new Error("Could not find cell for deleted entity");
                 }
 
                 cellsToRemove.push(vertex);

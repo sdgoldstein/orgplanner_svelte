@@ -123,11 +123,18 @@ interface OrgStructure
     moveTeamToManager(team: Team, manager: Manager): Team;
 
     /**
-     * Remove the specified employeed from the org structure
+     * Remove the specified employees from the org structure
      *
      * @param {Employee[]} employeesToRemove the employees to remove
      */
     removeEmployees(employeesToRemove: Employee[]): void;
+
+    /**
+     * Remove the specified teams from the org structure
+     *
+     * @param {Team[]} teamsToRemove the teamss to remove
+     */
+    removeTeams(teamsToRemove: Team[]): void;
 
     /**
      * Create the org leader of this org structure

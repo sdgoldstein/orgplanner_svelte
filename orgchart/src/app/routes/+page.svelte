@@ -148,11 +148,11 @@
     }
     const testListener = new TestListener();
     PubSubManager.instance.registerListener(
-        OrgChartEvents.DELETE_ENTITY_CELL_ACTION,
+        OrgChartEvents.DELETE_EMPLOYEE_CELL_ACTION,
         testListener,
     );
     PubSubManager.instance.registerListener(
-        OrgChartEvents.EDIT_ENTITY_CELL_ACTION,
+        OrgChartEvents.EDIT_EMPLOYEE_CELL_ACTION,
         testListener,
     );
     PubSubManager.instance.registerListener(
@@ -160,7 +160,7 @@
         testListener,
     );
     PubSubManager.instance.registerListener(
-        OrgChartEvents.DROP_MOUSE_EVENT,
+        OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT,
         testListener,
     );
 </script>

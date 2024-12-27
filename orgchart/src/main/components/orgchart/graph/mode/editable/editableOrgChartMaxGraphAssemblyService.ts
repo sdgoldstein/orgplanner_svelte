@@ -3,6 +3,9 @@ import type {Manager, IndividualContributor, Team} from "orgplanner-common/model
 import type {OrgChartMaxGraphAssemblyService} from "../shared/orgChartMaxGraphAssemblyService";
 import {OrgChartMaxGraphAssemblyServiceBase} from "../shared/orgChartMaxGraphAssemblyServiceBase";
 
+// FIXME - There should be one assembly service like a builder.  That enables consistency across the graphs.  The
+// details of how things are built should be handled in the graph subclasses.  Therefore, sublasses of assembly servie
+// shold not be needed.  (I think!)
 class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblyServiceBase implements
     OrgChartMaxGraphAssemblyService
 {
@@ -10,8 +13,8 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
     {
         const cellToReturn = super.addManagerNode(manager);
         this.addToggleSubtreeOverlay(cellToReturn);
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
+        this.addEditEmployeeButtonOverlay(cellToReturn);
+        this.addDeleteEmployeeButtonOverlay(cellToReturn);
 
         return cellToReturn;
     }
@@ -20,8 +23,8 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
     {
         let cellToReturn = super.addICNode(ic);
 
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
+        this.addEditEmployeeButtonOverlay(cellToReturn);
+        this.addDeleteEmployeeButtonOverlay(cellToReturn);
 
         return cellToReturn;
     }
@@ -31,8 +34,8 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
         let cellToReturn = super.addTeamNode(team);
 
         this.addToggleSubtreeOverlay(cellToReturn);
-        this.addEditButtonOverlay(cellToReturn);
-        this.addDeleteButtonOverlay(cellToReturn);
+        this.addEditTeamButtonOverlay(cellToReturn);
+        this.addDeleteTeamButtonOverlay(cellToReturn);
 
         // FIXME - This does not account for edges from children to their Teams
 

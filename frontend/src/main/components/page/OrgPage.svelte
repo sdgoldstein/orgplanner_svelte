@@ -1,4 +1,11 @@
 <script lang="ts">
+    import {
+        DeleteEmployeeCellActionEvent,
+        DeleteTeamCellActionEvent,
+        EditEmployeeCellActionEvent,
+        EditTeamCellActionEvent,
+        OrgChartEvents,
+    } from "orgplanner-orgchart";
     import { Pane, Splitpanes } from "svelte-splitpanes";
     import OrgChartPane from "@src/components/orgchart/OrgChartPane.svelte";
     import {
@@ -7,14 +14,12 @@
         type PubSubListener,
     } from "orgplanner-common/jscore";
 
-    import type { Employee, Team } from "orgplanner-common/model";
     import {
-        OrgPageEvents,
-        EditEmployeeActionEvent,
-        DeleteEmployeeEvent,
-        DeleteEmployeeActionEvent,
-        EditTeamActionEvent,
-    } from "./orgPageEvents";
+        type Employee,
+        type Team,
+        OrgEntityTypes,
+    } from "orgplanner-common/model";
+    import { DeleteEmployeeEvent, DeleteTeamEvent } from "./orgPageEvents";
     import {
         DefaultOrgPageMediator,
         type OrgPageMediator,
@@ -76,9 +81,9 @@
                     orgPageMediator.getFirstSelectedManager().id;
                 employeeToEdit = undefined;
                 newEditEmployeeModalMode = NewEditEmployeeModalModes.NEW;
-            } else if (eventName === OrgPageEvents.EDIT_EMPLOYEE_ACTION) {
+            } else if (eventName === OrgChartEvents.EDIT_EMPLOYEE_CELL_ACTION) {
                 const editEmployeeActionEvent =
-                    eventToHandle as EditEmployeeActionEvent;
+                    eventToHandle as EditEmployeeCellActionEvent;
                 employeeToEdit = editEmployeeActionEvent.employeeToEdit;
                 newEditEmployeeModalMode = NewEditEmployeeModalModes.EDIT;
             }
@@ -92,7 +97,7 @@
         orgPageListener,
     );
     PubSubManager.instance.registerListener(
-        OrgPageEvents.EDIT_EMPLOYEE_ACTION,
+        OrgChartEvents.EDIT_EMPLOYEE_CELL_ACTION,
         orgPageListener,
     );
     /**
@@ -118,9 +123,9 @@
                 newTeamManagerId = orgPageMediator.getFirstSelectedManager().id;
                 teamToEdit = undefined;
                 newEditTeamModalMode = RecordModalModes.NEW;
-            } else if (eventName === OrgPageEvents.EDIT_TEAM_ACTION) {
+            } else if (eventName === OrgChartEvents.EDIT_TEAM_CELL_ACTION) {
                 const editTeamActionEvent =
-                    eventToHandle as EditTeamActionEvent;
+                    eventToHandle as EditTeamCellActionEvent;
                 teamToEdit = editTeamActionEvent.teamToEdit;
                 newEditTeamModalMode = NewEditEmployeeModalModes.EDIT;
             }
@@ -134,7 +139,7 @@
         newEditTeamActionListener,
     );
     PubSubManager.instance.registerListener(
-        OrgPageEvents.EDIT_TEAM_ACTION,
+        OrgChartEvents.EDIT_TEAM_CELL_ACTION,
         newEditTeamActionListener,
     );
 
@@ -148,37 +153,56 @@
     class DeleteDialogController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
             // NOT MODAL at the moment.  Need to add at some point
-            let employeeToDelete;
             if (
                 eventName ===
-                OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION
+                OrgChartEditingToolbarEvents.DELETE_ENTITY_TOOLBAR_ACTION
             ) {
                 if (!orgPageMediator) {
                     throw new Error("OrgPageMediator undefined");
                 }
-                employeeToDelete = orgPageMediator.getFirstSelectedEmployee();
-            } else if (eventName === OrgPageEvents.DELETE_EMPLOYEE_ACTION) {
+                let entityToDelete = orgPageMediator.getFirstSelectedEntity();
+                if (entityToDelete.orgEntityType === OrgEntityTypes.TEAM) {
+                    const deleteTeamEvent = new DeleteTeamEvent(
+                        entityToDelete as Team,
+                    );
+                    PubSubManager.instance.fireEvent(deleteTeamEvent);
+                } else {
+                    const deleteEmployeeEvent = new DeleteEmployeeEvent(
+                        entityToDelete as Employee,
+                    );
+                    PubSubManager.instance.fireEvent(deleteEmployeeEvent);
+                }
+            } else if (
+                eventName === OrgChartEvents.DELETE_EMPLOYEE_CELL_ACTION
+            ) {
                 const deleteEmployeeActionEvent =
-                    eventToHandle as DeleteEmployeeActionEvent;
-                employeeToDelete = deleteEmployeeActionEvent.employeeToDelete;
+                    eventToHandle as DeleteEmployeeCellActionEvent;
+                let employeeToDelete =
+                    deleteEmployeeActionEvent.employeeToDelete;
+                const deleteEmployeeEvent = new DeleteEmployeeEvent(
+                    employeeToDelete,
+                );
+                PubSubManager.instance.fireEvent(deleteEmployeeEvent);
+            } else if (eventName === OrgChartEvents.DELETE_TEAM_CELL_ACTION) {
+                const deleteTeamActionEvent =
+                    eventToHandle as DeleteTeamCellActionEvent;
+                let teamToDelete = deleteTeamActionEvent.teamToDelete;
+                const deleteTeamEvent = new DeleteTeamEvent(teamToDelete);
+                PubSubManager.instance.fireEvent(deleteTeamEvent);
             }
-
-            if (!employeeToDelete) {
-                throw new Error("Could not obtain employee to delete");
-            }
-            const deleteEmployeeEvent = new DeleteEmployeeEvent(
-                employeeToDelete,
-            );
-            PubSubManager.instance.fireEvent(deleteEmployeeEvent);
         }
     }
     const deleteActionListener = new DeleteDialogController();
     PubSubManager.instance.registerListener(
-        OrgPageEvents.DELETE_EMPLOYEE_ACTION,
+        OrgChartEvents.DELETE_EMPLOYEE_CELL_ACTION,
         deleteActionListener,
     );
     PubSubManager.instance.registerListener(
-        OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION,
+        OrgChartEvents.DELETE_TEAM_CELL_ACTION,
+        deleteActionListener,
+    );
+    PubSubManager.instance.registerListener(
+        OrgChartEditingToolbarEvents.DELETE_ENTITY_TOOLBAR_ACTION,
         deleteActionListener,
     );
     /**
