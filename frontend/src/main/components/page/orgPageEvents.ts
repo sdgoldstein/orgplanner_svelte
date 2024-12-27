@@ -90,7 +90,7 @@ class DeleteEmployeeEvent extends BasePubSubEvent
 
 class NewTeamEvent extends BasePubSubEvent
 {
-    constructor(public readonly teamName: string)
+    constructor(public readonly title: string, public managerId: string)
     {
         super(OrgPageEvents.ADD_TEAM);
     }

@@ -4,6 +4,7 @@ import {
     DeleteEmployeeEvent,
     EditEmployeeEvent,
     NewEmployeeEvent,
+    NewTeamEvent,
     OrgPageEvents,
     OrgPageSelectionChangedEvent,
     SaveAsImageEvent
@@ -13,6 +14,7 @@ import {
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEventEntitiesRemoved
 } from "orgplanner-common/model";
+import {OrgChartEditingToolbarEvents} from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
 
 interface OrgPageMediator
 {
@@ -33,8 +35,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgPageEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.EDIT_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_EMPLOYEE, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.ADD_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
-        PubSubManager.instance.registerListener(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
+        PubSubManager.instance.registerListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
     reset()
@@ -42,8 +45,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.EDIT_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_EMPLOYEE, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
-        PubSubManager.instance.unregisterListener(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
+        PubSubManager.instance.unregisterListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
     getFirstSelectedManager(): Manager
@@ -110,7 +114,14 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             const orgStructureChangedEvent = new OrgStructureChangedEventEntitiesRemoved(employeesToDelete);
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
-        else if (eventName === OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION)
+        else if (eventName === OrgPageEvents.ADD_TEAM)
+        {
+            const newTeamEvent = eventToHandle as NewTeamEvent;
+            const newTeam = this._orgStructure.createTeam(newTeamEvent.title, newTeamEvent.managerId);
+            const orgStructureChangedEvent = new OrgStructureChangedEventEntityAdded(newTeam);
+            PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION)
         {
             const orgStructureChangedEvent = new SaveAsImageEvent();
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);

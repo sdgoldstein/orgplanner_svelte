@@ -44,7 +44,10 @@
                 teamToEdit,
             );
         } else {
-            eventToFire = new NewTeamEvent(teamName.valueOf() as string);
+            eventToFire = new NewTeamEvent(
+                teamName.valueOf() as string,
+                managerId,
+            );
         }
 
         PubSubManager.instance.fireEvent(eventToFire);

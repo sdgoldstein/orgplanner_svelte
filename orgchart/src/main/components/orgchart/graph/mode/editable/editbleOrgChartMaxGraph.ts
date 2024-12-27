@@ -98,6 +98,16 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
             return errorToReturn;
         }
 
+    addTeam(team: Team): void
+    {
+        this.batchUpdate(() => {
+            const teamCell = this.orgChartMaxGraphAssemblyService.addTeamNode(team);
+            this.orgChartMaxGraphAssemblyService.augmentCellTemp(teamCell, this.visibilityState);
+
+            this._postAddEntity(teamCell);
+        });
+    }
+
     addEmployee(employeeToAdd: Employee): void
     {
         this.batchUpdate(() => {
@@ -110,25 +120,27 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
             {
                 cellAdded = this.orgChartMaxGraphAssemblyService.addICNode(employeeToAdd);
             }
-
             this.orgChartMaxGraphAssemblyService.augmentCellTemp(cellAdded, this.visibilityState);
 
-            // Expand the parent in case it is collapsed so the new cell shows
-            const managerCell = this.model.getCell(employeeToAdd.managerId);
-            if (managerCell != null)
-            {
-                // It hsould always be non-null
-
-                this.showHideSubtree(managerCell, true);
-            }
-
-            // Set the newly added cell to be selected
-            this.setSelectionCell(cellAdded);
-
-            // FIX - Move to selrction handler
-            const eventToFire = new OrgChartSelectionChangedEvent([ employeeToAdd ]);
-            PubSubManager.instance.fireEvent(eventToFire);
+            this._postAddEntity(cellAdded);
         });
+    }
+
+    private _postAddEntity(cellAdded: Cell)
+    {
+        const managerId = cellAdded.getValue().orgEntity.managerId;
+        const managerCell = this.model.getCell(managerId);
+        if (managerCell != null)
+        {
+            // It hsould always be non-null
+            this.showHideSubtree(managerCell, true);
+        }
+
+        // Set the newly added cell to be selected
+        this.setSelectionCell(cellAdded);
+
+        const eventToFire = new OrgChartSelectionChangedEvent([ cellAdded.getValue().orgEntity ]);
+        PubSubManager.instance.fireEvent(eventToFire);
     }
 
     employeeEdited(employee: Employee): void

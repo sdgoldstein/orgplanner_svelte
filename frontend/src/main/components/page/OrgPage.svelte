@@ -115,8 +115,7 @@
                 if (!orgPageMediator) {
                     throw new Error("OrgPageMediator undefined");
                 }
-                newEmployeeManagerId =
-                    orgPageMediator.getFirstSelectedManager().id;
+                newTeamManagerId = orgPageMediator.getFirstSelectedManager().id;
                 teamToEdit = undefined;
                 newEditTeamModalMode = RecordModalModes.NEW;
             } else if (eventName === OrgPageEvents.EDIT_TEAM_ACTION) {

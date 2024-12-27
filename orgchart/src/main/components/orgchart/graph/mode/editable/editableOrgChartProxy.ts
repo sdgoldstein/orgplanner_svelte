@@ -5,15 +5,16 @@ import {
     type OrgEntityColorTheme,
     OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
+    OrgEntityTypes,
     type OrgStructure,
     OrgStructureChangedEventEntitiesRemoved,
     OrgStructureChangedEventEntityAdded,
     OrgStructureChangedEventEntityEdited,
-    OrgStructureChangedEvents
+    OrgStructureChangedEvents,
+    type Team
 } from "orgplanner-common/model";
 
 import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
-import {OrgChartMaxGraphThemeDefault} from "../../common/themes/orgChartMaxGraphThemeDefault";
 import {
     OrgChartEntityVisibleStateImpl,
 } from "../../../orgChartViewState";
@@ -155,7 +156,14 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         if (eventName === OrgStructureChangedEvents.ORG_ENTITY_ADDED)
         {
             const orgEntityAddedEvent = event as unknown as OrgStructureChangedEventEntityAdded;
-            this.currentGraph.addEmployee(orgEntityAddedEvent.entityAded as Employee);
+            if (orgEntityAddedEvent.entityAded.orgEntityType === OrgEntityTypes.TEAM)
+            {
+                this.currentGraph.addTeam(orgEntityAddedEvent.entityAded as Team);
+            }
+            else
+            {
+                this.currentGraph.addEmployee(orgEntityAddedEvent.entityAded as Employee);
+            }
         }
         else if (eventName === OrgStructureChangedEvents.ORG_ENTITY_EDITED)
         {
