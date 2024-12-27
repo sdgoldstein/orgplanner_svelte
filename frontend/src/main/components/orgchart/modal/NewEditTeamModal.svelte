@@ -73,9 +73,11 @@
 <SubmitCancelModal
     id="new_team_modal"
     bind:open
-    title="New Team"
-    description="Please enter a title for the new team."
-    actionButtonText="Create"
+    title={mode == RecordModalModes.NEW ? "New Team" : "Edit Team"}
+    description={mode == RecordModalModes.NEW
+        ? "Please enter a title for the new team."
+        : "Please edit the title for the selected team."}
+    actionButtonText={mode == RecordModalModes.NEW ? "Create" : "Save"}
     {colorVariant}
     {dynamicColorTheme}
     onsubmit={handleSubmit}
@@ -87,6 +89,9 @@
         name="new_team_title_input_name"
         placeholder="New Team"
         schema={zExtended.requiredString("Team")}
+        value={mode == RecordModalModes.EDIT && teamToEdit
+            ? teamToEdit.title
+            : undefined}
         {colorVariant}
         {dynamicColorTheme}
     />
