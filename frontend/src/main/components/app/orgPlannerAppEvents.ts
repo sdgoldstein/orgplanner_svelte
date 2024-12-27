@@ -4,7 +4,6 @@ import {BasePubSubEvent} from "orgplanner-common/jscore";
 class OrgPlannerAppEvents
 {
     public static readonly CREATE_NEW_ORG: string = "CREATE_NEW_ORG";
-    public static readonly CREATE_TEAM_ORG: string = "CREATE_TEAM_ORG";
 
     // FIXME - Can some of these be combined (e.g. OrgStructureChanged and PlanChanged)?
     public static readonly SHOW_CHANGE_ORG_LEADER_MODAL: string = "SHOW_CHANGE_ORG_LEADER_MODAL";
@@ -44,14 +43,6 @@ class CreateNewOrgEvent extends BasePubSubEvent
     public get orgName(): string
     {
         return this._orgName;
-    }
-}
-
-class CreateNewTeamEvent extends BasePubSubEvent
-{
-    constructor(public readonly teamName: string)
-    {
-        super(OrgPlannerAppEvents.CREATE_NEW_ORG);
     }
 }
 

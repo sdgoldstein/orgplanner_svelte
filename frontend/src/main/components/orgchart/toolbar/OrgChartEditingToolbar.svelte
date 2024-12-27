@@ -3,6 +3,21 @@
     import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
     import { User, Users } from "lucide-svelte";
 
+    class OrgChartEditingToolbarEvents {
+        public static readonly ADD_EMPLOYEE_TOOLBAR_ACTION: string =
+            "ADD_EMPLOYEE_TOOLBAR_ACTION";
+        public static readonly DELETE_EMPLOYEE_TOOLBAR_ACTION: string =
+            "DELETE_EMPLOYEE_TOOLBAR_ACTION";
+        public static readonly CREATE_SNAPSHOT_TOOLBAR_ACTION: string =
+            "CREATE_SNAPSHOT_TOOLBAR_ACTION";
+        public static readonly MODIFY_SETTINGS_TOOLBAR_ACTION: string =
+            "MODIFY_SETTINGS_TOOLBAR_ACTION";
+        public static readonly SAVE_AS_IMAGE_TOOLBAR_ACTION: string =
+            "SAVE_AS_IMAGE_TOOLBAR_ACTION";
+        public static readonly ADD_TEAM_TOOLBAR_ACTION: string =
+            "ADD_TEAM_TOOLBAR_ACTION";
+    }
+
     interface OrgChartEditingToolbarProps
         extends OrgPlannerColorThemableComponentProps {
         orgStructure: OrgStructure;
@@ -10,19 +25,19 @@
 
     class AddEmployeeToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.ADD_EMPLOYEE_TOOLBAR_ACTION);
         }
     }
 
     class AddTeamToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.ADD_TEAM_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.ADD_TEAM_TOOLBAR_ACTION);
         }
     }
 
     class DeleteEmployeeToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION);
         }
     }
 
@@ -34,25 +49,26 @@
 
     class CreateSnapshotToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION);
         }
     }
 
     class SaveAsImageToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION);
         }
     }
 
     class ModifySettingsToolbarEvent extends BasePubSubEvent {
         constructor() {
-            super(OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION);
+            super(OrgChartEditingToolbarEvents.MODIFY_SETTINGS_TOOLBAR_ACTION);
         }
     }
+
+    export { OrgChartEditingToolbarEvents };
 </script>
 
 <script lang="ts">
-    import OrgChartEditingToolbarButton from "./OrgChartEditingToolbarButton.svelte";
     import {
         AppDynamicColorThemeColorSelector,
         tempgetDynamicColorTheme,
@@ -63,10 +79,7 @@
     import { OrgPageEvents } from "@src/components/page/orgPageEvents";
     import { Trash2 } from "lucide-svelte";
     import { FileDown } from "lucide-svelte";
-    import { Cog } from "lucide-svelte";
     import { Settings } from "lucide-svelte";
-    import { SlidersVertical } from "lucide-svelte";
-    import { SlidersVerticalIcon } from "lucide-svelte";
 
     let { orgStructure, appDynamicColorTheme }: OrgChartEditingToolbarProps =
         $props();

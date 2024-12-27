@@ -7,12 +7,13 @@
         type PubSubListener,
     } from "orgplanner-common/jscore";
 
-    import type { Employee } from "orgplanner-common/model";
+    import type { Employee, Team } from "orgplanner-common/model";
     import {
         OrgPageEvents,
         EditEmployeeActionEvent,
         DeleteEmployeeEvent,
         DeleteEmployeeActionEvent,
+        EditTeamActionEvent,
     } from "./orgPageEvents";
     import {
         DefaultOrgPageMediator,
@@ -24,6 +25,12 @@
         NewEditEmployeeModalModes,
     } from "../orgchart/modal/NewEditEmployeeModal.svelte";
     import { PrintableOrgChartProxy } from "orgplanner-orgchart";
+    import NewEditTeamModal from "../orgchart/modal/NewEditTeamModal.svelte";
+    import {
+        RecordModalModes,
+        type RecordModalMode,
+    } from "../orgchart/modal/modal";
+    import { OrgChartEditingToolbarEvents } from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -58,7 +65,10 @@
 
     class NewEditModalController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
-            if (eventName === OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION) {
+            if (
+                eventName ===
+                OrgChartEditingToolbarEvents.ADD_EMPLOYEE_TOOLBAR_ACTION
+            ) {
                 if (!orgPageMediator) {
                     throw new Error("OrgPageMediator undefined");
                 }
@@ -66,19 +76,19 @@
                     orgPageMediator.getFirstSelectedManager().id;
                 employeeToEdit = undefined;
                 newEditEmployeeModalMode = NewEditEmployeeModalModes.NEW;
-                newEditEmployeeModalOpen = true;
             } else if (eventName === OrgPageEvents.EDIT_EMPLOYEE_ACTION) {
                 const editEmployeeActionEvent =
                     eventToHandle as EditEmployeeActionEvent;
                 employeeToEdit = editEmployeeActionEvent.employeeToEdit;
                 newEditEmployeeModalMode = NewEditEmployeeModalModes.EDIT;
-                newEditEmployeeModalOpen = true;
             }
+
+            newEditEmployeeModalOpen = true;
         }
     }
     const orgPageListener = new NewEditModalController();
     PubSubManager.instance.registerListener(
-        OrgPageEvents.ADD_EMPLOYEE_TOOLBAR_ACTION,
+        OrgChartEditingToolbarEvents.ADD_EMPLOYEE_TOOLBAR_ACTION,
         orgPageListener,
     );
     PubSubManager.instance.registerListener(
@@ -89,6 +99,50 @@
      * End NewEdit Employee Modal Logic
      */
 
+    /*
+     * NewEdit Team Modal Logic
+     */
+    let newEditTeamModalOpen: boolean = $state(false);
+    let newEditTeamModalMode: RecordModalMode = $state(RecordModalModes.NEW);
+    let newTeamManagerId: string = $state("");
+    let teamToEdit: Team | undefined = $state(undefined);
+    class NewEditTeamModalController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            if (
+                eventName ===
+                OrgChartEditingToolbarEvents.ADD_TEAM_TOOLBAR_ACTION
+            ) {
+                if (!orgPageMediator) {
+                    throw new Error("OrgPageMediator undefined");
+                }
+                newEmployeeManagerId =
+                    orgPageMediator.getFirstSelectedManager().id;
+                teamToEdit = undefined;
+                newEditTeamModalMode = RecordModalModes.NEW;
+            } else if (eventName === OrgPageEvents.EDIT_TEAM_ACTION) {
+                const editTeamActionEvent =
+                    eventToHandle as EditTeamActionEvent;
+                teamToEdit = editTeamActionEvent.teamToEdit;
+                newEditTeamModalMode = NewEditEmployeeModalModes.EDIT;
+            }
+
+            newEditTeamModalOpen = true;
+        }
+    }
+    const newEditTeamActionListener = new NewEditTeamModalController();
+    PubSubManager.instance.registerListener(
+        OrgChartEditingToolbarEvents.ADD_TEAM_TOOLBAR_ACTION,
+        newEditTeamActionListener,
+    );
+    PubSubManager.instance.registerListener(
+        OrgPageEvents.EDIT_TEAM_ACTION,
+        newEditTeamActionListener,
+    );
+
+    /**
+     * End NewEdit Team Modal Logic
+     */
+
     /**
      * Delete Employee Modal Logic
      */
@@ -96,7 +150,10 @@
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
             // NOT MODAL at the moment.  Need to add at some point
             let employeeToDelete;
-            if (eventName === OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION) {
+            if (
+                eventName ===
+                OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION
+            ) {
                 if (!orgPageMediator) {
                     throw new Error("OrgPageMediator undefined");
                 }
@@ -122,7 +179,7 @@
         deleteActionListener,
     );
     PubSubManager.instance.registerListener(
-        OrgPageEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION,
+        OrgChartEditingToolbarEvents.DELETE_EMPLOYEE_TOOLBAR_ACTION,
         deleteActionListener,
     );
     /**
@@ -135,14 +192,17 @@
     let modifySettingsModalOpen: boolean = $state(false);
     class ModifySettingsModalController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
-            if (eventName === OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION) {
+            if (
+                eventName ===
+                OrgChartEditingToolbarEvents.MODIFY_SETTINGS_TOOLBAR_ACTION
+            ) {
                 modifySettingsModalOpen = true;
             }
         }
     }
     const modifySettingsListener = new ModifySettingsModalController();
     PubSubManager.instance.registerListener(
-        OrgPageEvents.MODIFY_SETTINGS_TOOLBAR_ACTION,
+        OrgChartEditingToolbarEvents.MODIFY_SETTINGS_TOOLBAR_ACTION,
         modifySettingsListener,
     );
     /**
@@ -176,7 +236,7 @@
     }
     const saveAsImageListener = new SaveAsImageController();
     PubSubManager.instance.registerListener(
-        OrgPageEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION,
+        OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION,
         saveAsImageListener,
     );
     /**
@@ -212,6 +272,15 @@
     bind:open={modifySettingsModalOpen}
     {appDynamicColorTheme}
     orgPlannerSettings={settings}
+/>
+
+<NewEditTeamModal
+    bind:open={newEditTeamModalOpen}
+    bind:mode={newEditTeamModalMode}
+    bind:managerId={newTeamManagerId}
+    bind:teamToEdit
+    {appDynamicColorTheme}
+    {orgStructure}
 />
 
 <style>

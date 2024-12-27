@@ -1,26 +1,31 @@
 import {BasePubSubEvent} from "orgplanner-common/jscore";
-import type {OrgEntityPropertyBag, OrgEntity, Employee} from "orgplanner-common/model";
+import type {OrgEntityPropertyBag, OrgEntity, Employee, Team} from "orgplanner-common/model";
 
+/*
+New Employee Example
+1.  OrgChartEditingToolbar fires
+OrgChartEditingToolbar.AddEmployeeToolbarEvent(OrgChartEditingToolbarEvents.ADD_EMPLOYEE_TOOLBAR_ACTION)->OrgPage.svelte
+Launches NewEditEmployeeModal
+2.  NewEditEmployeeModal fires orgPageEvents.NewEmployeeEvent(orgPageEvents.ADD_EMPLOYEE)->DefaultOrgPageMediator
+modifies OrgStructure
+3.  DefaultOrgPageMediator fires
+OrgStructureChangedEvents.OrgStructureChangedEventEntityAdded(OrgStructureChangedEvents.ORG_ENTITY_ADDED) ->
+EditableOrgChartProxy modifies org chart
+*/
 class OrgPageEvents
 {
     /**
-     * Editing Toolbar Events
-     */
-    public static readonly ADD_EMPLOYEE_TOOLBAR_ACTION: string = "ADD_EMPLOYEE_TOOLBAR_ACTION";
-    public static readonly DELETE_EMPLOYEE_TOOLBAR_ACTION: string = "DELETE_EMPLOYEE_TOOLBAR_ACTION";
-    public static readonly CREATE_SNAPSHOT_TOOLBAR_ACTION: string = "CREATE_SNAPSHOT_TOOLBAR_ACTION";
-    public static readonly MODIFY_SETTINGS_TOOLBAR_ACTION: string = "MODIFY_SETTINGS_TOOLBAR_ACTION";
-    public static readonly SAVE_AS_IMAGE_TOOLBAR_ACTION: string = "SAVE_AS_IMAGE_TOOLBAR_ACTION";
-    public static readonly ADD_TEAM_TOOLBAR_ACTION: string = "ADD_TEAM_TOOLBAR_ACTION";
-
-    /**
-     * CRUD Events
+     * CRUD Events are general and not owned by modals  Instead, they're owned by the page that opens the modal
      */
     public static readonly ADD_EMPLOYEE: string = "ADD_EMPLOYEE";
-    public static readonly EDIT_EMPLOYEE_ACTION: string = "EDIT_EMPLOYEE_ACTION";
     public static readonly EDIT_EMPLOYEE: string = "EDIT_EMPLOYEE";
-    public static readonly DELETE_EMPLOYEE_ACTION: string = "DELETE_EMPLOYEE_ACTION";
     public static readonly DELETE_EMPLOYEE: string = "DELETE_EMPLOYEE";
+    public static readonly ADD_TEAM: string = "ADD_TEAM";
+    public static readonly EDIT_TEAM: string = "EDIT_TEAM";
+
+    public static readonly EDIT_TEAM_ACTION: string = "EDIT_TEAM_ACTION";
+    public static readonly EDIT_EMPLOYEE_ACTION: string = "EDIT_EMPLOYEE_ACTION";
+    public static readonly DELETE_EMPLOYEE_ACTION: string = "DELETE_EMPLOYEE_ACTION";
 
     /**
      * App State Change Events
@@ -83,6 +88,30 @@ class DeleteEmployeeEvent extends BasePubSubEvent
     }
 }
 
+class NewTeamEvent extends BasePubSubEvent
+{
+    constructor(public readonly teamName: string)
+    {
+        super(OrgPageEvents.ADD_TEAM);
+    }
+}
+
+class EditTeamEvent extends BasePubSubEvent
+{
+    constructor(public readonly teamName: string, public teamToEdit: Team)
+    {
+        super(OrgPageEvents.EDIT_TEAM);
+    }
+}
+
+class EditTeamActionEvent extends BasePubSubEvent
+{
+    constructor(public teamToEdit: Team)
+    {
+        super(OrgPageEvents.EDIT_TEAM_ACTION);
+    }
+}
+
 class SaveAsImageEvent extends BasePubSubEvent
 {
     constructor()
@@ -99,5 +128,8 @@ export {
     EditEmployeeEvent,
     DeleteEmployeeActionEvent,
     DeleteEmployeeEvent,
-    SaveAsImageEvent
+    SaveAsImageEvent,
+    EditTeamActionEvent,
+    NewTeamEvent,
+    EditTeamEvent
 };

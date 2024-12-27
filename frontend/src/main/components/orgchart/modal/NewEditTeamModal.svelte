@@ -8,6 +8,9 @@
     interface NewEditTeamModalProps
         extends OrgPlannerColorThemableComponentProps {
         open: boolean;
+        teamToEdit?: Team;
+        managerId: string;
+        mode: RecordModalMode;
     }
 </script>
 
@@ -19,7 +22,12 @@
         zExtended,
     } from "@sphyrna/uicomponents";
     import { PubSubManager } from "orgplanner-common/jscore";
-    import { CreateNewTeamEvent } from "@src/components/app/orgPlannerAppEvents";
+    import {
+        EditTeamEvent,
+        NewTeamEvent,
+    } from "@src/components/page/orgPageEvents";
+    import { RecordModalModes, type RecordModalMode } from "./modal";
+    import type { Team } from "orgplanner-common/model";
 
     function handleSubmit(formData: FormData): void {
         const teamName: FormDataEntryValue | null = formData.get(
@@ -29,16 +37,27 @@
             throw Error("teamName not found in form data");
         }
 
-        open = false;
-        const eventToFire = new CreateNewTeamEvent(
-            teamName.valueOf() as string,
-        );
+        let eventToFire;
+        if (mode == RecordModalModes.EDIT && teamToEdit) {
+            eventToFire = new EditTeamEvent(
+                teamName.valueOf() as string,
+                teamToEdit,
+            );
+        } else {
+            eventToFire = new NewTeamEvent(teamName.valueOf() as string);
+        }
+
         PubSubManager.instance.fireEvent(eventToFire);
+
+        open = false;
     }
 
     let {
-        open = $bindable(),
+        open = $bindable(false),
         appDynamicColorTheme,
+        managerId = $bindable(),
+        mode = $bindable(RecordModalModes.NEW),
+        teamToEdit = $bindable(),
         ...restProps
     }: NewEditTeamModalProps = $props();
 
