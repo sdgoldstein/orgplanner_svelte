@@ -61,6 +61,7 @@ interface OrgEntity
 {
     readonly id: string;
     orgEntityType: OrgEntityType;
+    canDelete(): boolean;
 }
 
 interface OrgEntityPropertyCarrier

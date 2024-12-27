@@ -30,15 +30,9 @@ class BaseTeam implements Team
 {
     orgEntityType: OrgEntityType = OrgEntityTypes.TEAM;
 
-    private readonly _id: string;
-    private _title: string;
-    private _managerId: string;
-
-    constructor(id: string, title: string, managerId = "Unknown")
+    constructor(private readonly _id: string, private _title: string, private _managerId: string,
+                private _canDelete: boolean)
     {
-        this._id = id;
-        this._title = title;
-        this._managerId = managerId;
     }
 
     get id(): string
@@ -66,9 +60,14 @@ class BaseTeam implements Team
         this._managerId = value;
     }
 
+    canDelete(): boolean
+    {
+        return this._canDelete;
+    }
+
     clone(): Team
     {
-        return new BaseTeam(this._id, this._title, this._managerId);
+        return new BaseTeam(this._id, this._title, this._managerId, this._canDelete);
     }
 }
 

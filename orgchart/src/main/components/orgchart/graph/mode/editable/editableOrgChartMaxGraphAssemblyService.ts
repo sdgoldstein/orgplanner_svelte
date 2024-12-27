@@ -14,7 +14,11 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
         const cellToReturn = super.addManagerNode(manager);
         this.addToggleSubtreeOverlay(cellToReturn);
         this.addEditEmployeeButtonOverlay(cellToReturn);
-        this.addDeleteEmployeeButtonOverlay(cellToReturn);
+
+        if (manager.canDelete())
+        {
+            this.addDeleteEmployeeButtonOverlay(cellToReturn);
+        }
 
         return cellToReturn;
     }
@@ -24,7 +28,11 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
         let cellToReturn = super.addICNode(ic);
 
         this.addEditEmployeeButtonOverlay(cellToReturn);
-        this.addDeleteEmployeeButtonOverlay(cellToReturn);
+
+        if (ic.canDelete())
+        {
+            this.addDeleteEmployeeButtonOverlay(cellToReturn);
+        }
 
         return cellToReturn;
     }
@@ -35,7 +43,11 @@ class EditableOrgChartMaxGraphAssemblyService extends OrgChartMaxGraphAssemblySe
 
         this.addToggleSubtreeOverlay(cellToReturn);
         this.addEditTeamButtonOverlay(cellToReturn);
-        this.addDeleteTeamButtonOverlay(cellToReturn);
+
+        if (team.canDelete())
+        {
+            this.addDeleteTeamButtonOverlay(cellToReturn);
+        }
 
         // FIXME - This does not account for edges from children to their Teams
 
