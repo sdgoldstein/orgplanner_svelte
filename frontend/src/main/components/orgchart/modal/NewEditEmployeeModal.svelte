@@ -210,6 +210,9 @@
         bind:selected={selectedTeam}
         {colorVariant}
         {dynamicColorTheme}
+        disabled={mode == NewEditEmployeeModalModes.EDIT &&
+            employeeToEdit &&
+            !employeeToEdit.canMove()}
     >
         {#each orgStructure.getTeams() as nextTeam: Team}
             <SelectOption value={nextTeam.id}>{nextTeam.title}</SelectOption>

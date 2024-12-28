@@ -3,7 +3,7 @@
 		"name": "OrgDataCore",
 		"objectVersion": "1"
 	},
-	"title": "ZfMUIrmBEZuzh5Jp6",
+	"title": "zplLgAAmmlX3eZVJI9O",
 	"orgStructure": {
 		"serializationDescriptor": {
 			"name": "OrgStructure",
@@ -17,6 +17,7 @@
 			"name": "PHONE_PROPERTY_DESCRIPTOR",
 			"title": "Phone",
 			"defaultValue": "999-999-9999",
+			"defaultVisibility": "false",
 			"enabled": "true"
 		},
 		{
@@ -27,6 +28,7 @@
 			"name": "LOCATION_PROPERTY_DESCRIPTOR",
 			"title": "Location",
 			"defaultValue": "San Francisco",
+			"defaultVisibility": "true",
 			"enabled": "true"
 		}],
 		"employees": [{
@@ -34,16 +36,16 @@
 				"name": "Manager",
 				"objectVersion": "1"
 			},
-			"id": "7e64d6fe-372b-42ee-81d6-5f53696a13c9",
+			"id": "60cf86c9-433f-44c7-ad91-99c009e2135a",
 			"name": "First Last",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"San Francisco"}
+"value":"Your Location"}
 ],
-			"title": "Senior Vice President",
+			"title": "Vice President",
 			"managerId": "ROOT_ID",
-			"teamId": "9dc82d19-a8e0-465a-bbbb-e55befb8df96",
+			"teamId": "d12347b4-77d5-4b7e-89d2-f1094f6e9940",
 			"isManager": "true"
 		},
 		{
@@ -51,15 +53,15 @@
 				"name": "IndividualContributor",
 				"objectVersion": "1"
 			},
-			"id": "MO95M",
-			"name": "qTR3qR zr7t1R",
+			"id": "tMNO3",
+			"name": "lPO5I4 MriGwU",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"New York, NY"}
+"value":"San Francisco, CA"}
 ],
-			"title": "7dpBA2wBS3",
-			"managerId": "7e64d6fe-372b-42ee-81d6-5f53696a13c9",
+			"title": "Kd2x8EJqvL",
+			"managerId": "60cf86c9-433f-44c7-ad91-99c009e2135a",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "false"
 		}],
@@ -77,8 +79,8 @@
 				"name": "Team",
 				"objectVersion": "1"
 			},
-			"id": "9dc82d19-a8e0-465a-bbbb-e55befb8df96",
-			"title": "Critical Organization",
+			"id": "d12347b4-77d5-4b7e-89d2-f1094f6e9940",
+			"title": "Your Organization",
 			"managerId": "ROOT_ID"
 		}]
 	}

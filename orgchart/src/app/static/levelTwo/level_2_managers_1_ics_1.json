@@ -3,7 +3,7 @@
 		"name": "OrgDataCore",
 		"objectVersion": "1"
 	},
-	"title": "qpaOwGUXMFGSD7Wcd7",
+	"title": "1BtoKzgNYGMLEuEur3Ae",
 	"orgStructure": {
 		"serializationDescriptor": {
 			"name": "OrgStructure",
@@ -17,6 +17,7 @@
 			"name": "PHONE_PROPERTY_DESCRIPTOR",
 			"title": "Phone",
 			"defaultValue": "999-999-9999",
+			"defaultVisibility": "false",
 			"enabled": "true"
 		},
 		{
@@ -27,6 +28,7 @@
 			"name": "LOCATION_PROPERTY_DESCRIPTOR",
 			"title": "Location",
 			"defaultValue": "San Francisco",
+			"defaultVisibility": "true",
 			"enabled": "true"
 		}],
 		"employees": [{
@@ -34,16 +36,16 @@
 				"name": "Manager",
 				"objectVersion": "1"
 			},
-			"id": "94a67664-d900-4584-8a28-b94aa7420800",
+			"id": "addf875e-3a9a-4974-b46d-706455378597",
 			"name": "First Last",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"San Francisco"}
+"value":"Your Location"}
 ],
-			"title": "Senior Vice President",
+			"title": "Vice President",
 			"managerId": "ROOT_ID",
-			"teamId": "4404a89a-8255-44d9-aac9-29c6f94df435",
+			"teamId": "5a947c0a-ad97-44d7-9842-3313126fca87",
 			"isManager": "true"
 		},
 		{
@@ -51,15 +53,15 @@
 				"name": "Manager",
 				"objectVersion": "1"
 			},
-			"id": "vRncC",
-			"name": "4LKDpG ZdUEqh",
+			"id": "NgdXi",
+			"name": "IZOxdm Y1tC5x",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"San Francisco, CA"}
+"value":"New York, NY"}
 ],
-			"title": "h9YRmk0G3b",
-			"managerId": "94a67664-d900-4584-8a28-b94aa7420800",
+			"title": "YgLjczG7GS",
+			"managerId": "addf875e-3a9a-4974-b46d-706455378597",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "true"
 		},
@@ -68,15 +70,15 @@
 				"name": "IndividualContributor",
 				"objectVersion": "1"
 			},
-			"id": "mnKBz",
-			"name": "evHWFX 31SXcd",
+			"id": "2MMaQ",
+			"name": "GQ9lfs oyDuD6",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"New York, NY"}
+"value":"San Francisco, CA"}
 ],
-			"title": "IxrHCFamy6",
-			"managerId": "vRncC",
+			"title": "uMc54QfE0S",
+			"managerId": "NgdXi",
 			"teamId": "NO_TEAM_ID",
 			"isManager": "false"
 		}],
@@ -94,8 +96,8 @@
 				"name": "Team",
 				"objectVersion": "1"
 			},
-			"id": "4404a89a-8255-44d9-aac9-29c6f94df435",
-			"title": "Critical Organization",
+			"id": "5a947c0a-ad97-44d7-9842-3313126fca87",
+			"title": "Your Organization",
 			"managerId": "ROOT_ID"
 		}]
 	}

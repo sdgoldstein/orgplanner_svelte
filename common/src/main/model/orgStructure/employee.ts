@@ -25,10 +25,10 @@ class EmployeeReservedPropertyDescriptors
         new Map<string, OrgEntityPropertyDescriptor>();
 
     static readonly PHONE: OrgEntityPropertyDescriptor =
-        new OrgEntityPropertyDescriptorImpl("PHONE_PROPERTY_DESCRIPTOR", "Phone", "999-999-9999", true);
+        new OrgEntityPropertyDescriptorImpl("PHONE_PROPERTY_DESCRIPTOR", "Phone", "999-999-9999", false, true);
 
     static readonly LOCATION: OrgEntityPropertyDescriptor =
-        new OrgEntityPropertyDescriptorImpl("LOCATION_PROPERTY_DESCRIPTOR", "Location", "San Francisco", true);
+        new OrgEntityPropertyDescriptorImpl("LOCATION_PROPERTY_DESCRIPTOR", "Location", "San Francisco", true, true);
 
     static
     {
@@ -96,8 +96,8 @@ abstract class BasePerson implements Person
 
     private readonly _propertyHelper: PropertyCarrierHelper
 
-    constructor(public name: string, private _canDelete: boolean, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
-                properties: OrgEntityPropertyBag)
+    constructor(public name: string, private _canDelete: boolean, private _canMove: boolean,
+                propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
     {
         this._propertyHelper = new PropertyCarrierHelper(propertyDescriptors, properties);
     }
@@ -120,6 +120,11 @@ abstract class BasePerson implements Person
     {
         return this._canDelete;
     }
+
+    canMove(): boolean
+    {
+        return this._canMove;
+    }
 }
 
 @RegisterSerializable("Employee", 1)
@@ -129,10 +134,10 @@ abstract class BaseEmployee extends BasePerson implements Employee
     private _managerId: string;
 
     protected constructor(id: string, name: string, public title: string, managerId: string, public team: Team,
-                          canDelete: boolean, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
+                          canDelete: boolean, canMove: boolean, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
                           properties: OrgEntityPropertyBag)
     {
-        super(name, canDelete, propertyDescriptors, properties);
+        super(name, canDelete, canMove, propertyDescriptors, properties);
 
         this._id = id;
         this._managerId = managerId;
@@ -164,9 +169,10 @@ class BaseManager extends BaseEmployee implements Manager
     orgEntityType: OrgEntityType = OrgEntityTypes.MANAGER;
 
     constructor(id: string, name: string, title: string, managerId: string, team: Team, canDelete: boolean,
-                propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
+                canMove: boolean, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
+                properties: OrgEntityPropertyBag)
     {
-        super(id, name, title, managerId, team, canDelete, propertyDescriptors, properties);
+        super(id, name, title, managerId, team, canDelete, canMove, propertyDescriptors, properties);
     }
 
     isManager(): boolean
@@ -186,9 +192,10 @@ class BaseIndividualContributor extends BaseEmployee implements IndividualContri
     orgEntityType: OrgEntityType = OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR;
 
     constructor(id: string, name: string, title: string, managerId: string, team: Team, canDelete: boolean,
-                propertyDescriptors: Set<OrgEntityPropertyDescriptor>, properties: OrgEntityPropertyBag)
+                canMove: boolean, propertyDescriptors: Set<OrgEntityPropertyDescriptor>,
+                properties: OrgEntityPropertyBag)
     {
-        super(id, name, title, managerId, team, canDelete, propertyDescriptors, properties);
+        super(id, name, title, managerId, team, canDelete, canMove, propertyDescriptors, properties);
     }
 
     isManager(): boolean

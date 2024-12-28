@@ -57,12 +57,12 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
         // Place holders for items that can be part of the label, but are fixed properties
         // FIXME - Should these be fixed?
         this._viewState.set(FixedOrgEntityPropertyDescriptors.TITLE.name, true);
-        this._viewState.set(FixedOrgEntityPropertyDescriptors.TEAM_TITLE.name, true);
+        this._viewState.set(FixedOrgEntityPropertyDescriptors.TEAM_TITLE.name, false);
 
         // Add in properties that are not fixed
         for (const nextPropertyDescriptor of propertyDescriptors)
         {
-            this._viewState.set(nextPropertyDescriptor.name, true)
+            this._viewState.set(nextPropertyDescriptor.name, nextPropertyDescriptor.defaultVisibility)
         }
     }
 

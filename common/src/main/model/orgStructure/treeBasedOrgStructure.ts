@@ -142,7 +142,7 @@ class TreeBasedOrgStructure implements OrgStructure
         let createdTeam: Team;
         if ((managerId === TreeBasedOrgStructure.ROOT_ID) && (id != TeamConstants.NO_TEAM_ID))
         {
-            createdTeam = this._createTeamImpl(id, title, managerId, false);
+            createdTeam = this._createTeamImpl(id, title, managerId, false, false);
 
             // FIXME - Why the No Team ID is hard coded , but the root team is not?  Seems inconsistent, but it's
             // allowing us to differentiate at this point
@@ -150,7 +150,7 @@ class TreeBasedOrgStructure implements OrgStructure
         }
         else
         {
-            createdTeam = this._createTeamImpl(id, title, managerId, true);
+            createdTeam = this._createTeamImpl(id, title, managerId, true, true);
         }
 
         return createdTeam;
@@ -163,13 +163,14 @@ class TreeBasedOrgStructure implements OrgStructure
         if (managerId === TreeBasedOrgStructure.ROOT_ID)
         {
             createdEmployee =
-                this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, false, properties);
+                this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, false, false, properties);
 
             this.orgLeader = createdEmployee;
         }
         else
         {
-            createdEmployee = this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, true, properties);
+            createdEmployee =
+                this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, true, true, properties);
         }
 
         return createdEmployee;
@@ -183,7 +184,7 @@ class TreeBasedOrgStructure implements OrgStructure
     createRootTeam(title: string): Team
     {
         const id: string = uuidv4();
-        this.rootTeam = this._createTeamImpl(id, title, TreeBasedOrgStructure.ROOT_ID, false);
+        this.rootTeam = this._createTeamImpl(id, title, TreeBasedOrgStructure.ROOT_ID, false, false);
 
         return this.rootTeam;
     }
@@ -191,7 +192,7 @@ class TreeBasedOrgStructure implements OrgStructure
     createTeam(title: string, managerId: string): Team
     {
         const id: string = uuidv4();
-        return this._createTeamImpl(id, title, managerId, true);
+        return this._createTeamImpl(id, title, managerId, true, true);
     }
 
     getTeam(id: string): Team
@@ -278,7 +279,7 @@ class TreeBasedOrgStructure implements OrgStructure
                    properties: OrgEntityPropertyBag): Employee
     {
         const id: string = uuidv4();
-        return this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, true, properties);
+        return this._createEmployeeImpl(id, name, title, managerId, teamId, isManager, true, true, properties);
     }
 
     getEmployee(id: string): Employee
@@ -299,8 +300,8 @@ class TreeBasedOrgStructure implements OrgStructure
         const teamId = this._rootTeam != undefined ? this._rootTeam.id : TeamConstants.NO_TEAM_ID;
 
         const id: string = uuidv4();
-        this.orgLeader =
-            this._createEmployeeImpl(id, name, title, TreeBasedOrgStructure.ROOT_ID, teamId, true, false, properties);
+        this.orgLeader = this._createEmployeeImpl(id, name, title, TreeBasedOrgStructure.ROOT_ID, teamId, true, false,
+                                                  false, properties);
 
         return this.orgLeader;
     }
@@ -525,7 +526,8 @@ class TreeBasedOrgStructure implements OrgStructure
     }*/
 
     private _createEmployeeImpl(id: string, name: string, title: string, managerId: string, teamId: string,
-                                isManager: boolean, canDelete: boolean, properties: OrgEntityPropertyBag): Employee
+                                isManager: boolean, canDelete: boolean, canMove: boolean,
+                                properties: OrgEntityPropertyBag): Employee
     {
         const team: Team|undefined = this.teamIdToTeamsMap.get(teamId);
         if (team === undefined)
@@ -536,12 +538,12 @@ class TreeBasedOrgStructure implements OrgStructure
         let employeeToAdd: Employee;
         if (isManager)
         {
-            employeeToAdd = new BaseManager(id, name, title, managerId, team, canDelete,
+            employeeToAdd = new BaseManager(id, name, title, managerId, team, canDelete, canMove,
                                             this._employeePropertyDescriptors, properties);
         }
         else
         {
-            employeeToAdd = new BaseIndividualContributor(id, name, title, managerId, team, canDelete,
+            employeeToAdd = new BaseIndividualContributor(id, name, title, managerId, team, canDelete, canMove,
                                                           this._employeePropertyDescriptors, properties);
         }
 
@@ -551,9 +553,9 @@ class TreeBasedOrgStructure implements OrgStructure
         return employeeToAdd;
     }
 
-    private _createTeamImpl(id: string, title: string, managerId: string, canDelete: boolean): Team
+    private _createTeamImpl(id: string, title: string, managerId: string, canDelete: boolean, canMove: boolean): Team
     {
-        const teamToAdd = new BaseTeam(id, title, managerId, canDelete);
+        const teamToAdd = new BaseTeam(id, title, managerId, canDelete, canMove);
 
         const ownedTeams: Team[]|undefined = this.managerIdToTeamsMap.get(managerId);
         if (ownedTeams !== undefined)
@@ -620,7 +622,7 @@ class TreeBasedOrgStructure implements OrgStructure
 
         // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
         this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE, TreeBasedOrgStructure.ROOT_ID,
-                             false);
+                             false, false);
     }
 }
 

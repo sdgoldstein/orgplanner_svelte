@@ -3,6 +3,7 @@ import {BaseService, type Service} from "@sphyrna/service-manager-ts";
 
 import {EMPTY_PROPERTY_BAG} from "./orgStructure/orgEntity";
 import type {OrgStructure} from "./orgStructure/orgStructure";
+import {EmployeeReservedPropertyDescriptors} from "./orgStructure/employee";
 
 interface OrgTemplate
 {
@@ -13,8 +14,9 @@ class SimpleOrgTemplate implements OrgTemplate
 {
     apply(orgStructure: OrgStructure): void
     {
-        orgStructure.createRootTeam("Critical Organization");
-        orgStructure.createOrgLeader("First Last", "Senior Vice President", EMPTY_PROPERTY_BAG);
+        orgStructure.createRootTeam("Your Organization");
+        orgStructure.createOrgLeader("First Last", "Your Job Title",
+                                     new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
     }
 }
 
@@ -22,8 +24,10 @@ class SmallOrgTemplate implements OrgTemplate
 {
     apply(orgStructure: OrgStructure): void
     {
-        orgStructure.createRootTeam("Critical Organization");
-        const orgLeader = orgStructure.createOrgLeader("Steve Johnson", "Senior Vice President", EMPTY_PROPERTY_BAG);
+        orgStructure.createRootTeam("Your Organization");
+        const orgLeader = orgStructure.createOrgLeader(
+            "First Last", "Vice President",
+            new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
         orgStructure.createEmployee("Frank Smith", "Senior Manager", orgLeader.id, "NO_TEAM_ID", true,
                                     EMPTY_PROPERTY_BAG);
         orgStructure.createEmployee("Bilbo Baggins", "Engineer", orgLeader.id, "NO_TEAM_ID", false, EMPTY_PROPERTY_BAG);

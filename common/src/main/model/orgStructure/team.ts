@@ -31,7 +31,7 @@ class BaseTeam implements Team
     orgEntityType: OrgEntityType = OrgEntityTypes.TEAM;
 
     constructor(private readonly _id: string, private _title: string, private _managerId: string,
-                private _canDelete: boolean)
+                private _canDelete: boolean, private _canMove: boolean)
     {
     }
 
@@ -65,9 +65,14 @@ class BaseTeam implements Team
         return this._canDelete;
     }
 
+    canMove(): boolean
+    {
+        return this._canMove;
+    }
+
     clone(): Team
     {
-        return new BaseTeam(this._id, this._title, this._managerId, this._canDelete);
+        return new BaseTeam(this._id, this._title, this._managerId, this._canDelete, this._canMove);
     }
 }
 

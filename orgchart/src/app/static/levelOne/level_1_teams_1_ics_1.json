@@ -3,7 +3,7 @@
 		"name": "OrgDataCore",
 		"objectVersion": "1"
 	},
-	"title": "5NvX",
+	"title": "RHpBHji7CdSNS",
 	"orgStructure": {
 		"serializationDescriptor": {
 			"name": "OrgStructure",
@@ -17,6 +17,7 @@
 			"name": "PHONE_PROPERTY_DESCRIPTOR",
 			"title": "Phone",
 			"defaultValue": "999-999-9999",
+			"defaultVisibility": "false",
 			"enabled": "true"
 		},
 		{
@@ -27,6 +28,7 @@
 			"name": "LOCATION_PROPERTY_DESCRIPTOR",
 			"title": "Location",
 			"defaultValue": "San Francisco",
+			"defaultVisibility": "true",
 			"enabled": "true"
 		}],
 		"employees": [{
@@ -34,16 +36,16 @@
 				"name": "Manager",
 				"objectVersion": "1"
 			},
-			"id": "726f9bec-5324-4fde-917f-ecd92aeee79a",
+			"id": "16098341-bab7-46ca-86d1-9017c1c73cdd",
 			"name": "First Last",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
-"value":"San Francisco"}
+"value":"Your Location"}
 ],
-			"title": "Senior Vice President",
+			"title": "Vice President",
 			"managerId": "ROOT_ID",
-			"teamId": "68ac8686-1092-4de1-b77d-7e1b230cd553",
+			"teamId": "504e85cd-c1dd-4829-8d5a-b70a4c8b2ab9",
 			"isManager": "true"
 		},
 		{
@@ -51,16 +53,16 @@
 				"name": "IndividualContributor",
 				"objectVersion": "1"
 			},
-			"id": "PVosM",
-			"name": "BrUUDs Om2KNt",
+			"id": "ceXzO",
+			"name": "wd8v53 Rdya4E",
 			"properties": [{"name":"PHONE_PROPERTY_DESCRIPTOR",
 "value":"999-999-9999"}
 ,{"name":"LOCATION_PROPERTY_DESCRIPTOR",
 "value":"New York, NY"}
 ],
-			"title": "fqIgjayf4c",
-			"managerId": "726f9bec-5324-4fde-917f-ecd92aeee79a",
-			"teamId": "OvvPe",
+			"title": "77wDemTH8l",
+			"managerId": "16098341-bab7-46ca-86d1-9017c1c73cdd",
+			"teamId": "jQ0Tx",
 			"isManager": "false"
 		}],
 		"teams": [{
@@ -77,8 +79,8 @@
 				"name": "Team",
 				"objectVersion": "1"
 			},
-			"id": "68ac8686-1092-4de1-b77d-7e1b230cd553",
-			"title": "Critical Organization",
+			"id": "504e85cd-c1dd-4829-8d5a-b70a4c8b2ab9",
+			"title": "Your Organization",
 			"managerId": "ROOT_ID"
 		},
 		{
@@ -86,9 +88,9 @@
 				"name": "Team",
 				"objectVersion": "1"
 			},
-			"id": "OvvPe",
-			"title": "rOt5kape5I",
-			"managerId": "726f9bec-5324-4fde-917f-ecd92aeee79a"
+			"id": "jQ0Tx",
+			"title": "sA4b8VOOw0",
+			"managerId": "16098341-bab7-46ca-86d1-9017c1c73cdd"
 		}]
 	}
 }

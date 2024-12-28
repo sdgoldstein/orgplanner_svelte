@@ -62,6 +62,7 @@ interface OrgEntity
     readonly id: string;
     orgEntityType: OrgEntityType;
     canDelete(): boolean;
+    canMove(): boolean;
 }
 
 interface OrgEntityPropertyCarrier
@@ -138,13 +139,17 @@ interface OrgEntityPropertyDescriptor
     name: string;
     title: string;
     defaultValue: string;
+    defaultVisibility: boolean;
     enabled: boolean;
 }
 
 @RegisterSerializable("OrgEntityPropertyDescriptor", 1)
 class OrgEntityPropertyDescriptorImpl implements OrgEntityPropertyDescriptor
 {
-    constructor(public name: string, public title: string, public defaultValue: string, public enabled: boolean) {};
+    constructor(public name: string, public title: string, public defaultValue: string,
+                public defaultVisibility: boolean, public enabled: boolean)
+    {
+    };
 }
 
 @RegisterSerializer("OrgEntityPropertyDescriptor", SerializationFormat.JSON)
@@ -166,6 +171,7 @@ class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEn
         valueToReturn["name"] = serializableObject.name;
         valueToReturn["title"] = serializableObject.title;
         valueToReturn["defaultValue"] = serializableObject.defaultValue;
+        valueToReturn["defaultVisibility"] = serializableObject.defaultVisibility.toString();
         valueToReturn["enabled"] = serializableObject.enabled.toString();
 
         return valueToReturn;
@@ -175,7 +181,7 @@ class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEn
     {
 
         return new OrgEntityPropertyDescriptorImpl(dataObject.name, dataObject.title, dataObject.defaultValue,
-                                                   dataObject.enabled);
+                                                   dataObject.defaultVisibility, dataObject.enabled);
     }
 }
 
