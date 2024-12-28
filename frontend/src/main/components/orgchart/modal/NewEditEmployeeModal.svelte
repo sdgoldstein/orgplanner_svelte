@@ -262,14 +262,18 @@
             value="true"
             group="is_manager_option_name"
             {colorVariant}
-            {dynamicColorTheme}>Yes</RadioGroupOption
+            {dynamicColorTheme}
+            disabled={mode == NewEditEmployeeModalModes.EDIT}
+            >Yes</RadioGroupOption
         >
         <RadioGroupOption
             id="is_manager_no_option_id"
             value="false"
             group="is_manager_option_name"
             {colorVariant}
-            {dynamicColorTheme}>No</RadioGroupOption
+            {dynamicColorTheme}
+            disabled={mode == NewEditEmployeeModalModes.EDIT}
+            >No</RadioGroupOption
         >
     </RadioGroup>
 </SubmitCancelModal>

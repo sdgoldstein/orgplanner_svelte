@@ -28,10 +28,10 @@ export default {
             overlay: colors.neutral["950"],
             surface: {
                 lightest: "#FFFFFF",
-                light: "#F7F7F7",
+                light: colors.neutral["50"],
                 DEFAULT: "#FFFFFF",
-                dark: "#F0F0F0",
-                darkest: "#F0F0F0",
+                dark: colors.neutral["100"],
+                darkest: colors.neutral["300"],
                 text: {DEFAULT: colors.black, placeholder: "#BFBFBF"}
             },
             success: {DEFAULT: "#C1DD97", text: colors.black},
