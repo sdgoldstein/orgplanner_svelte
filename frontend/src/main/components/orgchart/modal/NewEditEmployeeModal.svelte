@@ -47,10 +47,6 @@
     } from "@src/components/page/orgPageEvents";
 
     function handleSubmit(formData: FormData): void {
-        for (let nextEntity of formData.entries()) {
-            console.log(nextEntity);
-        }
-
         const nameElement: FormDataEntryValue | null =
             formData.get("name_input_name");
         const titleElement: FormDataEntryValue | null =
@@ -65,7 +61,7 @@
             !nameElement ||
             !titleElement ||
             !teamElement ||
-            !isManagerElement
+            (!isManagerElement && mode === NewEditEmployeeModalModes.NEW)
         ) {
             throw new Error("Could not obtain form elements");
         }

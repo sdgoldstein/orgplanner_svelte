@@ -168,7 +168,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         else if (eventName === OrgStructureChangedEvents.ORG_ENTITY_EDITED)
         {
             const orgEntityEditedEvent = event as unknown as OrgStructureChangedEventEntityEdited;
-            this.currentGraph.employeeEdited(orgEntityEditedEvent.entityEdited as Employee);
+            this.currentGraph.entityEdited(orgEntityEditedEvent.entityEdited);
         }
         else if (eventName === OrgStructureChangedEvents.ORG_ENTITIES_REMOVED)
         {

@@ -11,6 +11,7 @@ import {
     DeleteEmployeeEvent,
     DeleteTeamEvent,
     EditEmployeeEvent,
+    EditTeamEvent,
     NewEmployeeEvent,
     NewTeamEvent,
     OrgPageEvents,
@@ -45,6 +46,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.ADD_TEAM, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.EDIT_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.registerListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
@@ -56,6 +58,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_TEAM, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.EDIT_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.unregisterListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
@@ -137,6 +140,15 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             const newTeamEvent = eventToHandle as NewTeamEvent;
             const newTeam = this._orgStructure.createTeam(newTeamEvent.title, newTeamEvent.managerId);
             const orgStructureChangedEvent = new OrgStructureChangedEventEntityAdded(newTeam);
+            PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgPageEvents.EDIT_TEAM)
+        {
+            const editTeamEvent: EditTeamEvent = eventToHandle as EditTeamEvent;
+            const teamToEdit: Team = editTeamEvent.teamToEdit;
+            teamToEdit.title = editTeamEvent.title;
+
+            const orgStructureChangedEvent = new OrgStructureChangedEventEntityEdited(teamToEdit);
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
         else if (eventName === OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION)

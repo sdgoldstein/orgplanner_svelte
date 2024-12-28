@@ -57,22 +57,22 @@ class OrgEntityColorThemes
         /* A bit ugly here in that we're type casting, but not sure of a better way to handle this without passing a
          * mapping in the constructor */
         let deepBlueTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_BLUE_THEME as DefaultOrgEntityColorThemeImpl)
-        deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#00004d", textOnPrimary : "#FFFFFF"});
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#172554", textOnPrimary : "#FFFFFF"});
         deepBlueTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                         {primary : "#000080", textOnPrimary : "#FFFFFF"});
-        deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#0000b3", textOnPrimary : "#FFFFFF"});
+                                         {primary : "#172554", textOnPrimary : "#FFFFFF"});
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#172554", textOnPrimary : "#FFFFFF"});
 
         let deepRedTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_RED_THEME as DefaultOrgEntityColorThemeImpl)
-        deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#4d0000", textOnPrimary : "#FFFFFF"});
+        deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#450a0a", textOnPrimary : "#FFFFFF"});
         deepRedTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                        {primary : "#800000", textOnPrimary : "#FFFFFF"});
-        deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#b30000", textOnPrimary : "#FFFFFF"});
+                                        {primary : "#450a0a", textOnPrimary : "#FFFFFF"});
+        deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#450a0a", textOnPrimary : "#FFFFFF"});
 
         let deepGreenTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_GREEN_THEME as DefaultOrgEntityColorThemeImpl)
-        deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#004d00", textOnPrimary : "#FFFFFF"});
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER, {primary : "#052e16", textOnPrimary : "#FFFFFF"});
         deepGreenTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                          {primary : "#008000", textOnPrimary : "#FFFFFF"});
-        deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#00b300", textOnPrimary : "#FFFFFF"});
+                                          {primary : "#052e16", textOnPrimary : "#FFFFFF"});
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM, {primary : "#052e16", textOnPrimary : "#FFFFFF"});
 
         OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_BLUE_THEME.name, this.DEEP_BLUE_THEME);
         OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_RED_THEME.name, this.DEEP_RED_THEME);

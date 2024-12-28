@@ -79,7 +79,7 @@ class NewTeamEvent extends BasePubSubEvent
 
 class EditTeamEvent extends BasePubSubEvent
 {
-    constructor(public readonly teamName: string, public teamToEdit: Team)
+    constructor(public readonly title: string, public teamToEdit: Team)
     {
         super(OrgPageEvents.EDIT_TEAM);
     }

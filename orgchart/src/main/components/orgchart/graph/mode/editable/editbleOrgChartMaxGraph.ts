@@ -159,10 +159,10 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
         PubSubManager.instance.fireEvent(eventToFire);
     }
 
-    employeeEdited(employee: Employee): void
+    entityEdited(entity: OrgEntity): void
     {
         this.batchUpdate(() => {
-            const vertex: Cell|null = this.model.getCell(employee.id);
+            const vertex: Cell|null = this.model.getCell(entity.id);
             if (!vertex)
             {
                 throw new Error("Could not find cell for edited employee");
