@@ -206,7 +206,7 @@ class OrgPlannerExportServiceDefaultImpl extends BaseService implements OrgPlann
 
         if (orgPlannerToExport.hasPresentOrg())
         {
-            const orgSnapshot: OrgSnapshot = orgPlannerToExport.presentOrg!;
+            const orgSnapshot: OrgSnapshot = orgPlannerToExport.orgSnapshots!;
 
             this._appendOrgDataCore(jsonBuilder, orgSnapshot.orgDataCore);
         }
@@ -217,14 +217,14 @@ class OrgPlannerExportServiceDefaultImpl extends BaseService implements OrgPlann
         jsonBuilder.appendArrayObjectValue();
         jsonBuilder.appendArrayKey("orgPlans");
 
-        this._appendOrgDataCore(jsonBuilder, orgPlannerToExport.planningProject.orgPlan.orgDataCore);
+        this._appendOrgDataCore(jsonBuilder, orgPlannerToExport.rootPlanningProject.orgPlan.orgDataCore);
 
         jsonBuilder.closeArrayKey();
         jsonBuilder.closeArrayObjectValue();
         jsonBuilder.closeArrayKey();
         jsonBuilder.closeObjectKey();
 
-        orgPlannerToExport.planningProject;
+        orgPlannerToExport.rootPlanningProject;
 
         return jsonBuilder.toString();
     }

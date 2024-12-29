@@ -1,7 +1,7 @@
 <script lang="ts">
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
-    ChangeSettingsActionEvent,
+        ChangeSettingsActionEvent,
         CreateNewOrgEvent,
         OrgPlannerAppEvents,
         SettingsChangedEvent,
@@ -17,10 +17,12 @@
     import type { PubSubEvent, PubSubListener } from "orgplanner-common/jscore";
     import type { Snippet } from "svelte";
     import type { LayoutData } from "./$types";
-    
-    let { data, children } : { data: LayoutData, children: Snippet } = $props();
 
-    let appDynamicColorTheme = $state(getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme));
+    let { data, children }: { data: LayoutData; children: Snippet } = $props();
+
+    let appDynamicColorTheme = $state(
+        getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme),
+    );
 
     // Is this the best place for this?  Not sure.  And, does it work?  Not Sure
     const pubSubManager = PubSubManager.instance;
@@ -37,19 +39,23 @@
             const orgPlanner =
                 orgPlannerManager.createOrgPlannerWithTitle(orgName);
 
-            data.orgPlanner = orgPlanner;
+            data = { orgPlanner: orgPlanner };
         },
     });
 
     class ChangeSettingsController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
             if (eventName === OrgPlannerAppEvents.CHANGE_SETTINGS_ACTION) {
-                data.orgPlanner.settings = (eventToHandle as ChangeSettingsActionEvent).newSettings;
+                data.orgPlanner.settings = (
+                    eventToHandle as ChangeSettingsActionEvent
+                ).newSettings;
 
                 // We need to set the color theme directive because objects aren't deeply reactive
-                appDynamicColorTheme = getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme);
+                appDynamicColorTheme = getAppDynamicColorTheme(
+                    data.orgPlanner.settings.colorTheme,
+                );
 
-                PubSubManager.instance.fireEvent(new SettingsChangedEvent())
+                PubSubManager.instance.fireEvent(new SettingsChangedEvent());
             }
         }
     }

@@ -6,11 +6,11 @@ import type {OrgPlannerImportService} from "@src/services/import/orgPlannerImpor
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 import {
     EmployeeReservedPropertyDescriptors,
+    type OrgDataCore,
     OrgDataCoreDefaultImpl,
     type OrgEntityColorTheme,
     OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
-    type OrgPlan,
     OrgPlanDefaultImpl,
     type OrgSnapshot,
     type OrgStructure,
@@ -23,6 +23,14 @@ import {
 import {v4 as uuidv4} from "uuid";
 
 import {OrgPlannerConstants} from "./orgPlannerConstants";
+import {
+    BaseJSONSerializer,
+    JSONSerializationHelper,
+    RegisterSerializable,
+    RegisterSerializer,
+    SerializationFormat,
+    type Serializer
+} from "orgplanner-common/jscore";
 
 const DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS: Set<OrgEntityPropertyDescriptor> = new Set<OrgEntityPropertyDescriptor>(
     [ EmployeeReservedPropertyDescriptors.PHONE, EmployeeReservedPropertyDescriptors.LOCATION ]);
@@ -33,12 +41,27 @@ interface OrgPlannerSettings
     employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>;
 }
 
+@RegisterSerializable("OrgPlannerSettings", 1)
 class OrgPlannerSettingsDefaultImpl implements OrgPlannerSettings
 {
     constructor(public employeePropertyDescriptors:
                     Set<OrgEntityPropertyDescriptor> = DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS,
                 public colorTheme: OrgEntityColorTheme = OrgEntityColorThemes.DEEP_BLUE_THEME)
     {
+    }
+}
+
+@RegisterSerializer("OrgPlannerSettings", SerializationFormat.JSON)
+class OrgPlannerSettingsDefaultImplSerializer extends BaseJSONSerializer<OrgPlannerSettings> implements
+    Serializer<OrgPlannerSettings, SerializationFormat.JSON>
+{
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlannerSettings
+    {
+        const colorTheme: OrgEntityColorTheme = serializationHelper.deserialize(dataObject.colorTheme);
+        const employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor> =
+            serializationHelper.deserialize(dataObject.employeePropertyDescriptors);
+
+        return new OrgPlannerSettingsDefaultImpl(employeePropertyDescriptors, colorTheme);
     }
 }
 
@@ -65,19 +88,15 @@ interface OrgPlanner
     orgTitle: string;
 
     /**
-     * The current org snapshot of the org being planned
+     * The org snapshots that have been imported or saves
      */
-    readonly presentOrg: OrgSnapshot|undefined;
+    readonly orgSnapshots: OrgSnapshot[];
 
     /**
-     * The planning project the represents the planning state
+     * The root planning project the represents the planning state.  In the future, could have multiple planning
+     * projects per org
      */
-    readonly planningProject: PlanningProject;
-
-    /**
-     * Determine if a present org has been imported or configured
-     */
-    hasPresentOrg(): boolean;
+    readonly rootPlanningProject: PlanningProject;
 
     /*
      *  Create a new snapshot of the planning org
@@ -85,77 +104,68 @@ interface OrgPlanner
     createSnapshot(snapshotName: string): void;
 }
 
+@RegisterSerializable("OrgPlanner", 1)
 class OrgPlannerDefaultImpl implements OrgPlanner
 {
     orgTitle: string;
     readonly id: string;
-    settings: OrgPlannerSettings;
-
-    private _presentOrg: OrgSnapshot|undefined;
-
-    // Set in the constructor by calling internal methods
-    private _planningProject!: PlanningProjectDefaultImpl;
+    readonly rootPlanningProject: PlanningProject;
 
     constructor(orgTitle: string);
-    constructor(orgTitle: string, id: string, presentOrg: OrgSnapshot);
-    constructor(orgTitle: string, id: string, planningOrg: OrgPlan);
-    constructor(orgTitle: string, id: string, presentOrg: OrgSnapshot, planningOrg: OrgPlan);
-
-    constructor(orgTitle: string, id?: string, presentOrg?: OrgSnapshot, planningOrg?: OrgPlan)
+    constructor(orgTitle: string, id: string, planningOrg: PlanningProject);
+    constructor(orgTitle: string, id: string, planningOrg: PlanningProject, orgSnapshots: OrgSnapshot[]);
+    constructor(orgTitle: string, id: string, planningOrg: PlanningProject, orgSnapshots: OrgSnapshot[],
+                settings: OrgPlannerSettings);
+    constructor(orgTitle: string, id?: string, planningOrg?: PlanningProject,
+                public readonly orgSnapshots: OrgSnapshot[] = [],
+                public readonly settings: OrgPlannerSettings = new OrgPlannerSettingsDefaultImpl())
     {
         this.orgTitle = orgTitle;
         this.id = id ?? uuidv4();
 
-        this.settings = new OrgPlannerSettingsDefaultImpl();
-
-        if (presentOrg !== undefined)
+        if (planningOrg !== undefined)
         {
-            this.presentOrg = presentOrg;
-            this.planningProject = new PlanningProjectDefaultImpl(orgTitle, this.presentOrg);
-        }
-        else if (planningOrg !== undefined)
-        {
-            this.planningProject = new PlanningProjectDefaultImpl(orgTitle, planningOrg);
+            this.rootPlanningProject = planningOrg;
         }
         else
         {
-            const orgStructure: OrgStructure = new TreeBasedOrgStructure(this.settings.employeePropertyDescriptors);
-            const orgDataCore = new OrgDataCoreDefaultImpl(orgTitle, orgStructure);
-            const orgPlan = new OrgPlanDefaultImpl(orgDataCore);
-            this.planningProject = new PlanningProjectDefaultImpl(orgTitle, orgPlan);
+            let planningOrgDataCore: OrgDataCore;
+            if (this.orgSnapshots.length > 0)
+            {
+                // Load form the first snapshot?  Not ideal, but not sure if there is an altnerative at this point
+                planningOrgDataCore = this.orgSnapshots[0].orgDataCore.clone();
+            }
+            else
+            {
+                const orgStructure: OrgStructure = new TreeBasedOrgStructure(this.settings.employeePropertyDescriptors);
+                planningOrgDataCore = new OrgDataCoreDefaultImpl(orgTitle, orgStructure);
+            }
+
+            const orgPlan = new OrgPlanDefaultImpl(planningOrgDataCore);
+            this.rootPlanningProject = new PlanningProjectDefaultImpl(orgTitle, orgPlan);
         }
     }
-
-    get presentOrg(): OrgSnapshot
-    {
-        if (!this.hasPresentOrg())
-        {
-            throw new Error("Present org is undefined");
-        }
-
-        return this._presentOrg!;
-    }
-
-    private set presentOrg(orgSnapshot: OrgSnapshot)
-    {
-        this._presentOrg = orgSnapshot;
-    }
-
-    get planningProject(): PlanningProjectDefaultImpl
-    {
-        return this._planningProject;
-    }
-
-    private set planningProject(planningProject: PlanningProjectDefaultImpl)
-    {
-        this._planningProject = planningProject;
-    }
-
-    hasPresentOrg(): boolean{return(this._presentOrg !== undefined)}
 
     createSnapshot(snapshotName: string): void
     {
-        this.presentOrg = {orgDataCore : this.planningProject.orgPlan.orgDataCore.clone()} as OrgSnapshot;
+        const snapshotOrgDataCore = this.rootPlanningProject.orgPlan.orgDataCore.clone();
+        snapshotOrgDataCore.title = snapshotName;
+        this.orgSnapshots.push({orgDataCore : snapshotOrgDataCore} as OrgSnapshot)
+    }
+}
+
+@RegisterSerializer("OrgPlanner", SerializationFormat.JSON)
+class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlanner> implements
+    Serializer<OrgPlanner, SerializationFormat.JSON>
+{
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlanner
+    {
+        const settings: OrgPlannerSettings = serializationHelper.deserialize(dataObject.settings);
+        const orgSnapshots: OrgSnapshot[] = serializationHelper.deserialize(dataObject.orgSnapshots);
+        const rootPlanningProject: PlanningProject = serializationHelper.deserialize(dataObject.rootPlanningProject);
+
+        return new OrgPlannerDefaultImpl(dataObject.orgTitle, dataObject.id, rootPlanningProject, orgSnapshots,
+                                         settings);
     }
 }
 
@@ -194,7 +204,7 @@ class OrgPlannerManager extends BaseService implements Service
         const templateFactoryService = ServiceManager.getService<OrgTemplateFactoryService>(
             OrgPlannerAppServicesConstants.ORG_TEMPLATE_FACTORY_SERVICE);
         const orgTemplate: OrgTemplate = templateFactoryService.getTemplate(orgTemplateName);
-        orgTemplate.apply(orgPlannerToReturn.planningProject.orgPlan.orgDataCore.orgStructure);
+        orgTemplate.apply(orgPlannerToReturn.rootPlanningProject.orgPlan.orgDataCore.orgStructure);
 
         return orgPlannerToReturn;
     }
@@ -220,5 +230,11 @@ class OrgPlannerManager extends BaseService implements Service
     }
 }
 
-export {OrgPlannerManager, OrgPlannerDefaultImpl, OrgPlannerSettingsDefaultImpl, DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS};
-export type{OrgPlanner, OrgPlannerSettings};
+export {
+    OrgPlannerManager,
+    OrgPlannerDefaultImpl,
+    OrgPlannerSettingsDefaultImpl,
+    OrgPlanDefaultImplSerializer,
+    DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS
+};
+export type{OrgPlanner, OrgPlannerSettings, OrgPlannerSettingsDefaultImplSerializer};

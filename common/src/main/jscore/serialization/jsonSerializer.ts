@@ -1,4 +1,3 @@
-
 import {BaseRootSerializer, SerializationHelperDefault} from "./rootSerializer";
 import {type SerializerDictionaryService, SerializerDictionaryServiceImpl} from "./serializationDictionary";
 import {
@@ -10,10 +9,6 @@ import {
     type Serializer
 } from "./serializationService";
 
-/****
- * FIXME - This should be in jsonSerializer module, but the SerialializationServiceImpl references the root json
- * serializer
- */
 class JSONSerializationHelper extends SerializationHelperDefault<SerializationFormat.JSON> implements
     SerializationHelper<SerializationFormat.JSON>
 {
@@ -96,6 +91,7 @@ abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationForma
 
         return json;
     }
+
     protected serializeIterable(serializableIterator: IterableIterator<any>,
                                 serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
     {
@@ -104,7 +100,7 @@ abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationForma
         let nextSerializable = serializableIterator.next();
         while (!nextSerializable.done)
         {
-            json += serializationHelper.serialize(nextSerializable.value);
+            json += this._serializeNestedValue(nextSerializable.value, serializationHelper);
 
             nextSerializable = serializableIterator.next();
 
@@ -127,13 +123,85 @@ abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationForma
 
     abstract deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): T;
 
-    abstract getValue(serializableObject: any,
-                      serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>;
+    getValue(serializableObject: any,
+             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
+    {
+        const result: Record<string, string> = {};
+
+        for (const key in serializableObject)
+        {
+            const value = serializableObject[key];
+            if (!this._ignoredDuringSerialization(value))
+            {
+                result[key] = this._serializeNestedValue(value, serializationHelper);
+            }
+        }
+
+        return result;
+    }
+
+    private _serializeNestedValue(value: any,
+                                  serializationHelper: SerializationHelper<SerializationFormat.JSON>): string
+    {
+        let valueToReturn: string;
+
+        if (this._isObject(value))
+        {
+            if (this._isIterable(value))
+            {
+                valueToReturn = this.serializeIterable(value[Symbol.iterator](), serializationHelper);
+            }
+            else
+            {
+                valueToReturn = serializationHelper.serialize(value);
+            }
+        }
+        else
+        {
+            valueToReturn = value.toString();
+        }
+        return valueToReturn;
+    }
+
+    private _isIterable(value: any): boolean
+    {
+        return (typeof value[Symbol.iterator] === "function");
+    }
+
+    private _isObject(value: any): boolean
+    {
+        return typeof value === "object" && value instanceof Date === false;
+    }
+
+    private _ignoredDuringSerialization(value: any): boolean
+    {
+        return this._isUndefined(value) || this._isNull(value) || this._isFunction(value) || this._isSymbol(value);
+    }
+
+    private _isUndefined(value: any): boolean
+    {
+        return value === undefined;
+    }
+
+    private _isNull(value: any): boolean
+    {
+        return value === null;
+    }
+
+    private _isFunction(value: any): boolean
+    {
+        return typeof value === "function";
+    }
+
+    private _isSymbol(value: any): boolean
+    {
+        return typeof value === "symbol";
+    }
 
     private _serializeKey(key: string, value: string): string
     {
-        // FIXME - Hack for now.  Ideally, values need to not just be strings but objects that indicate, value, object
-        // value, or array value
+        // FIXME - Hack for now.  Ideally, values need to not just be strings but objects that indicate, value,
+        // object value, or array value
         let valueToInclude = value.startsWith("{") || value.startsWith("[") ? value : `"${value}"`;
         return `"${key}": ${valueToInclude}`;
     }

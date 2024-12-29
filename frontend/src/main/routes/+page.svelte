@@ -17,8 +17,19 @@
     );
 
     let orgStructure = $derived(
-        data.orgPlanner.planningProject.orgPlan.orgDataCore.orgStructure,
+        data.orgPlanner.rootPlanningProject.orgPlan.orgDataCore.orgStructure,
     );
+    $effect(() => {
+        // This will be recreated whenever `milliseconds` changes
+        const interval = setInterval(() => {}, 1000);
+
+        return () => {
+            // if a callback is provided, it will run
+            // a) immediately before the effect re-runs
+            // b) when the component is destroyed
+            clearInterval(interval);
+        };
+    });
 
     class SettingsChangesController implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {

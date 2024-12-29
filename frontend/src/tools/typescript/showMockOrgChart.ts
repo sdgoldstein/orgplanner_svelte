@@ -70,7 +70,7 @@ function renderOrgChart()
         const orgPlanner = orgPlannerImportService.importSync(orgJSON);
 
         const orgChartTheme = new OrgChartMaxGraphThemeDefault(orgPlanner.settings.colorTheme);
-        const orgStructure = orgPlanner.presentOrg!.orgDataCore.orgStructure;
+        const orgStructure = orgPlanner.orgSnapshots!.orgDataCore.orgStructure;
         const visibiltyState = new OrgChartEntityVisibleStateImpl(orgPlanner.settings.employeePropertyDescriptors);
         const currentGraph =
             new EditableOrgChartMaxGraph(chartElementRoot, orgStructure, orgChartTheme, visibiltyState);
