@@ -207,7 +207,7 @@ class OrgPlannerManager extends BaseService implements Service
         const templateFactoryService = ServiceManager.getService<OrgTemplateFactoryService>(
             OrgPlannerAppServicesConstants.ORG_TEMPLATE_FACTORY_SERVICE);
         const orgTemplate: OrgTemplate = templateFactoryService.getTemplate(orgTemplateName);
-        orgTemplate.apply(orgPlannerToReturn.rootPlanningProject.orgPlan.orgDataCore.orgStructure);
+        orgTemplate.apply(orgPlannerToReturn.rootPlanningProject.orgPlan.orgDataCore.orgStructure, orgTitle);
 
         return orgPlannerToReturn;
     }

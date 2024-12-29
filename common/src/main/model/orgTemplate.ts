@@ -7,14 +7,15 @@ import {EmployeeReservedPropertyDescriptors} from "./orgStructure/employee";
 
 interface OrgTemplate
 {
-    apply(orgStructure: OrgStructure): void;
+    apply(orgStructure: OrgStructure, orgTitle?: string): void;
 }
 
 class SimpleOrgTemplate implements OrgTemplate
 {
-    apply(orgStructure: OrgStructure): void
+    apply(orgStructure: OrgStructure, orgTitle?: string): void
     {
-        orgStructure.createRootTeam("Your Organization");
+        const rootTeamName = orgTitle ?? "Your Organization";
+        orgStructure.createRootTeam(rootTeamName);
         orgStructure.createOrgLeader("First Last", "Your Job Title",
                                      new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
     }
@@ -22,9 +23,10 @@ class SimpleOrgTemplate implements OrgTemplate
 
 class SmallOrgTemplate implements OrgTemplate
 {
-    apply(orgStructure: OrgStructure): void
+    apply(orgStructure: OrgStructure, orgTitle?: string): void
     {
-        orgStructure.createRootTeam("Your Organization");
+        const rootTeamName = orgTitle ?? "Your Organization";
+        orgStructure.createRootTeam(rootTeamName);
         const orgLeader = orgStructure.createOrgLeader(
             "First Last", "Vice President",
             new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
