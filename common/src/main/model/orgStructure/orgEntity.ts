@@ -181,7 +181,8 @@ class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEn
     {
 
         return new OrgEntityPropertyDescriptorImpl(dataObject.name, dataObject.title, dataObject.defaultValue,
-                                                   dataObject.defaultVisibility, dataObject.enabled);
+                                                   (dataObject.defaultVisibility === "true"),
+                                                   (dataObject.enabled === "true"));
     }
 }
 
