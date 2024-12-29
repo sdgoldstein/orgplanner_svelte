@@ -79,3 +79,7 @@ const relativeMockFiles =
     mockOrgFilesWrittern.map((nextFileName) => { return path.relative(generatedDir, nextFileName); })
 const mockOrgListFile = fs.openSync(path.join(generatedDir, "mock_org_list.txt"), "w");
 fs.writeSync(mockOrgListFile, relativeMockFiles.join("\n"));
+
+const orgGenerator: OrgTreeGenerator = new OrgTreeGenerator();
+orgGenerator.generationEdgeTestOrgTree(path.join(generatedDir, "edge_test_org.json"));
+fs.writeSync(mockOrgListFile, "\nedge_test_org.json\n");

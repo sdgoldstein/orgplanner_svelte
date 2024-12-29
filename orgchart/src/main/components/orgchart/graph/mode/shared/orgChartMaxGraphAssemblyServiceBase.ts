@@ -15,7 +15,9 @@ import {
     type IndividualContributor,
     type Team,
     OrgEntityTypes,
-    type Employee
+    type Employee,
+    type OrgEntity,
+    type OrgEntityType
 } from "orgplanner-common/model";
 import {
     type OrgPlannerChartVertex,
@@ -368,8 +370,12 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
          *      OR
          *  -   The target only has multiple incomong edges, but only one source is visible
          *      OR
-         *  -   The target has multiple incoming edges, and the source is a Team and the target is an IC
-         *  -   OR
+         *  -   The target has multiple incoming edges, and the source is Team, the target is an employee and the team's
+         * manager is the same as the employee manager
+         *      OR
+         *  -   The target has multiple incoming edges, and the source is a Manager, the target is an employee and the
+         * employee's team's manager is not the source
+         *      OR
          *  -   The target has multiple incoming edges, and the source is a Manager and the target is an Team
          */
         insertedEdge.isVisibleOriginal = insertedEdge.isVisible;
@@ -404,16 +410,27 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
                     }
                     else if (numVisibleSources > 1)
                     {
-                        /*
-                            The target has multiple incoming edges, and the source type is not equal to the target type
-                           AND the target is not an IC OR The target has multiple incoming edges, and the source is a
-                           Team and the target is a IC
-                         */
-                        const targetVertexType = edgeTarget.getValue().getVertexType();
-                        const sourceVertexType = edgeSource.getValue().getVertexType();
+                        // The target has multiple incoming edges, and the source is Team, the target is an employee and
+                        // the team's manager is the same as the employee manager
+                        //   -   OR
+                        //   The target has multiple incoming edges, and the source is a Manager, the target is an
+                        //   employee and the employee's team's manager is not the source
+                        //   -   OR
+                        //   The target has multiple incoming edges, and the source is a Manager and the target is
+                        //   an Team
+                        const targetEntity: OrgEntity = edgeTarget.getValue().orgEntity;
+                        const sourceEntity: OrgEntity = edgeSource.getValue().orgEntity;
+                        const targetEntityType: OrgEntityType = targetEntity.orgEntityType;
+                        const sourceEntityType: OrgEntityType = sourceEntity.orgEntityType;
                         visibilityToReturn =
-                            (((sourceVertexType != targetVertexType) && (targetVertexType != VertexType.IC)) ||
-                             ((sourceVertexType === VertexType.TEAM) && (targetVertexType === VertexType.IC)));
+                            (((sourceEntityType === OrgEntityTypes.TEAM) &&
+                              (targetEntityType !== OrgEntityTypes.TEAM) &&
+                              ((targetEntity as Employee).managerId == (sourceEntity as Team).managerId)) ||
+                             ((sourceEntityType === OrgEntityTypes.MANAGER) &&
+                              (targetEntityType !== OrgEntityTypes.TEAM) &&
+                              ((targetEntity as Employee).team.managerId != (sourceEntity as Manager).id)) ||
+                             ((sourceEntityType === OrgEntityTypes.MANAGER) &&
+                              (targetEntityType === OrgEntityTypes.TEAM)));
                     }
                 }
                 else

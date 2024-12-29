@@ -35,23 +35,49 @@ class OrgTreeGenerator
     static readonly TITLE_LENGTH = 10;
     static readonly OTHER_LENGTH = 6;
 
+    async generationEdgeTestOrgTree(outputFile: string): Promise<void>
+    {
+        // Create Org Structure Object
+        const generatedOrgTree: TreeBasedOrgStructure = this._createStarterOrgTree();
+
+        const rootTeamId = generatedOrgTree.rootTeam.id;
+        const orgLeaderManagerId = generatedOrgTree.orgLeader.id;
+
+        // IC, Manager, and Team Combos
+        // Add one team and on ic to create simple tree
+        const teamId = this.addRandomTeam(generatedOrgTree, orgLeaderManagerId);
+        this.addRandomEmployee(generatedOrgTree, orgLeaderManagerId, teamId, false);
+
+        // Add an IC that is managed by the root manager but points ot the root team
+        this.addRandomEmployee(generatedOrgTree, orgLeaderManagerId, rootTeamId, false);
+
+        // Manager, Manager, Team combos
+        // Add a manager that reports the root manager and is on a team that the manager manages
+        const anotherTeamId = this.addRandomTeam(generatedOrgTree, orgLeaderManagerId);
+        this.addRandomEmployee(generatedOrgTree, orgLeaderManagerId, anotherTeamId, true);
+
+        // Add a manager that reports to the root manager but points ot the root tea
+        this.addRandomEmployee(generatedOrgTree, orgLeaderManagerId, rootTeamId, true);
+
+        this._writeToOutputFile(generatedOrgTree, outputFile);
+    }
+
     async generateOrgTree(outputFile: string, orgTreeConfig: OrgTreeDescriptor): Promise<void>
     {
         // Create Org Structure Object
-        const newOrgStrTreeBasedOrgStructure: TreeBasedOrgStructure =
-            new TreeBasedOrgStructure(DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS);
-
-        // Create Top Level Manager
-        const orgTemplate: OrgTemplate = new SimpleOrgTemplate();
-        orgTemplate.apply(newOrgStrTreeBasedOrgStructure);
-        const topManagerId: string = newOrgStrTreeBasedOrgStructure.orgLeader.id;
+        const generatedOrgTree: TreeBasedOrgStructure = this._createStarterOrgTree();
 
         // Build each level according to descriptor
         const levelIterator: IterableIterator<OrgTreeLevel> = orgTreeConfig.levels.values();
-        this.buildNextLevel(newOrgStrTreeBasedOrgStructure, levelIterator, [ topManagerId ]);
+        this.buildNextLevel(generatedOrgTree, levelIterator, [ generatedOrgTree.orgLeader.id ]);
 
+        this._writeToOutputFile(generatedOrgTree, outputFile);
+    }
+
+    private _writeToOutputFile(generatedOrgTree: TreeBasedOrgStructure, outputFile: string)
+    {
         const newOrgCoreData: OrgDataCore =
-            new OrgDataCoreDefaultImpl(this.randomString(this.randomNumber(25)), newOrgStrTreeBasedOrgStructure);
+            new OrgDataCoreDefaultImpl(this.randomString(this.randomNumber(25)), generatedOrgTree);
 
         // Finally, export to a file
         const serializationSevice: SerializationService =
@@ -61,7 +87,19 @@ class OrgTreeGenerator
         fs.writeFileSync(outputFile, jsonOut);
     }
 
-    buildNextLevel(newOrgStrTreeBasedOrgStructure: TreeBasedOrgStructure, levelIterator: IterableIterator<OrgTreeLevel>,
+    private _createStarterOrgTree()
+    {
+        const newOrgStrTreeBasedOrgStructure: TreeBasedOrgStructure =
+            new TreeBasedOrgStructure(DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS);
+
+        // Create Top Level Manager
+        const orgTemplate: OrgTemplate = new SimpleOrgTemplate();
+        orgTemplate.apply(newOrgStrTreeBasedOrgStructure);
+
+        return newOrgStrTreeBasedOrgStructure;
+    }
+
+    buildNextLevel(generatedOrgStructure: TreeBasedOrgStructure, levelIterator: IterableIterator<OrgTreeLevel>,
                    previousLevelManagerIds: string[]): void
     {
         const nextLevelResult: IteratorResult<OrgTreeLevel> = levelIterator.next();
@@ -74,7 +112,7 @@ class OrgTreeGenerator
             for (let i = 0; i < nextLevel.teams; i++)
             {
                 const managerId = previousLevelManagerIds[i % numManagers];
-                const newTeamId: string = this.addRandomTeam(newOrgStrTreeBasedOrgStructure, managerId);
+                const newTeamId: string = this.addRandomTeam(generatedOrgStructure, managerId);
                 let teamIdsArray = managerIdToTeamIdMap.get(managerId);
                 if (teamIdsArray === undefined)
                 {
@@ -95,7 +133,7 @@ class OrgTreeGenerator
                                    ? teamIdsForManager[i % teamIdsForManager.length]
                                    : TeamConstants.NO_TEAM_ID;
 
-                this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, teamId, false);
+                this.addRandomEmployee(generatedOrgStructure, managerId, teamId, false);
             }
 
             const nextManagerIds: string[] = [];
@@ -106,12 +144,11 @@ class OrgTreeGenerator
                 const teamId = ((teamIdsForManager !== undefined) && (teamIdsForManager.length > 0))
                                    ? teamIdsForManager[i % teamIdsForManager.length]
                                    : TeamConstants.NO_TEAM_ID;
-                const newManagerId: string =
-                    this.addRandomEmployee(newOrgStrTreeBasedOrgStructure, managerId, teamId, true);
+                const newManagerId: string = this.addRandomEmployee(generatedOrgStructure, managerId, teamId, true);
                 nextManagerIds.push(newManagerId);
             }
 
-            this.buildNextLevel(newOrgStrTreeBasedOrgStructure, levelIterator, nextManagerIds);
+            this.buildNextLevel(generatedOrgStructure, levelIterator, nextManagerIds);
         }
     }
 

@@ -139,7 +139,7 @@ class OrgEntityColorThemes
         deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER,
                                          new OrgEntityTypeColorAssignmentImpl("#172554", "#FFFFFF"));
         deepBlueTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                         new OrgEntityTypeColorAssignmentImpl("#172554", "#FFFFFF"));
+                                         new OrgEntityTypeColorAssignmentImpl("#1e3a8a", "#FFFFFF"));
         deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM,
                                          new OrgEntityTypeColorAssignmentImpl("#172554", "#FFFFFF"));
 
@@ -147,7 +147,7 @@ class OrgEntityColorThemes
         deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER,
                                         new OrgEntityTypeColorAssignmentImpl("#450a0a", "#FFFFFF"));
         deepRedTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                        new OrgEntityTypeColorAssignmentImpl("#450a0a", "#FFFFFF"));
+                                        new OrgEntityTypeColorAssignmentImpl("#7f1d1d", "#FFFFFF"));
         deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM,
                                         new OrgEntityTypeColorAssignmentImpl("#450a0a", "#FFFFFF"));
 
@@ -155,7 +155,7 @@ class OrgEntityColorThemes
         deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER,
                                           new OrgEntityTypeColorAssignmentImpl("#052e16", "#FFFFFF"));
         deepGreenTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                          new OrgEntityTypeColorAssignmentImpl("#052e16", "#FFFFFF"));
+                                          new OrgEntityTypeColorAssignmentImpl("#14532d", "#FFFFFF"));
         deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM,
                                           new OrgEntityTypeColorAssignmentImpl("#052e16", "#FFFFFF"));
 
