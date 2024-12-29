@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { OrgPlannerSettings } from "@src/model/orgPlanner";
+    import type { OrgPlannerManager, OrgPlannerSettings } from "@src/model/orgPlanner";
     import { getAppDynamicColorTheme } from "@src/components/theme.js";
     import OrgPage from "@src/components/page/OrgPage.svelte";
     import { OrgPlannerAppEvents } from "@src/components/app/orgPlannerAppEvents";
@@ -8,6 +8,8 @@
         type PubSubEvent,
         PubSubManager,
     } from "orgplanner-common/jscore";
+    import { OrgPlannerAppServicesConstants } from "@src/services/orgPlannerAppServicesConstants.js";
+    import { ServiceManager } from "@sphyrna/service-manager-ts";
 
     let { data } = $props();
 
@@ -21,7 +23,11 @@
     );
     $effect(() => {
         // This will be recreated whenever `milliseconds` changes
-        const interval = setInterval(() => {}, 1000);
+        const interval = setInterval(() => {
+            const orgPlannerManager = ServiceManager.getService<OrgPlannerManager>(
+                OrgPlannerAppServicesConstants.ORG_PLANNER_MANAGER_SERVICE);
+            orgPlannerManager.storeOrgPlanner(data.orgPlanner);
+        }, 1000);
 
         return () => {
             // if a callback is provided, it will run

@@ -1,7 +1,7 @@
 
 import {DefaultServiceManagerStrategyImpl, ServiceManager} from "@sphyrna/service-manager-ts";
 import {OrgPlannerManager} from "@src/model/orgPlanner";
-import {BrowserBasedFileService} from "orgplanner-common/jscore";
+import {BrowserBasedFileService, SerializationServiceImpl} from "orgplanner-common/jscore";
 import {OrgTemplateFactoryImpl} from "orgplanner-common/model";
 
 import {LocalStorageDataService} from "./data/localStorageDataService";
@@ -47,6 +47,9 @@ class OrgPlannerAppServices
         //] ]));
         // let startupDataServiceProvider = new SingletonServiceProvider(ChainingDataService);
         //
+
+        serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.SERIALIZATION_SERVICE_NAME,
+                                                        SerializationServiceImpl);
 
         serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.ORG_PLANNER_IMPORT_SERVICE,
                                                         TreeBasedOrgPlannerImportService);

@@ -76,6 +76,7 @@ class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer<OrgDataCore> i
     }
 }
 
+@RegisterSerializable("OrgPlan", 1)
 class OrgPlanDefaultImpl implements OrgPlan
 {
     orgDataCore: OrgDataCore;
@@ -86,6 +87,18 @@ class OrgPlanDefaultImpl implements OrgPlan
     }
 }
 
+@RegisterSerializer("OrgPlan", SerializationFormat.JSON)
+class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlan> implements
+    Serializer<OrgPlan, SerializationFormat.JSON>
+{
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
+    {
+        const orgDataCore = serializationHelper.deserialize<OrgDataCore>(dataObject.orgDataCore);
+        return new OrgPlanDefaultImpl(orgDataCore);
+    }
+}
+
+@RegisterSerializable("OrgSnapshot", 1)
 class OrgSnapshotDefaultImpl implements OrgSnapshot
 {
     orgDataCore: OrgDataCore;
@@ -96,5 +109,23 @@ class OrgSnapshotDefaultImpl implements OrgSnapshot
     }
 }
 
-export {OrgDataCoreDefaultImpl, OrgPlanDefaultImpl, OrgSnapshotDefaultImpl, OrgDataCoreDefaultImplSerializer};
+@RegisterSerializer("OrgSnapshot", SerializationFormat.JSON)
+class OrgSnapshotDefaultImplSerializer extends BaseJSONSerializer<OrgSnapshot> implements
+    Serializer<OrgSnapshot, SerializationFormat.JSON>
+{
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
+    {
+        const orgDataCore = serializationHelper.deserialize<OrgDataCore>(dataObject.orgDataCore);
+        return new OrgSnapshotDefaultImpl(orgDataCore);
+    }
+}
+
+export {
+    OrgDataCoreDefaultImpl,
+    OrgPlanDefaultImpl,
+    OrgSnapshotDefaultImpl,
+    OrgDataCoreDefaultImplSerializer,
+    OrgSnapshotDefaultImplSerializer,
+    OrgPlanDefaultImplSerializer
+};
 export type{OrgDataCore, OrgPlan, OrgSnapshot};

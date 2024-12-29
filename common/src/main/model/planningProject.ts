@@ -1,13 +1,25 @@
+import {
+    BaseJSONSerializer,
+    JSONSerializationHelper,
+    RegisterSerializable,
+    RegisterSerializer,
+    SerializationFormat,
+    type Serializer
+} from "orgplanner-common/jscore";
 import {type OrgPlan, OrgPlanDefaultImpl, type OrgSnapshot} from "./orgData";
 
 interface PlanningProject
 {
     title: string;
-    orgPlan: OrgPlan;
+    readonly orgPlan: OrgPlan;
+
+    // WHat happens when I create a snapshot of plan?  Is it part of the planning project  Do we need a set of snapshot
+    // here?
 }
 /**
  * PlanningProject is the root of all planning state when planning an organization
  */
+@RegisterSerializable("PlanningProject", 1)
 class PlanningProjectDefaultImpl implements PlanningProject
 {
     title: string;
@@ -35,5 +47,16 @@ class PlanningProjectDefaultImpl implements PlanningProject
     }
 }
 
-export {PlanningProjectDefaultImpl};
+@RegisterSerializer("PlanningProject", SerializationFormat.JSON)
+class PlanningProjectDefaultImplSerializer extends BaseJSONSerializer<PlanningProject> implements
+    Serializer<PlanningProject, SerializationFormat.JSON>
+{
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): PlanningProject
+    {
+        const orgPlan = serializationHelper.deserialize<OrgPlan>(dataObject.orgPlan);
+        return new PlanningProjectDefaultImpl(dataObject.title, orgPlan);
+    }
+}
+
+export {PlanningProjectDefaultImpl, PlanningProjectDefaultImplSerializer};
 export type{PlanningProject};
