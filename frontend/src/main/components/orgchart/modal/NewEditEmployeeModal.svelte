@@ -60,13 +60,29 @@
         if (
             !nameElement ||
             !titleElement ||
-            !teamElement ||
+            (!teamElement &&
+                (mode === NewEditEmployeeModalModes.NEW ||
+                    (employeeToEdit !== undefined &&
+                        employeeToEdit.canMove()))) ||
             (!isManagerElement && mode === NewEditEmployeeModalModes.NEW)
         ) {
             throw new Error("Could not obtain form elements");
         }
 
-        let teamId: string = teamElement.valueOf() as string;
+        let teamId: string;
+        if (
+            mode === NewEditEmployeeModalModes.EDIT &&
+            employeeToEdit !== undefined &&
+            !employeeToEdit.canMove()
+        ) {
+            teamId = employeeToEdit.team.id;
+        } else {
+            if (!teamElement) {
+                throw new Error("Could not obtain team form element");
+            }
+            teamId = teamElement.valueOf() as string;
+        }
+
         if (teamId === "<<-- New Team -->>") {
             const newTeamTitle: FormDataEntryValue | null = formData.get(
                 "new_team_name_input_name",

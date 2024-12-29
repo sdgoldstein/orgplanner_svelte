@@ -17,6 +17,7 @@
     import type { PubSubEvent, PubSubListener } from "orgplanner-common/jscore";
     import type { Snippet } from "svelte";
     import type { LayoutData } from "./$types";
+    import { invalidateAll } from "$app/navigation";
 
     let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -38,8 +39,8 @@
 
             const orgPlanner =
                 orgPlannerManager.createOrgPlannerWithTitle(orgName);
-
-            data = { orgPlanner: orgPlanner };
+            orgPlannerManager.storeOrgPlanner(orgPlanner);
+            invalidateAll();
         },
     });
 
