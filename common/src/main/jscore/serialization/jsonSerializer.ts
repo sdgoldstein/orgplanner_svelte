@@ -100,7 +100,11 @@ abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationForma
         let nextSerializable = serializableIterator.next();
         while (!nextSerializable.done)
         {
-            json += this._serializeNestedValue(nextSerializable.value, serializationHelper);
+            // FIXME - this is a hack for now.  The returned value will usually be another object or array, but could
+            // also be just a string.  If the later, we need to wrap it in quotes
+            let nestedValue = this._serializeNestedValue(nextSerializable.value, serializationHelper);
+            nestedValue = nestedValue.startsWith("{") || nestedValue.startsWith("[") ? nestedValue : `"${nestedValue}"`;
+            json += nestedValue;
 
             nextSerializable = serializableIterator.next();
 
@@ -114,6 +118,14 @@ abstract class BaseJSONSerializer<T> implements Serializer<T, SerializationForma
         json += "]";
 
         return json;
+    }
+
+    protected deserializeIterable<N>(dataObject: any[], serializationHelper: JSONSerializationHelper): N[]
+    {
+        // FIXME - Does not support primitive types
+        const arrayToReturn = dataObject.map((value) => { return serializationHelper.deserializeObject<N>(value); });
+
+        return arrayToReturn;
     }
 
     deserialize(data: string, serializationHelper: SerializationHelper<SerializationFormat.JSON>): T

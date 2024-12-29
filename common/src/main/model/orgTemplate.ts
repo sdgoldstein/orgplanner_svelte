@@ -44,13 +44,13 @@ class OrgTemplateFactoryImpl extends BaseService implements OrgTemplateFactorySe
     static readonly NAME_TO_TEMPLATE_MAP: Map<string, OrgTemplate> = new Map<string, OrgTemplate>();
     static
     {
-        this.NAME_TO_TEMPLATE_MAP.set("Simple", new SimpleOrgTemplate());
-        this.NAME_TO_TEMPLATE_MAP.set("Small", new SmallOrgTemplate());
+        this.NAME_TO_TEMPLATE_MAP.set("simple", new SimpleOrgTemplate());
+        this.NAME_TO_TEMPLATE_MAP.set("small", new SmallOrgTemplate());
     }
 
     getTemplate(templateName: string): OrgTemplate
     {
-        const valueToReturn = OrgTemplateFactoryImpl.NAME_TO_TEMPLATE_MAP.get(templateName);
+        const valueToReturn = OrgTemplateFactoryImpl.NAME_TO_TEMPLATE_MAP.get(templateName.toLowerCase());
         if (valueToReturn === undefined)
         {
             throw new Error("Template note found: " + templateName);

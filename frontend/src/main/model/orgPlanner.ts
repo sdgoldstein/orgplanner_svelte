@@ -57,9 +57,10 @@ class OrgPlannerSettingsDefaultImplSerializer extends BaseJSONSerializer<OrgPlan
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlannerSettings
     {
-        const colorTheme: OrgEntityColorTheme = serializationHelper.deserialize(dataObject.colorTheme);
+        const colorTheme: OrgEntityColorTheme = serializationHelper.deserializeObject(dataObject.colorTheme);
         const employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor> =
-            serializationHelper.deserialize(dataObject.employeePropertyDescriptors);
+            new Set(this.deserializeIterable<OrgEntityPropertyDescriptor>(
+                dataObject.employeePropertyDescriptors as any[], serializationHelper));
 
         return new OrgPlannerSettingsDefaultImpl(employeePropertyDescriptors, colorTheme);
     }
@@ -160,9 +161,11 @@ class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlanner> implem
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlanner
     {
-        const settings: OrgPlannerSettings = serializationHelper.deserialize(dataObject.settings);
-        const orgSnapshots: OrgSnapshot[] = serializationHelper.deserialize(dataObject.orgSnapshots);
-        const rootPlanningProject: PlanningProject = serializationHelper.deserialize(dataObject.rootPlanningProject);
+        const settings: OrgPlannerSettings = serializationHelper.deserializeObject(dataObject.settings);
+        const orgSnapshots: OrgSnapshot[] =
+            this.deserializeIterable<OrgSnapshot>(dataObject.orgSnapshots, serializationHelper);
+        const rootPlanningProject: PlanningProject =
+            serializationHelper.deserializeObject(dataObject.rootPlanningProject);
 
         return new OrgPlannerDefaultImpl(dataObject.orgTitle, dataObject.id, rootPlanningProject, orgSnapshots,
                                          settings);

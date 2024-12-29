@@ -53,7 +53,7 @@ class PlanningProjectDefaultImplSerializer extends BaseJSONSerializer<PlanningPr
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): PlanningProject
     {
-        const orgPlan = serializationHelper.deserialize<OrgPlan>(dataObject.orgPlan);
+        const orgPlan = serializationHelper.deserializeObject<OrgPlan>(dataObject.orgPlan);
         return new PlanningProjectDefaultImpl(dataObject.title, orgPlan);
     }
 }

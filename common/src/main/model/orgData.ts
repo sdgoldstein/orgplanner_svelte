@@ -93,7 +93,7 @@ class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlan> implement
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
     {
-        const orgDataCore = serializationHelper.deserialize<OrgDataCore>(dataObject.orgDataCore);
+        const orgDataCore = serializationHelper.deserializeObject<OrgDataCore>(dataObject.orgDataCore);
         return new OrgPlanDefaultImpl(orgDataCore);
     }
 }
@@ -115,7 +115,7 @@ class OrgSnapshotDefaultImplSerializer extends BaseJSONSerializer<OrgSnapshot> i
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
     {
-        const orgDataCore = serializationHelper.deserialize<OrgDataCore>(dataObject.orgDataCore);
+        const orgDataCore = serializationHelper.deserializeObject<OrgDataCore>(dataObject.orgDataCore);
         return new OrgSnapshotDefaultImpl(orgDataCore);
     }
 }

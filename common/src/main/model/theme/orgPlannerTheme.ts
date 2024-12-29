@@ -5,6 +5,7 @@ import {
     RegisterSerializable,
     RegisterSerializer,
     SerializationFormat,
+    type Serializable,
     type Serializer
 } from "orgplanner-common/jscore";
 import {type OrgEntityType, OrgEntityTypes} from "../orgStructure/orgEntity";
@@ -72,6 +73,30 @@ class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
 class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEntityColorTheme> implements
     Serializer<OrgEntityColorTheme, SerializationFormat.JSON>
 {
+    getValue(serializableObject: OrgEntityColorTheme, serializationHelper: JSONSerializationHelper): Record<string, any>
+    {
+        const valueToReturn: Record<string, any> = {};
+
+        valueToReturn["name"] = serializableObject.name;
+        valueToReturn["label"] = serializableObject.label;
+
+        // FIXME - Need a better way to handle Maps
+        const typeToAssignmentJSONArray: Array<string> = new Array<string>();
+        for (const nextOrgEntityType of OrgEntityTypes.typeIterator())
+        {
+            const nextColorAssignment: OrgEntityTypeColorAssignment =
+                serializableObject.getColorAssignment(nextOrgEntityType);
+
+            // @ts-ignore FIXME - This is a hack to get the JSON to serialize correctly
+            typeToAssignmentJSONArray.push(`{"${nextOrgEntityType.name}": ${
+                serializationHelper.serialize(nextColorAssignment as unknown as Serializable)}}`);
+        }
+        valueToReturn["orgTypeToColorAssignmentMap"] =
+            this.serializeIterable(typeToAssignmentJSONArray[Symbol.iterator](), serializationHelper);
+
+        return valueToReturn;
+    }
+
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgEntityColorTheme
     {
         const name: string = dataObject.name;
@@ -79,9 +104,15 @@ class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEnt
 
         const colorTheme: DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(name, label);
 
-        for (const [key, value] of dataObject._typeToAssignmentMap)
+        const typeToAssignmentMap = dataObject.orgTypeToColorAssignmentMap;
+        for (const nextAssignment of typeToAssignmentMap)
         {
-            colorTheme.setColorAssignment(key, value);
+            // FIXME - This is ugly.  The map keys have been conversted to properties of the object
+            Object.entries(nextAssignment).forEach(([ key, value ]) => {
+                colorTheme.setColorAssignment(
+                    OrgEntityTypes.getTypeByName(key),
+                    serializationHelper.deserializeObject<OrgEntityTypeColorAssignment>(value));
+            });
         }
 
         return colorTheme;
