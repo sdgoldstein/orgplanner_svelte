@@ -6,7 +6,8 @@ import {
     type Employee,
     type OrgStructure,
     type OrgEntityColorTheme,
-    type Team
+    type Team,
+    type OrgEntity
 } from "orgplanner-common/model";
 import {
     FixedOrgEntityPropertyDescriptors,
@@ -428,22 +429,16 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
      * Old Methods which are no longer used?
      * *********************/
     /*
-     getSelectedEntity(): OrgEntity
-     {
-         // FIXME - What happens if more than one cell is selected?
-         const selectedCell = this.getSelectionCell();
-         return (selectedCell.value as OrgPlannerChartVertex).orgEntity;
-     }
-     isEntitySelected(): boolean
-     {
-         return !this.isSelectionEmpty();
-     }
+    isEntitySelected(): boolean
+    {
+        return !this.isSelectionEmpty();
+    }
 
-     protected isEmpty(): boolean
-     {
-        return (!this._rootCell);
-     }
-    */
+    protected isEmpty(): boolean
+    {
+       return (!this._rootCell);
+    }
+   */
 }
 
 export {OrgChartMaxGraphBase, OrgPlannerChartVisitor, OrgPlannerChartLayoutManager, OrgChartBuildingVisitor};

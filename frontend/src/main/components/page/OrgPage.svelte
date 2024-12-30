@@ -160,17 +160,23 @@
                 if (!orgPageMediator) {
                     throw new Error("OrgPageMediator undefined");
                 }
+
+                // FIXME - We should be able to delete multiple entities at once
                 let entityToDelete = orgPageMediator.getFirstSelectedEntity();
-                if (entityToDelete.orgEntityType === OrgEntityTypes.TEAM) {
-                    const deleteTeamEvent = new DeleteTeamEvent(
-                        entityToDelete as Team,
-                    );
-                    PubSubManager.instance.fireEvent(deleteTeamEvent);
-                } else {
-                    const deleteEmployeeEvent = new DeleteEmployeeEvent(
-                        entityToDelete as Employee,
-                    );
-                    PubSubManager.instance.fireEvent(deleteEmployeeEvent);
+
+                // FIXME - Button should be disabled if entity can't be deleted
+                if (entityToDelete.canDelete()) {
+                    if (entityToDelete.orgEntityType === OrgEntityTypes.TEAM) {
+                        const deleteTeamEvent = new DeleteTeamEvent(
+                            entityToDelete as Team,
+                        );
+                        PubSubManager.instance.fireEvent(deleteTeamEvent);
+                    } else {
+                        const deleteEmployeeEvent = new DeleteEmployeeEvent(
+                            entityToDelete as Employee,
+                        );
+                        PubSubManager.instance.fireEvent(deleteEmployeeEvent);
+                    }
                 }
             } else if (
                 eventName === OrgChartEvents.DELETE_EMPLOYEE_CELL_ACTION

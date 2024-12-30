@@ -3,7 +3,7 @@ import type {OrgEntity} from "./orgEntity";
 
 class OrgStructureChangedEvents
 {
-    public static readonly ORG_ENTITY_ADDED: string = "ORG_ENTITY_ADDED";
+    public static readonly ORG_ENTITIES_ADDED: string = "ORG_ENTITIES_ADDED";
     public static readonly ORG_ENTITY_EDITED: string = "ORG_ENTITY_EDITED";
     public static readonly ORG_ENTITIES_REMOVED: string = "ORG_ENTITY_REMOVED";
 }
@@ -12,11 +12,11 @@ interface OrgStructureChangedEvent extends PubSubEvent
 {
 }
 
-class OrgStructureChangedEventEntityAdded extends BasePubSubEvent
+class OrgStructureChangedEventEntitiesAdded extends BasePubSubEvent
 {
-    constructor(public entityAded: OrgEntity)
+    constructor(public entitiesAded: OrgEntity[])
     {
-        super(OrgStructureChangedEvents.ORG_ENTITY_ADDED)
+        super(OrgStructureChangedEvents.ORG_ENTITIES_ADDED)
     }
 }
 
@@ -38,7 +38,7 @@ class OrgStructureChangedEventEntitiesRemoved extends BasePubSubEvent
 
 export {
     OrgStructureChangedEvents,
-    OrgStructureChangedEventEntityAdded,
+    OrgStructureChangedEventEntitiesAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEventEntitiesRemoved
 };

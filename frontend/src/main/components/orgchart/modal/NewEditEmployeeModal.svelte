@@ -43,6 +43,7 @@
     } from "@sphyrna/uicomponents";
     import {
         EditEmployeeEvent,
+        NewEmployeeAndTeamEvent,
         NewEmployeeEvent,
     } from "@src/components/page/orgPageEvents";
 
@@ -62,8 +63,7 @@
             !titleElement ||
             (!teamElement &&
                 (mode === NewEditEmployeeModalModes.NEW ||
-                    (employeeToEdit !== undefined &&
-                        employeeToEdit.canMove()))) ||
+                    employeeToEdit !== undefined)) ||
             (!isManagerElement && mode === NewEditEmployeeModalModes.NEW)
         ) {
             throw new Error("Could not obtain form elements");
@@ -72,30 +72,15 @@
         let teamId: string;
         if (
             mode === NewEditEmployeeModalModes.EDIT &&
-            employeeToEdit !== undefined &&
-            !employeeToEdit.canMove()
+            employeeToEdit !== undefined
         ) {
             teamId = employeeToEdit.team.id;
         } else {
             if (!teamElement) {
+                // This should have already been checked above
                 throw new Error("Could not obtain team form element");
             }
             teamId = teamElement.valueOf() as string;
-        }
-
-        if (teamId === "<<-- New Team -->>") {
-            const newTeamTitle: FormDataEntryValue | null = formData.get(
-                "new_team_name_input_name",
-            );
-            if (!newTeamTitle) {
-                throw new Error("Could not obtain new team title form element");
-            }
-
-            const createdTeam = orgStructure.createTeam(
-                newTeamTitle.valueOf() as string,
-                managerId,
-            );
-            teamId = createdTeam.id;
         }
 
         const properties: OrgEntityPropertyBag = new Map<
@@ -119,7 +104,36 @@
         }
 
         let eventToFire;
-        if (mode == NewEditEmployeeModalModes.EDIT && employeeToEdit) {
+        if (mode == NewEditEmployeeModalModes.NEW) {
+            if (teamId === "<<-- New Team -->>") {
+                const newTeamTitle: FormDataEntryValue | null = formData.get(
+                    "new_team_name_input_name",
+                );
+                if (!newTeamTitle) {
+                    throw new Error(
+                        "Could not obtain new team title form element",
+                    );
+                }
+
+                eventToFire = new NewEmployeeAndTeamEvent(
+                    nameElement.valueOf() as string,
+                    titleElement.valueOf() as string,
+                    managerId,
+                    isManagerElement.valueOf() === "true",
+                    properties,
+                    newTeamTitle.valueOf() as string,
+                );
+            } else {
+                eventToFire = new NewEmployeeEvent(
+                    nameElement.valueOf() as string,
+                    titleElement.valueOf() as string,
+                    managerId,
+                    teamId,
+                    isManagerElement.valueOf() === "true",
+                    properties,
+                );
+            }
+        } else if (mode == NewEditEmployeeModalModes.EDIT && employeeToEdit) {
             eventToFire = new EditEmployeeEvent(
                 nameElement.valueOf() as string,
                 titleElement.valueOf() as string,
@@ -128,14 +142,7 @@
                 employeeToEdit,
             );
         } else {
-            eventToFire = new NewEmployeeEvent(
-                nameElement.valueOf() as string,
-                titleElement.valueOf() as string,
-                managerId,
-                teamId,
-                isManagerElement.valueOf() === "true",
-                properties,
-            );
+            throw new Error("Invalid mode and state");
         }
 
         PubSubManager.instance.fireEvent(eventToFire);
@@ -226,9 +233,7 @@
         bind:selected={selectedTeam}
         {colorVariant}
         {dynamicColorTheme}
-        disabled={mode == NewEditEmployeeModalModes.EDIT &&
-            employeeToEdit &&
-            !employeeToEdit.canMove()}
+        disabled={mode == NewEditEmployeeModalModes.EDIT && employeeToEdit}
     >
         {#each orgStructure.getTeams() as nextTeam: Team}
             <SelectOption value={nextTeam.id}>{nextTeam.title}</SelectOption>

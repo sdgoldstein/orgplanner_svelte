@@ -8,7 +8,7 @@ import {
     OrgEntityTypes,
     type OrgStructure,
     OrgStructureChangedEventEntitiesRemoved,
-    OrgStructureChangedEventEntityAdded,
+    OrgStructureChangedEventEntitiesAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEvents,
     type Team
@@ -19,7 +19,7 @@ import {
     OrgChartEntityVisibleStateImpl,
 } from "../../../orgChartViewState";
 import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
-import {OrgChartEvents} from "../../../OrgChartEvents";
+import {OrgChartEvents, OrgChartSelectionChangedEvent} from "../../../OrgChartEvents";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import {
     ViewToggableEntityToggledEventHandler,
@@ -27,6 +27,7 @@ import {
     type EntityViewToggableOrgChartProxy
 } from "../shared/viewToggableEntityEventHandler";
 import {EditableOrgChartMaxGraphTheme} from "./editableOrgChartMaxGraphTheme";
+import {InternalEvent} from "@maxgraph/core";
 
 /**
  * This is a class used by all clients/external logic of the orgchart to make orgchat changes, whether by event or
@@ -68,7 +69,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         const pubSubManager = PubSubManager.instance;
         pubSubManager.registerListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED,
                                        this._viewToggableEntityToggledEventHandler);
-        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
+        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
     }
@@ -80,10 +81,11 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         const pubSubManager = PubSubManager.instance;
         pubSubManager.unregisterListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED,
                                          this._viewToggableEntityToggledEventHandler);
-        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_ADDED, this);
+        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
 
+        // FIXME - this._currentGraph?.removeListener(this)
         this._currentGraph?.destroy();
     }
 
@@ -149,20 +151,30 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
             new EditableOrgChartMaxGraph(this.chartContainer, this._orgStructure, orgChartTheme, visibiltyState);
 
         this._currentGraph.renderGraph();
+
+        // FIXME - Is there a better place for this?
+        this._currentGraph.selectionModel.addListener(InternalEvent.CHANGE, () => {
+            const selectedEntities = this._currentGraph!.getSelectedEntities();
+            const selectionChangedEvent = new OrgChartSelectionChangedEvent(selectedEntities);
+            PubSubManager.instance.fireEvent(selectionChangedEvent);
+        });
     }
 
     onEvent(eventName: string, event: PubSubEvent): void
     {
-        if (eventName === OrgStructureChangedEvents.ORG_ENTITY_ADDED)
+        if (eventName === OrgStructureChangedEvents.ORG_ENTITIES_ADDED)
         {
-            const orgEntityAddedEvent = event as unknown as OrgStructureChangedEventEntityAdded;
-            if (orgEntityAddedEvent.entityAded.orgEntityType === OrgEntityTypes.TEAM)
+            const orgEntityAddedEvent = event as unknown as OrgStructureChangedEventEntitiesAdded;
+            for (const nextEntityAdded of orgEntityAddedEvent.entitiesAded)
             {
-                this.currentGraph.addTeam(orgEntityAddedEvent.entityAded as Team);
-            }
-            else
-            {
-                this.currentGraph.addEmployee(orgEntityAddedEvent.entityAded as Employee);
+                if (nextEntityAdded.orgEntityType === OrgEntityTypes.TEAM)
+                {
+                    this.currentGraph.addTeam(nextEntityAdded as Team);
+                }
+                else
+                {
+                    this.currentGraph.addEmployee(nextEntityAdded as Employee);
+                }
             }
         }
         else if (eventName === OrgStructureChangedEvents.ORG_ENTITY_EDITED)

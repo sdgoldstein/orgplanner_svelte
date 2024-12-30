@@ -12,18 +12,19 @@ import {
     DeleteTeamEvent,
     EditEmployeeEvent,
     EditTeamEvent,
+    NewEmployeeAndTeamEvent,
     NewEmployeeEvent,
     NewTeamEvent,
     OrgPageEvents,
-    OrgPageSelectionChangedEvent,
     SaveAsImageEvent
 } from "./orgPageEvents";
 import {
-    OrgStructureChangedEventEntityAdded,
+    OrgStructureChangedEventEntitiesAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEventEntitiesRemoved
 } from "orgplanner-common/model";
 import {OrgChartEditingToolbarEvents} from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
+import {OrgChartEvents, OrgChartSelectionChangedEvent} from "orgplanner-orgchart";
 
 interface OrgPageMediator
 {
@@ -31,6 +32,7 @@ interface OrgPageMediator
     reset(): void;
     getFirstSelectedManager(): Manager;
     getFirstSelectedEntity(): OrgEntity;
+    getSelectedEntities(): OrgEntity[];
 }
 
 class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
@@ -46,8 +48,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.registerListener(OrgPageEvents.DELETE_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.ADD_TEAM, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.ADD_EMPLOYEE_AND_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.EDIT_TEAM, this);
-        PubSubManager.instance.registerListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.registerListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.registerListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
@@ -58,8 +61,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_EMPLOYEE, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.DELETE_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_TEAM, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_EMPLOYEE_AND_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.EDIT_TEAM, this);
-        PubSubManager.instance.unregisterListener(OrgPageEvents.SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.unregisterListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.unregisterListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
@@ -88,6 +92,11 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         return this._currentSelection[0] as OrgEntity;
     }
 
+    getSelectedEntities(): OrgEntity[]
+    {
+        return this._currentSelection;
+    }
+
     onEvent(eventName: string, eventToHandle: PubSubEvent): void
     {
         if (eventName === OrgPageEvents.ADD_EMPLOYEE)
@@ -96,7 +105,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             const newEmployee = this._orgStructure.createEmployee(
                 newEmployeeEvent.name, newEmployeeEvent.title, newEmployeeEvent.managerId, newEmployeeEvent.teamId,
                 newEmployeeEvent.isManager, newEmployeeEvent.properties);
-            const orgStructureChangedEvent = new OrgStructureChangedEventEntityAdded(newEmployee);
+            const orgStructureChangedEvent = new OrgStructureChangedEventEntitiesAdded([ newEmployee ]);
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
         else if (eventName === OrgPageEvents.EDIT_EMPLOYEE)
@@ -114,9 +123,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             const orgStructureChangedEvent = new OrgStructureChangedEventEntityEdited(employeeToEdit);
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
-        else if (eventName == OrgPageEvents.SELECTION_CHANGED_EVENT)
+        else if (eventName == OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT)
         {
-            const selectionChangedEvent = eventToHandle as OrgPageSelectionChangedEvent;
+            const selectionChangedEvent = eventToHandle as OrgChartSelectionChangedEvent;
             this._currentSelection = selectionChangedEvent.newSelectedEntities;
         }
         else if (eventName === OrgPageEvents.DELETE_EMPLOYEE)
@@ -139,7 +148,20 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         {
             const newTeamEvent = eventToHandle as NewTeamEvent;
             const newTeam = this._orgStructure.createTeam(newTeamEvent.title, newTeamEvent.managerId);
-            const orgStructureChangedEvent = new OrgStructureChangedEventEntityAdded(newTeam);
+            const orgStructureChangedEvent = new OrgStructureChangedEventEntitiesAdded([ newTeam ]);
+            PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgPageEvents.ADD_EMPLOYEE_AND_TEAM)
+        {
+            const newEmployeeAndTeamEvent = eventToHandle as NewEmployeeAndTeamEvent;
+
+            const newTeam =
+                this._orgStructure.createTeam(newEmployeeAndTeamEvent.title, newEmployeeAndTeamEvent.managerId);
+
+            const newEmployee = this._orgStructure.createEmployee(
+                newEmployeeAndTeamEvent.name, newEmployeeAndTeamEvent.title, newEmployeeAndTeamEvent.managerId,
+                newTeam.id, newEmployeeAndTeamEvent.isManager, newEmployeeAndTeamEvent.properties);
+            const orgStructureChangedEvent = new OrgStructureChangedEventEntitiesAdded([ newTeam, newEmployee ]);
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
         }
         else if (eventName === OrgPageEvents.EDIT_TEAM)

@@ -15,7 +15,8 @@ import {
     type Employee,
     type OrgStructure,
     type OrgEntityColorTheme,
-    type Team
+    type Team,
+    type OrgEntity
 } from "orgplanner-common/model";
 import {
     FixedOrgEntityPropertyDescriptors,
@@ -509,6 +510,18 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
             // Is this the best way to force a redraw?
             this.refresh(cell);
         });
+    }
+
+    getSelectedEntities(): OrgEntity[]
+    {
+        const selectedEntitiesToReturn: OrgEntity[] = [];
+
+        const selectedCell = this.getSelectionCells();
+        for (const nextCell of selectedCell)
+        {
+            selectedEntitiesToReturn.push((nextCell.value as OrgPlannerChartVertex).orgEntity);
+        }
+        return selectedEntitiesToReturn;
     }
 
     /********************

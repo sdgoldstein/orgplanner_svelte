@@ -21,6 +21,7 @@ class OrgPageEvents
     public static readonly EDIT_EMPLOYEE: string = "EDIT_EMPLOYEE";
     public static readonly DELETE_EMPLOYEE: string = "DELETE_EMPLOYEE";
     public static readonly ADD_TEAM: string = "ADD_TEAM";
+    public static readonly ADD_EMPLOYEE_AND_TEAM: string = "ADD_EMPLOYEE_AND_TEAM";
     public static readonly EDIT_TEAM: string = "EDIT_TEAM";
     public static readonly DELETE_TEAM: string = "DELETE_TEAM";
 
@@ -49,6 +50,21 @@ class NewEmployeeEvent extends BasePubSubEvent
                 public isManager: boolean, public properties: OrgEntityPropertyBag)
     {
         super(OrgPageEvents.ADD_EMPLOYEE);
+    }
+}
+
+class NewEmployeeAndTeamEvent extends BasePubSubEvent
+{
+    constructor(
+        public name: string,
+        public title: string,
+        public managerId: string,
+        public isManager: boolean,
+        public properties: OrgEntityPropertyBag,
+        public teamTitle: string,
+    )
+    {
+        super(OrgPageEvents.ADD_EMPLOYEE_AND_TEAM);
     }
 }
 
@@ -110,5 +126,6 @@ export {
     SaveAsImageEvent,
     NewTeamEvent,
     EditTeamEvent,
-    DeleteTeamEvent
+    DeleteTeamEvent,
+    NewEmployeeAndTeamEvent
 };

@@ -5,7 +5,8 @@ import {
     DeleteTeamCellActionEvent,
     EditEmployeeCellActionEvent,
     EditTeamCellActionEvent,
-    OrgChartEvents
+    OrgChartEvents,
+    OrgChartSelectionChangedEvent
 } from "./components/orgchart/OrgChartEvents"
 import {OrgChartMode} from "./components/orgchart/orgChartViewState"
 
@@ -17,5 +18,6 @@ export {
     OrgChart,
     OrgChartEvents,
     OrgChartMode,
+    OrgChartSelectionChangedEvent,
     PrintableOrgChartProxy
 };
