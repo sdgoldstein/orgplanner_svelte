@@ -7,7 +7,7 @@
         OrgChartEvents,
     } from "orgplanner-orgchart";
     import { Pane, Splitpanes } from "svelte-splitpanes";
-    import OrgChartPane from "@src/components/orgchart/OrgChartPane.svelte";
+    import OrgChartPanel from "@src/components/orgchart/OrgChartPanel.svelte";
     import {
         PubSubManager,
         type PubSubEvent,
@@ -36,6 +36,7 @@
         type RecordModalMode,
     } from "../orgchart/modal/modal";
     import { OrgChartEditingToolbarEvents } from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
+    import OrgStatisticsPanel from "../orgStatistics/OrgStatisticsPanel.svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -275,10 +276,16 @@
 
 <div class="h-screen flex">
     <Splitpanes theme="org-chart-splitter-theme">
-        <Pane class="p-2">
-            <OrgChartPane {appDynamicColorTheme} {orgStructure} {settings} />
+        <Pane>
+            <OrgChartPanel {appDynamicColorTheme} {orgStructure} {settings} />
         </Pane>
-        <!--    <Pane size="0" class="p-2">dlfjsdlf</Pane>  -->
+        <Pane snapSize={5} size={0}>
+            <OrgStatisticsPanel
+                {orgStructure}
+                {settings}
+                {appDynamicColorTheme}
+            />
+        </Pane>
     </Splitpanes>
 </div>
 

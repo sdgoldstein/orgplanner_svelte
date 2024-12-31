@@ -6,23 +6,25 @@
     import type { OrgPlannerSettings } from "@src/model/orgPlanner";
     import { OrgChart, OrgChartMode } from "orgplanner-orgchart";
 
-    interface OrgChartPaneProps extends OrgPlannerColorThemableComponentProps {
+    interface OrgChartPanelProps extends OrgPlannerColorThemableComponentProps {
         orgStructure: OrgStructure;
         settings: OrgPlannerSettings;
     }
 
-    let { orgStructure, settings, appDynamicColorTheme }: OrgChartPaneProps =
+    let { orgStructure, settings, appDynamicColorTheme }: OrgChartPanelProps =
         $props();
     let colorTheme = $derived(settings.colorTheme);
     let propertyDescriptors = $derived(settings.employeePropertyDescriptors);
 </script>
 
-<OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
-></OrgChartEditingToolbar>
-<OrgChart
-    data-id="org_chart"
-    {orgStructure}
-    mode={OrgChartMode.EDIT}
-    {colorTheme}
-    {propertyDescriptors}
-/>
+<div class="p-2">
+    <OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
+    ></OrgChartEditingToolbar>
+    <OrgChart
+        data-id="org_chart"
+        {orgStructure}
+        mode={OrgChartMode.EDIT}
+        {colorTheme}
+        {propertyDescriptors}
+    />
+</div>
