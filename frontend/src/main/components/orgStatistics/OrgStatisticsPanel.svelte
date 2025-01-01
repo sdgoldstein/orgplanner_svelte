@@ -12,7 +12,7 @@
     } from "@src/components/theme.js";
     import type { OrgStructure } from "orgplanner-common/model";
     import type { OrgPlannerSettings } from "@src/model/orgPlanner";
-    import OrgStatList from "./OrgStatList.svelte";
+    import OrgSummaryStatList from "./OrgSummaryStatList.svelte";
     import ManagerStatList from "./ManagerStatList.svelte";
     import TeamStatList from "./TeamStatList.svelte";
     import ICStatList from "./ICStatList.svelte";
@@ -36,20 +36,19 @@
 
 <div>
     <AccordionPanel>
-        <AccordionPanelItem>
+        <AccordionPanelItem name="orgStatistics">
             <AccordionPanelItemHeader
                 dynamicColorTheme={dynamicColorThemeMap}
                 {colorVariant}>Organization Statistics</AccordionPanelItemHeader
             >
             <AccordionPanelItemContent>
-                <OrgStatList
-                    orgStatistics={orgStructure.orgStatistics
+                <OrgSummaryStatList
+                    orgSummaryStatistics={orgStructure.orgStatistics
                         .orgSummaryStatistics}
                 />
             </AccordionPanelItemContent>
         </AccordionPanelItem>
-        <div style="padding:.20em"></div>
-        <AccordionPanelItem>
+        <AccordionPanelItem name="managerStatistics">
             <AccordionPanelItemHeader
                 dynamicColorTheme={dynamicColorThemeMap}
                 {colorVariant}>Manager Statistics</AccordionPanelItemHeader
@@ -61,11 +60,10 @@
                 ></ManagerStatList>
             </AccordionPanelItemContent>
         </AccordionPanelItem>
-        <div style="padding:.20em"></div>
-        <AccordionPanelItem>
+        <AccordionPanelItem name="teamStatistics">
             <AccordionPanelItemHeader
                 dynamicColorTheme={dynamicColorThemeMap}
-                {colorVariant}>TeamTemp Statistics</AccordionPanelItemHeader
+                {colorVariant}>Team Statistics</AccordionPanelItemHeader
             >
             <AccordionPanelItemContent>
                 <TeamStatList
@@ -73,8 +71,7 @@
                 ></TeamStatList>
             </AccordionPanelItemContent>
         </AccordionPanelItem>
-        <div style="padding:.20em"></div>
-        <AccordionPanelItem>
+        <AccordionPanelItem name="icStatistics">
             <AccordionPanelItemHeader
                 dynamicColorTheme={dynamicColorThemeMap}
                 {colorVariant}>IC Statistics</AccordionPanelItemHeader
