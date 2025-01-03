@@ -1,9 +1,9 @@
 <script lang="ts">
-    import Datatable from "../ui/datatable/datatable.svelte";
+    import { Datatable } from "@sphyrna/uicomponents";
     import type {
         ColumnDefinition,
         TableDataSource,
-    } from "../ui/datatable/datatable";
+    } from "@sphyrna/uicomponents";
 
     interface StatListProps {
         columnDefinitions: ColumnDefinition[];

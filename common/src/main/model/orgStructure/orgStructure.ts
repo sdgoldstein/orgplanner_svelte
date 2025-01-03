@@ -162,6 +162,8 @@ interface OrgStructure
     createTeam(newTeamTitle: string, managerId: string): Team;
 
     employeePropertyIterator(): IterableIterator<OrgEntityPropertyDescriptor>;
+
+    batchUpdate(updateFunction: () => void): void;
 }
 
 /**

@@ -7,9 +7,9 @@ class ManagerStatListConstants
     static readonly COLUMN_DEFINITIONS = [
         {columnName : "manager.name", columnLabel: "Name"},
         {columnName : "manager.title", columnLabel: "Title"},
-        {columnName : "numManagers", columnLabel: "# of Managers"},
-        {columnName : "numDirects", columnLabel: "# of Directs"},
-        {columnName : "numReports", columnLabel: "# of Reports"},
+        {columnName : "numManagers", columnLabel: "Managers"},
+        {columnName : "numDirects", columnLabel: "Directs"},
+        {columnName : "numReports", columnLabel: "Reports"},
         {columnName : "managerToICRatio", columnLabel: "Manager Ratio"},
     ];
 }

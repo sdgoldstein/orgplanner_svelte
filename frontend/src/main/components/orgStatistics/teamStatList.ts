@@ -6,9 +6,9 @@ class TeamStatListConstants
 {
     static readonly COLUMN_DEFINITIONS = [
         {columnName : "title", columnLabel: "Name"},
-        {columnName : "numMembers", columnLabel: "# of Members"},
-        {columnName : "numICs", columnLabel: "# of Engineers"},
-        {columnName : "numManagers", columnLabel: "# of Managers"},
+        {columnName : "numMembers", columnLabel: "Members"},
+        {columnName : "numICs", columnLabel: "Engineers"},
+        {columnName : "numManagers", columnLabel: "Managers"},
     ];
 }
 

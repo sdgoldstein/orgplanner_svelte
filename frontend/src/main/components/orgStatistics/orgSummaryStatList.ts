@@ -5,10 +5,10 @@ import {StatListDataRowIterator} from "./statList";
 class OrgSummaryStatListConstants
 {
     static readonly COLUMN_DEFINITIONS = [
-        {columnName : "numEmployees", columnLabel: "# of Employees"},
-        {columnName : "numManagers", columnLabel: "# of Managers"},
-        {columnName : "numICs", columnLabel: "# of ICs"},
-        {columnName : "managerToICRatio", columnLabel: "# of Manager Ratio"},
+        {columnName : "numEmployees", columnLabel: "Employees"},
+        {columnName : "numManagers", columnLabel: "Managers"},
+        {columnName : "numICs", columnLabel: "ICs"},
+        {columnName : "managerToICRatio", columnLabel: "Manager Ratio"},
     ];
 }
 

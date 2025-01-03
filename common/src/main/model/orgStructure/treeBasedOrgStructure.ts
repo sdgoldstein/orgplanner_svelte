@@ -306,6 +306,12 @@ class TreeBasedOrgStructure implements OrgStructure
         return this.orgLeader;
     }
 
+    batchUpdate(updateFunction: () => void): void
+    {
+        updateFunction();
+        this.orgStatistics = StatsCollector.instance.collectStats(this);
+    }
+
     get orgLeader(): Employee
     {
         if (!this._orgLeader)
@@ -671,25 +677,28 @@ class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<OrgStructure> i
 
         const orgStructureToReturn: TreeBasedOrgStructure = new TreeBasedOrgStructure(propertyDescriptorsSet);
 
-        // FIXME - This was the old way to import.  Consider recurive serialization using helper instead
+        orgStructureToReturn.batchUpdate(() => {
+            // FIXME - This was the old way to import.  Consider recurive serialization using helper instead
 
-        // Add teams first.
-        const teams: any[] = dataObject.teams;
-        teams.forEach(
-            (nextTeam: any) => { orgStructureToReturn.importTeam(nextTeam.id, nextTeam.title, nextTeam.managerId); });
+            // Add teams first.
+            const teams: any[] = dataObject.teams;
+            teams.forEach(
+                (nextTeam:
+                     any) => { orgStructureToReturn.importTeam(nextTeam.id, nextTeam.title, nextTeam.managerId); });
 
-        // Add Employees second
-        const employees: any[] = dataObject.employees;
-        employees.forEach((nextEmployee: any) => {
-            const properties = new Map();
-            for (const nextProperty of nextEmployee.properties)
-            {
-                properties.set(propertyDescriptorMap.get(nextProperty.name), nextProperty.value);
-            }
+            // Add Employees second
+            const employees: any[] = dataObject.employees;
+            employees.forEach((nextEmployee: any) => {
+                const properties = new Map();
+                for (const nextProperty of nextEmployee.properties)
+                {
+                    properties.set(propertyDescriptorMap.get(nextProperty.name), nextProperty.value);
+                }
 
-            orgStructureToReturn.importEmployee(nextEmployee.id, nextEmployee.name, nextEmployee.title,
-                                                nextEmployee.managerId, nextEmployee.teamId,
-                                                nextEmployee.isManager == "true", properties);
+                orgStructureToReturn.importEmployee(nextEmployee.id, nextEmployee.name, nextEmployee.title,
+                                                    nextEmployee.managerId, nextEmployee.teamId,
+                                                    nextEmployee.isManager == "true", properties);
+            });
         });
 
         return orgStructureToReturn;
