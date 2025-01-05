@@ -9,14 +9,20 @@
 import {Cell, CellState, type CellStateStyle, EventObject, VertexHandler} from "@maxgraph/core";
 
 import {PubSubManager} from "orgplanner-common/jscore";
-import {OrgEntityTypes, type Employee, type OrgEntity, type OrgStructure, type Team} from "orgplanner-common/model";
+import {
+    OrgEntityTypes,
+    type Employee,
+    type OrgEntity,
+    type OrgEntityType,
+    type OrgStructure,
+    type Team
+} from "orgplanner-common/model";
 
 import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
 import {
     OrgPlannerChartEmployeeVertex,
     OrgPlannerChartTeamVertex,
-    type OrgPlannerChartVertex,
 } from "../../common/core/orgPlannerChartModel";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartVertexHandler} from "../../common/themes/orgChartVertexHandler";
@@ -100,19 +106,6 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
     {
         return new OrgChartVertexHandler(state);
     }
-
-    validateEdge: (edge: Cell, source: Cell, target: Cell) => string | null =
-        (edge: Cell, source: Cell, target: Cell) => {
-            let errorToReturn = null;
-
-            const targetEntity = target.getValue().orgEntity;
-            if (targetEntity.orgEntityType === OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR)
-            {
-                errorToReturn = "Cannot connect to an individual contributor";
-            }
-
-            return errorToReturn;
-        }
 
     addTeam(team: Team): void
     {

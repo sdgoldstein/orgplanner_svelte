@@ -74,7 +74,7 @@ class DeleteTeamCellActionEvent extends BasePubSubEvent
 
 class DropEntityOnEntityMouseEvent extends BasePubSubEvent
 {
-    constructor(public sourceEntityt: OrgEntity, public targetEntity: OrgEntity)
+    constructor(public sourceEntity: OrgEntity, public targetEntity: OrgEntity)
     {
         super(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT);
     }

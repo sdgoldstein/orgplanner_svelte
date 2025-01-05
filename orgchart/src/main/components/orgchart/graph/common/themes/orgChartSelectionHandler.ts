@@ -8,6 +8,7 @@ import {
     InternalMouseEvent,
     SelectionHandler
 } from "@maxgraph/core";
+import {OrgEntityTypes, type OrgEntityType} from "orgplanner-common/model";
 
 class OrgChartSelectionHandler extends SelectionHandler
 {
@@ -78,7 +79,7 @@ class OrgChartSelectionHandler extends SelectionHandler
                         {
                             // This is where I change behavior to not show error if a drop target is not valid
                             const error = graph.getEdgeValidationError(null, this.cell, cell);
-                            if (error === null)
+                            if ((error === null) && this.isOrgChartEdgeValid(this.cell, cell))
                             {
                                 this.setHighlightColor(constants.VALID_COLOR);
                                 highlight = true;
@@ -154,6 +155,40 @@ class OrgChartSelectionHandler extends SelectionHandler
                 me.sourceState.setCursor(cursor);
             }
         }
+    }
+
+    // We swap target and source because in our context, it's opposite of maxgraph
+    // Source will be the parent and target
+    isOrgChartEdgeValid(target: Cell, source: Cell): boolean
+    {
+        let valueToReturn = true;
+
+        const sourceEntity = source.getValue().orgEntity;
+        const targetEntity = target.getValue().orgEntity;
+
+        const targetEntityType: OrgEntityType = targetEntity.orgEntityType;
+        const sourceEntityType: OrgEntityType = sourceEntity.orgEntityType;
+
+        // First, check types
+        if (sourceEntity.orgEntityType === OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR)
+        {
+            valueToReturn = false;
+        }
+        else if ((sourceEntityType === OrgEntityTypes.TEAM) && (targetEntityType === OrgEntityTypes.TEAM))
+        {
+            valueToReturn = false;
+        }
+        else
+        {
+            // Now, check existing edges and make sure the edge doesn't already exist
+            let currentEdgesFromSource: Cell[] = source.getOutgoingEdges();
+            for (let nextCurrentEdge of currentEdgesFromSource)
+            {
+                valueToReturn &&= (nextCurrentEdge.target !== target);
+            }
+        }
+
+        return valueToReturn;
     }
 }
 export {OrgChartSelectionHandler};

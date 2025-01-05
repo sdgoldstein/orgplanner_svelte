@@ -143,7 +143,7 @@
 
     class TestListener implements PubSubListener {
         onEvent(eventName: string, eventToHandle: PubSubEvent): void {
-            alert(`Event ${eventName} received`);
+            //alert(`Event ${eventName} received`);
         }
     }
     const testListener = new TestListener();
