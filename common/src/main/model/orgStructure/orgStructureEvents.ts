@@ -37,10 +37,19 @@ class OrgStructureChangedEventEntitiesRemoved extends BasePubSubEvent
     }
 }
 
+class OrgStructureChangedEventEntitiesMoved extends BasePubSubEvent
+{
+    constructor(public movedEntity: OrgEntity, public newParent: OrgEntity, public previousParent: OrgEntity)
+    {
+        super(OrgStructureChangedEvents.ORG_ENTITIES_MOVED)
+    }
+}
+
 export {
     OrgStructureChangedEvents,
     OrgStructureChangedEventEntitiesAdded,
     OrgStructureChangedEventEntityEdited,
-    OrgStructureChangedEventEntitiesRemoved
+    OrgStructureChangedEventEntitiesRemoved,
+    OrgStructureChangedEventEntitiesMoved
 };
 export type{OrgStructureChangedEvent};

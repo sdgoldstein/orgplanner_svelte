@@ -11,7 +11,8 @@ import {
     OrgStructureChangedEventEntitiesAdded,
     OrgStructureChangedEventEntityEdited,
     OrgStructureChangedEvents,
-    type Team
+    type Team,
+    OrgStructureChangedEventEntitiesMoved
 } from "orgplanner-common/model";
 
 import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
@@ -72,6 +73,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
+        pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_MOVED, this);
     }
 
     onDismount(): void
@@ -84,6 +86,7 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
+        pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_MOVED, this);
 
         // FIXME - this._currentGraph?.removeListener(this)
         this._currentGraph?.destroy();
@@ -187,6 +190,12 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
             const orgEntityDeletedEvent = event as unknown as OrgStructureChangedEventEntitiesRemoved;
 
             this.currentGraph.entitiesDeleted(orgEntityDeletedEvent.entitiesRemoved);
+        }
+        else if (eventName === OrgStructureChangedEvents.ORG_ENTITIES_MOVED)
+        {
+            const orgEntitiesMovedEvent = event as unknown as OrgStructureChangedEventEntitiesMoved;
+            this.currentGraph.entitiesMoved(orgEntitiesMovedEvent.movedEntity, orgEntitiesMovedEvent.newParent,
+                                            orgEntitiesMovedEvent.previousParent);
         }
     }
 }

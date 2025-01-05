@@ -1,6 +1,7 @@
 import {PubSubManager, type PubSubEvent, type PubSubListener} from "orgplanner-common/jscore";
 import {
     OrgEntityTypes,
+    OrgStructureChangedEventEntitiesMoved,
     type Employee,
     type Manager,
     type OrgEntity,
@@ -196,20 +197,38 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
             4.  Manager move to new Team
             5.  Team moves to new Manager
             */
+            // FIXME - lots of copied code
             if (sourceEntityType === OrgEntityTypes.MANAGER)
             {
                 if (targetEntityType === OrgEntityTypes.TEAM)
                 {
-                    this._orgStructure.moveTeamToManager(targetEntity as Team, sourceEntity as Manager);
+                    const previousManagerId = (targetEntity as Team).managerId;
+                    const previousManager = this._orgStructure.getEmployee(previousManagerId);
+                    const movedTeam =
+                        this._orgStructure.moveTeamToManager(targetEntity as Team, sourceEntity as Manager);
+                    const orgStructureEntityMovedEvent =
+                        new OrgStructureChangedEventEntitiesMoved(movedTeam, sourceEntity, previousManager);
+                    PubSubManager.instance.fireEvent(orgStructureEntityMovedEvent);
                 }
                 else
                 {
-                    this._orgStructure.moveEmployeeToManager(targetEntity as Employee, sourceEntity as Manager);
+                    const previousManagerId = (targetEntity as Employee).managerId;
+                    const previousManager = this._orgStructure.getEmployee(previousManagerId);
+                    const movedEmployee =
+                        this._orgStructure.moveEmployeeToManager(targetEntity as Employee, sourceEntity as Manager);
+                    const orgStructureEntityMovedEvent =
+                        new OrgStructureChangedEventEntitiesMoved(movedEmployee, sourceEntity, previousManager);
+                    PubSubManager.instance.fireEvent(orgStructureEntityMovedEvent);
                 }
             }
             else if (targetEntityType === OrgEntityTypes.TEAM)
             {
-                this._orgStructure.moveEmployeeToTeam(targetEntity as Employee, sourceEntity as Team);
+                const previousTeam = (targetEntity as Employee).team;
+                const movedEmployee =
+                    this._orgStructure.moveEmployeeToTeam(targetEntity as Employee, sourceEntity as Team);
+                const orgStructureEntityMovedEvent =
+                    new OrgStructureChangedEventEntitiesMoved(movedEmployee, sourceEntity, previousTeam);
+                PubSubManager.instance.fireEvent(orgStructureEntityMovedEvent);
             }
         }
     }

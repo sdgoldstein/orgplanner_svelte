@@ -285,20 +285,95 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
         const managerCell = this.graph.model.getCell(team.managerId);
         if (managerCell)
         {
-            const insertedEdge = this.graph.insertEdge(parent, team.managerId + team.id, "", managerCell, cellToReturn);
-            this._augmentEdgeTemp(insertedEdge);
+            this._insertOrgEntityToOrgEntityEdge(managerCell, cellToReturn);
 
             // Create edge from teams their manager's team.  This enables removing managers from the chart
             const parentTeamCell = this.graph.model.getCell(managerCell.value.orgEntity.team.id);
             if (parentTeamCell)
             {
-                const insertedEdge =
-                    this.graph.insertEdge(parent, team.id + parentTeamCell.value.id, "", parentTeamCell, cellToReturn);
-                this._augmentEdgeTemp(insertedEdge);
+                this._insertOrgEntityToOrgEntityEdge(parentTeamCell, cellToReturn);
             }
         }
 
         return cellToReturn;
+    }
+
+    moveNode(movedEntity: OrgEntity, newParent: OrgEntity, previousParent: OrgEntity): void
+    {
+        const movedCell = this.graph.model.getCell(movedEntity.id);
+        if (movedCell === null)
+        {
+            throw new Error(`Could not find cell by id, ${movedEntity.id}`);
+        }
+
+        // Replace value just in case it has changed
+        // WRONG!!!! Need Vertex
+        switch (movedEntity.orgEntityType)
+        {
+        case OrgEntityTypes.MANAGER:
+            movedCell.value = new OrgPlannerChartManagerVertex(movedEntity as Employee);
+            break;
+        case OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR:
+            movedCell.value = new OrgPlannerChartICVertex(movedEntity as Employee);
+            break;
+        case OrgEntityTypes.TEAM:
+            movedCell.value = new OrgPlannerChartTeamVertex(movedEntity as Team);
+            break;
+        default:
+            throw new Error(`Unexpected org entity type: ${movedEntity.orgEntityType}`);
+        }
+
+        const newParentCell = this.graph.model.getCell(newParent.id);
+        if (newParentCell === null)
+        {
+            throw new Error(`Could not find new parent cell by id, ${newParent.id}`);
+        }
+
+        const previousParentCell = this.graph.model.getCell(previousParent.id);
+        if (previousParentCell === null)
+        {
+            throw new Error(`Could not find new parent cell by id, ${previousParent.id}`);
+        }
+
+        // Remove edge from previous parent to cell
+        // Add edge from new parent to cell
+        /*
+        Scenarios:
+        1.  IC moves to new Manager
+        2.  Manager moves to new Manaager
+        3.  IC move to new Team
+        4.  Manager move to new Team
+        5.  Team moves to new Manager
+        */
+        const incomingEdgesForMovedEntity: Cell[] = movedCell.getIncomingEdges();
+        for (let nextIncomingEdgeForMovedEntity of incomingEdgesForMovedEntity)
+        {
+            if (nextIncomingEdgeForMovedEntity.source === previousParentCell)
+            {
+                this.graph.removeCells([ nextIncomingEdgeForMovedEntity ]);
+                this._insertOrgEntityToOrgEntityEdge(newParentCell, movedCell);
+            }
+            else if (movedEntity.orgEntityType === OrgEntityTypes.TEAM)
+            {
+                if ((nextIncomingEdgeForMovedEntity.source !== null) &&
+                    (nextIncomingEdgeForMovedEntity.source.value.orgEntityType === OrgEntityTypes.TEAM))
+                {
+                    this.graph.removeCells([ nextIncomingEdgeForMovedEntity ]);
+                    // Create edge from teams their manager's team.  This enables removing managers from the chart
+                    const parentTeamCell = this.graph.model.getCell(newParentCell.value.orgEntity.team.id);
+                    if (parentTeamCell)
+                    {
+                        this._insertOrgEntityToOrgEntityEdge(movedCell, parentTeamCell);
+                    }
+                }
+                else
+                {
+                    throw new Error(`Unexpect edge with parent type, ${
+                        nextIncomingEdgeForMovedEntity.source?.value.orgEntityType}, and child ${
+                        movedEntity.orgEntityType}`);
+                }
+            }
+        }
     }
 
     augmentCellTemp(cell: Cell, visibilityState: OrgChartEntityVisibleState): void
@@ -336,17 +411,14 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
         const managerCell = this.graph.model.getCell(employee.managerId);
         if (managerCell)
         {
-            const insertedEdge =
-                this.graph.insertEdge(parent, employee.managerId + employee.id, "", managerCell, newCell);
-            this._augmentEdgeTemp(insertedEdge);
+            this._insertOrgEntityToOrgEntityEdge(managerCell, newCell);
         }
 
         // Create edge from teams to employee
         const teamCell = this.graph.model.getCell(employee.team.id);
         if (teamCell)
         {
-            const insertedEdge = this.graph.insertEdge(parent, employee.team.id + employee.id, "", teamCell, newCell);
-            this._augmentEdgeTemp(insertedEdge);
+            this._insertOrgEntityToOrgEntityEdge(teamCell, newCell);
         }
 
         /*else
@@ -357,6 +429,15 @@ class OrgChartMaxGraphAssemblyServiceBase extends BaseService implements OrgChar
         }*/
 
         return newCell;
+    }
+
+    private _insertOrgEntityToOrgEntityEdge(parentEntityCell: Cell, childEntityCell: Cell)
+    {
+        const parent = this.graph.getDefaultParent();
+        const insertedEdge = this.graph.insertEdge(
+            parent, `${parentEntityCell.value.orgEntity.id}-${childEntityCell.value.orgEntity.id}`, "",
+            parentEntityCell, childEntityCell);
+        this._augmentEdgeTemp(insertedEdge);
     }
 
     private _augmentEdgeTemp(insertedEdge: Cell)

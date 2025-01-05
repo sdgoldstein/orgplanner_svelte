@@ -9,14 +9,7 @@
 import {Cell, CellState, type CellStateStyle, EventObject, VertexHandler} from "@maxgraph/core";
 
 import {PubSubManager} from "orgplanner-common/jscore";
-import {
-    OrgEntityTypes,
-    type Employee,
-    type OrgEntity,
-    type OrgEntityType,
-    type OrgStructure,
-    type Team
-} from "orgplanner-common/model";
+import {type Employee, type OrgEntity, type OrgStructure, type Team} from "orgplanner-common/model";
 
 import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
 
@@ -190,6 +183,15 @@ class EditableOrgChartMaxGraph extends OrgChartMaxGraphBase implements EntityVie
 
             this.removeCells(cellsToRemove);
         });
+    }
+
+    entitiesMoved(movedEntity: OrgEntity, newParent: OrgEntity, previousParent: OrgEntity)
+    {
+        this.batchUpdate(
+            () => { this.orgChartMaxGraphAssemblyService.moveNode(movedEntity, newParent, previousParent); });
+
+        // Is this the best way to force a redraw?
+        this.refresh(this.rootCell);
     }
 
     // @ts-ignore FIXME = not used
