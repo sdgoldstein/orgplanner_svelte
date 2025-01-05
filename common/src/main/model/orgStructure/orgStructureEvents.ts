@@ -6,6 +6,7 @@ class OrgStructureChangedEvents
     public static readonly ORG_ENTITIES_ADDED: string = "ORG_ENTITIES_ADDED";
     public static readonly ORG_ENTITY_EDITED: string = "ORG_ENTITY_EDITED";
     public static readonly ORG_ENTITIES_REMOVED: string = "ORG_ENTITY_REMOVED";
+    public static readonly ORG_ENTITIES_MOVED: string = "ORG_ENTITY_MOVED";
 }
 
 interface OrgStructureChangedEvent extends PubSubEvent

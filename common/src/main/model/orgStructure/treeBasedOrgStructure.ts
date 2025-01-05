@@ -83,6 +83,7 @@ class TreeBasedOrgStructure implements OrgStructure
 
     locked: boolean = false;
 
+    //@ts-ignore - This is set in the constructor through a function call
     orgStatistics: OrgStatistics;
 
     private _employeePropertyDescriptors: Set<OrgEntityPropertyDescriptor>;
@@ -98,6 +99,8 @@ class TreeBasedOrgStructure implements OrgStructure
     private _teamsIdToTeamsMap!: Map<string, Team>;
     private _employeeIdToEmployeeMap!: Map<string, Employee>;
 
+    private _batchUpdateInProgress = false;
+
     /**
      * Create an instance of a TreeBasedOrgStructure
      */
@@ -110,8 +113,7 @@ class TreeBasedOrgStructure implements OrgStructure
         this.createRootTeam("Root Team");
         this.createOrgLeader("Org Leader", "Org Leader", new Map());
 
-        // FIXME
-        this.orgStatistics = StatsCollector.instance.collectStats(this);
+        this._resetStats();
     }
 
     public deepClone(): OrgStructure
@@ -260,6 +262,8 @@ class TreeBasedOrgStructure implements OrgStructure
         employee.managerId = manager.id;
         this.orgTree.moveNodeToParent(employee.id, manager.id);
 
+        this._resetStats();
+
         return employee;
     }
 
@@ -267,6 +271,9 @@ class TreeBasedOrgStructure implements OrgStructure
     {
         // At this point, this is pretty straightforwardo
         employee.team = team;
+
+        this._resetStats();
+
         return employee;
     }
 
@@ -278,6 +285,8 @@ class TreeBasedOrgStructure implements OrgStructure
         // that are members of this team
         const teamMoveVisitor = new TeamMoveOrgStructureVisitor(team, manager, this);
         this.partialTraverseBF(teamMoveVisitor, team.managerId);
+
+        this._resetStats();
 
         return team;
     }
@@ -315,7 +324,9 @@ class TreeBasedOrgStructure implements OrgStructure
 
     batchUpdate(updateFunction: () => void): void
     {
+        this._batchUpdateInProgress = true;
         updateFunction();
+        this._batchUpdateInProgress = false;
         this.orgStatistics = StatsCollector.instance.collectStats(this);
     }
 
@@ -457,6 +468,8 @@ class TreeBasedOrgStructure implements OrgStructure
                 // Thats all we need to do.  All employees below the manager have been removed
             }
         });
+
+        this._resetStats();
     }
 
     removeTeams(teamsToRemove: Team[]): void
@@ -494,6 +507,8 @@ class TreeBasedOrgStructure implements OrgStructure
                 }
             });
         });
+
+        this._resetStats();
     }
 
     employeePropertyIterator(): IterableIterator<OrgEntityPropertyDescriptor>
@@ -563,6 +578,8 @@ class TreeBasedOrgStructure implements OrgStructure
         this.orgTree.addNode(employeeToAdd.id, employeeToAdd, employeeToAdd.managerId);
         this.employeeIdToEmployeesMap.set(employeeToAdd.id, employeeToAdd);
 
+        this._resetStats();
+
         return employeeToAdd;
     }
 
@@ -581,6 +598,8 @@ class TreeBasedOrgStructure implements OrgStructure
         }
 
         this._teamsIdToTeamsMap.set(id, teamToAdd);
+
+        this._resetStats();
 
         return teamToAdd;
     }
@@ -636,6 +655,14 @@ class TreeBasedOrgStructure implements OrgStructure
         // FIXME - Need to remove the concept of a NO_TEAM_ID and just make Team optional on the Employee
         this._createTeamImpl(TeamConstants.NO_TEAM_ID, TeamConstants.NO_TEAM_TITLE, TreeBasedOrgStructure.ROOT_ID,
                              false, false);
+    }
+
+    private _resetStats()
+    {
+        if (!this._batchUpdateInProgress)
+        {
+            this.orgStatistics = StatsCollector.instance.collectStats(this);
+        }
     }
 }
 
