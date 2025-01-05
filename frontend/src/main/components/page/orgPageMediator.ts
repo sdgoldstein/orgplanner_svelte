@@ -24,7 +24,7 @@ import {
     OrgStructureChangedEventEntitiesRemoved
 } from "orgplanner-common/model";
 import {OrgChartEditingToolbarEvents} from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
-import {OrgChartEvents, OrgChartSelectionChangedEvent} from "orgplanner-orgchart";
+import {OrgChartEvents, OrgChartSelectionChangedEvent, DropEntityOnEntityMouseEvent} from "orgplanner-orgchart";
 
 interface OrgPageMediator
 {
@@ -51,6 +51,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgPageEvents.ADD_EMPLOYEE_AND_TEAM, this);
         PubSubManager.instance.registerListener(OrgPageEvents.EDIT_TEAM, this);
         PubSubManager.instance.registerListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.registerListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         PubSubManager.instance.registerListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
@@ -64,6 +65,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgPageEvents.ADD_EMPLOYEE_AND_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgPageEvents.EDIT_TEAM, this);
         PubSubManager.instance.unregisterListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
+        PubSubManager.instance.unregisterListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         PubSubManager.instance.unregisterListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
     }
 
@@ -177,6 +179,38 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         {
             const orgStructureChangedEvent = new SaveAsImageEvent();
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT)
+        {
+            const dropEvent = eventToHandle as DropEntityOnEntityMouseEvent;
+            const sourceEntity = dropEvent.sourceEntity;
+            const targetEntity = dropEvent.targetEntity;
+            const sourceEntityType = sourceEntity.orgEntityType;
+            const targetEntityType = targetEntity.orgEntityType;
+
+            /*
+            Scenarios:
+            1.  IC moves to new Manager
+            2.  Manager moves to new Manaager
+            3.  IC move to new Team
+            4.  Manager move to new Team
+            5.  Team moves to new Manager
+            */
+            if (sourceEntityType === OrgEntityTypes.MANAGER)
+            {
+                if (targetEntityType === OrgEntityTypes.TEAM)
+                {
+                    this._orgStructure.moveTeamToManager(targetEntity as Team, sourceEntity as Manager);
+                }
+                else
+                {
+                    this._orgStructure.moveEmployeeToManager(targetEntity as Employee, sourceEntity as Manager);
+                }
+            }
+            else if (targetEntityType === OrgEntityTypes.TEAM)
+            {
+                this._orgStructure.moveEmployeeToTeam(targetEntity as Employee, sourceEntity as Team);
+            }
         }
     }
 }

@@ -263,6 +263,13 @@ class TreeBasedOrgStructure implements OrgStructure
         return employee;
     }
 
+    moveEmployeeToTeam(employee: Employee, team: Team): Employee
+    {
+        // At this point, this is pretty straightforwardo
+        employee.team = team;
+        return employee;
+    }
+
     moveTeamToManager(team: Team, manager: Manager): Team
     {
         team.managerId = manager.id;

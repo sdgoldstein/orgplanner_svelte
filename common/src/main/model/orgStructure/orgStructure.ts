@@ -114,6 +114,15 @@ interface OrgStructure
     moveEmployeeToManager(employee: Employee, manager: Manager): Employee
 
     /**
+     * While planning the org structure, move the specified employee under the specified taem
+     *
+     * @param {Employee} employee the employee to move
+     * @param {Manager} manager the team to which the employee is being moved
+     * @returns {Employee} the employee, potentially cloned from the original, that has been moved
+     */
+    moveEmployeeToTeam(employee: Employee, manager: Team): Employee
+
+    /**
      * While planning the org structure, move the specified Team under the specified manager
      *
      * @param {Team} team the team to move

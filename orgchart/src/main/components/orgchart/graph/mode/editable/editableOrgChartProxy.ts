@@ -19,7 +19,7 @@ import {
     OrgChartEntityVisibleStateImpl,
 } from "../../../orgChartViewState";
 import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
-import {DropEntityOnEntityMouseEvent, OrgChartEvents, OrgChartSelectionChangedEvent} from "../../../OrgChartEvents";
+import {OrgChartEvents, OrgChartSelectionChangedEvent} from "../../../OrgChartEvents";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import {
     ViewToggableEntityToggledEventHandler,
@@ -69,7 +69,6 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         const pubSubManager = PubSubManager.instance;
         pubSubManager.registerListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED,
                                        this._viewToggableEntityToggledEventHandler);
-        pubSubManager.registerListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.registerListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
@@ -82,7 +81,6 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         const pubSubManager = PubSubManager.instance;
         pubSubManager.unregisterListener(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED,
                                          this._viewToggableEntityToggledEventHandler);
-        pubSubManager.unregisterListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_ADDED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITY_EDITED, this);
         pubSubManager.unregisterListener(OrgStructureChangedEvents.ORG_ENTITIES_REMOVED, this);
@@ -189,14 +187,6 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
             const orgEntityDeletedEvent = event as unknown as OrgStructureChangedEventEntitiesRemoved;
 
             this.currentGraph.entitiesDeleted(orgEntityDeletedEvent.entitiesRemoved);
-        }
-        else if (eventName === OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT)
-        {
-            const dropEvent = event as DropEntityOnEntityMouseEvent;
-            const sourceEntity = dropEvent.sourceEntity;
-            const targetEntity = dropEvent.targetEntity;
-
-            
         }
     }
 }
