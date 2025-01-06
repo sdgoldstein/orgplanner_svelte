@@ -37,6 +37,7 @@
     } from "../orgchart/modal/modal";
     import { OrgChartEditingToolbarEvents } from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
     import OrgStatisticsPanel from "../orgStatistics/OrgStatisticsPanel.svelte";
+    import { Button, Image } from "@sphyrna/uicomponents";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -58,6 +59,11 @@
     /**
      * End Set up the Org Page Mediator
      */
+
+    /**
+     * Splitter variables
+     */
+    let rightPanelSize = $state(0);
 
     /**
      * NewEdit Employee Modal Logic
@@ -274,12 +280,26 @@
      */
 </script>
 
+<!-- The first pane is positioned relative so that the button div will position fixed inside the pane (rather than the window).  See https://www.w3schools.com/css/css_positioning.asp-->
 <div class="h-screen flex">
     <Splitpanes theme="org-chart-splitter-theme">
-        <Pane>
+        <Pane class="relative">
+            <div
+                class="absolute top-3 right-0 w-8 h-8 z-50 flex justify-center"
+                style="background-color:{appDynamicColorTheme.secondary}"
+            >
+                <Button
+                    classOverride="p-1"
+                    onclick={() => {
+                        rightPanelSize = rightPanelSize === 0 ? 30 : 0;
+                    }}
+                >
+                    <Image src="pie-chart-icon-with-arrow.png" />
+                </Button>
+            </div>
             <OrgChartPanel {appDynamicColorTheme} {orgStructure} {settings} />
         </Pane>
-        <Pane snapSize={5} size={0}>
+        <Pane snapSize={8} bind:size={rightPanelSize}>
             <OrgStatisticsPanel
                 {orgStructure}
                 {settings}
@@ -386,7 +406,7 @@
         ) {
         transform: translateY(-50%);
         width: 1px;
-        height: 30px;
+        height: 50px;
     }
     :global(
             .org-chart-splitter-theme.splitpanes--vertical
