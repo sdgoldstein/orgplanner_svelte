@@ -38,6 +38,7 @@
     import { OrgChartEditingToolbarEvents } from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
     import OrgStatisticsPanel from "../orgStatistics/OrgStatisticsPanel.svelte";
     import { Button, Image } from "@sphyrna/uicomponents";
+    import OrgChartViewSettingsPanel from "../orgchart/viewsettings/OrgChartViewSettingsPanel.svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -330,7 +331,7 @@
         {/if}
         {#if rightViewSettingsPanelSize > 0}
             <Pane snapSize={8} bind:size={rightViewSettingsPanelSize}>
-                View Settings
+                <OrgChartViewSettingsPanel />
             </Pane>
         {/if}
     </Splitpanes>
