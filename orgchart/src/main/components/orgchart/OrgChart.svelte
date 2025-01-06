@@ -4,13 +4,10 @@
         type OrgEntityPropertyDescriptor,
     } from "orgplanner-common/model";
 
-    import { OrgChartMode } from "./orgChartViewState";
     import { onMount } from "svelte";
-    import type {
-        OrgChartProxy,
-        OrgChartProps,
-    } from "./orgChartProxy";
-    import OrgChartProxyFactory from "./orgChartProxyFactory";
+    import type { OrgChartProxy } from "./graph/mode/base/orgChartProxy";
+    import { OrgChartMode, type OrgChartProps } from "./orgChart";
+    import OrgChartProxyFactory from "./graph/mode/base/orgChartProxyFactory";
 
     // HTML Element for maxgraph
     let chartContainer: HTMLElement | undefined;

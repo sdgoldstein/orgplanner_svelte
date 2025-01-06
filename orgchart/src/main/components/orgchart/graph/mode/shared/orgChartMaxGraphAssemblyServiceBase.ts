@@ -9,7 +9,7 @@ import {
     type CellStateStyle
 } from "@maxgraph/core";
 import {BaseService, type ServiceConfiguration} from "@sphyrna/service-manager-ts";
-import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
+import type {OrgChartEntityVisibleState} from "@src/components/orgchart/graph/common/core/orgChartViewState";
 import {
     type Manager,
     type IndividualContributor,

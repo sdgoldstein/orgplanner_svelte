@@ -1,6 +1,6 @@
 import type {GuardedMap} from "@kameleon/tscore/jscore";
 import {Cell, GraphDataModel} from "@maxgraph/core";
-import type {OrgChartEntityVisibleState} from "@src/components/orgchart/orgChartViewState";
+import type {OrgChartEntityVisibleState} from "@src/components/orgchart/graph/common/core/orgChartViewState";
 import type {Employee, IndividualContributor, Manager, OrgEntity, Team} from "orgplanner-common/model";
 
 class OrgPlannerChartModel extends GraphDataModel

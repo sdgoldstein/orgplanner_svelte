@@ -11,7 +11,7 @@ import {Cell, CellState, type CellStateStyle, EventObject, VertexHandler} from "
 import {PubSubManager} from "orgplanner-common/jscore";
 import {type Employee, type OrgEntity, type OrgStructure, type Team} from "orgplanner-common/model";
 
-import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
+import type {OrgChartEntityVisibleState} from "../../common/core/orgChartViewState";
 
 import {
     OrgPlannerChartEmployeeVertex,

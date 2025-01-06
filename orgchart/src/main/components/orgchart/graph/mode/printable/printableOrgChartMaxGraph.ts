@@ -1,5 +1,5 @@
 import type {OrgStructure} from "orgplanner-common/model";
-import type {OrgChartEntityVisibleState} from "../../../orgChartViewState";
+import type {OrgChartEntityVisibleState} from "../../common/core/orgChartViewState";
 import type {MaxGraphTheme} from "../../common/themes/maxGraphTheme";
 import {OrgChartMaxGraphBase} from "../shared/orgChartMaxGraphBase";
 import {PrintableOrgChartMaxGraphAssemblyService} from "./printableOrgChartMaxGraphAssemblyService";

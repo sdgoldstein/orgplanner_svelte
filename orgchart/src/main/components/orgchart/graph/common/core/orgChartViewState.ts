@@ -1,13 +1,9 @@
-import {BasePubSubEvent} from "orgplanner-common/jscore";
 import {
     type OrgEntityPropertyDescriptor,
     OrgEntityPropertyDescriptorImpl,
-    type OrgEntityType,
     OrgEntityTypes
 } from "orgplanner-common/model";
-import {OrgChartEvents} from "./OrgChartEvents";
-
-type ViewToggableEntity = OrgEntityPropertyDescriptor|OrgEntityType;
+import type {ViewToggableEntity} from "../../../orgChart";
 
 // FIXME - Probably need to create another type besides OrgEntityPropertyDescriptor and add it to ViewToggaleEntity list
 class FixedOrgEntityPropertyDescriptors
@@ -16,24 +12,6 @@ class FixedOrgEntityPropertyDescriptors
         new OrgEntityPropertyDescriptorImpl("TITLE", "Title", "Employee", true);
     static readonly TEAM_TITLE: OrgEntityPropertyDescriptor =
         new OrgEntityPropertyDescriptorImpl("TEAM_TITLE", "Team Title", "Team", true);
-}
-
-class ViewToggableEntityToggledEvent extends BasePubSubEvent
-{
-    constructor(private _toggledEntity: ViewToggableEntity, private _newState: boolean)
-    {
-        super(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED);
-    }
-
-    getNewState(): boolean
-    {
-        return this._newState;
-    }
-
-    getViewToggableEntity(): ViewToggableEntity
-    {
-        return this._toggledEntity;
-    }
 }
 
 interface OrgChartEntityVisibleState
@@ -87,16 +65,5 @@ class OrgChartEntityVisibleStateImpl implements OrgChartEntityVisibleState
     }
 }
 
-enum OrgChartMode {
-    READ_ONLY = "READ_ONLY",
-    EDIT = "EDIT",
-    PRINT = "PRINT"
-}
-
 export type{OrgChartEntityVisibleState, ViewToggableEntity};
-export {
-    OrgChartEntityVisibleStateImpl,
-    OrgChartMode,
-    ViewToggableEntityToggledEvent,
-    FixedOrgEntityPropertyDescriptors
-};
+export {OrgChartEntityVisibleStateImpl, FixedOrgEntityPropertyDescriptors};

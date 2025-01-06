@@ -1,5 +1,6 @@
 import {OrgChartEvents} from "@src/components/orgchart/OrgChartEvents";
-import type {ViewToggableEntity, ViewToggableEntityToggledEvent} from "@src/components/orgchart/orgChartViewState";
+import type {ViewToggableEntity} from "@src/components/orgchart/graph/common/core/orgChartViewState";
+import type {ViewToggableEntityToggledEvent} from "@src/components/orgchart/OrgChartEvents";
 import type {PubSubEvent, PubSubListener} from "orgplanner-common/jscore";
 import type {OrgChartMaxGraph} from "../../common/core/orgChartMaxGraph";
 

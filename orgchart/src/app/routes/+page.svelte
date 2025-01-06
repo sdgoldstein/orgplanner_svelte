@@ -22,10 +22,9 @@
     import OrgChart from "@src/components/orgchart/OrgChart.svelte";
     import {
         FixedOrgEntityPropertyDescriptors,
-        OrgChartMode,
-        ViewToggableEntityToggledEvent,
         type ViewToggableEntity,
-    } from "@src/components/orgchart/orgChartViewState";
+    } from "@src/components/orgchart/graph/common/core/orgChartViewState";
+    import { ViewToggableEntityToggledEvent } from "@src/components/orgchart/OrgChartEvents";
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
         PubSubManager,
@@ -37,6 +36,7 @@
     } from "orgplanner-common/jscore";
     import { ChevronLeft, ChevronRight } from "lucide-svelte";
     import { OrgChartEvents } from "@src/components/orgchart/OrgChartEvents";
+    import { OrgChartMode } from "@src/components/orgchart/orgChart";
 
     let { data }: { data: PageData } = $props();
 

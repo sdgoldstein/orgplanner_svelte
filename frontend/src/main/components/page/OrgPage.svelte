@@ -331,7 +331,7 @@
         {/if}
         {#if rightViewSettingsPanelSize > 0}
             <Pane snapSize={8} bind:size={rightViewSettingsPanelSize}>
-                <OrgChartViewSettingsPanel />
+                <OrgChartViewSettingsPanel {settings} {appDynamicColorTheme} />
             </Pane>
         {/if}
     </Splitpanes>

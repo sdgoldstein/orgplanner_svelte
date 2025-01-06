@@ -13,7 +13,7 @@ import {
     FixedOrgEntityPropertyDescriptors,
     type OrgChartEntityVisibleState,
     type ViewToggableEntity
-} from "../../../orgChartViewState";
+} from "../../common/core/orgChartViewState";
 import {
     OrgPlannerChartModel,
     type OrgPlannerChartVertex,

@@ -1,9 +1,9 @@
-import {OrgChartEntityVisibleStateImpl} from "../../../orgChartViewState";
+import {OrgChartEntityVisibleStateImpl} from "../../common/core/orgChartViewState";
 
 import {PrintableOrgChartMaxGraph} from "./printableOrgChartMaxGraph";
 import {PrintableOrgChartMaxGraphTheme} from "./printableOrgChartMaxGraphTheme";
 
-import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
+import type {OrgChartProps, OrgChartProxy} from "../base/orgChartProxy";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 
 class PrintableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy

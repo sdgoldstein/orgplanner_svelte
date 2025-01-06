@@ -1,5 +1,6 @@
 import {BasePubSubEvent} from "orgplanner-common/jscore";
 import type {Employee, OrgEntity, Team} from "orgplanner-common/model";
+import type {ViewToggableEntity} from "./graph/common/core/orgChartViewState";
 
 class OrgChartEvents
 {
@@ -80,6 +81,24 @@ class DropEntityOnEntityMouseEvent extends BasePubSubEvent
     }
 }
 
+class ViewToggableEntityToggledEvent extends BasePubSubEvent
+{
+    constructor(private _toggledEntity: ViewToggableEntity, private _newState: boolean)
+    {
+        super(OrgChartEvents.VIEW_TOGGABLE_ENTITY_TOGGLED);
+    }
+
+    getNewState(): boolean
+    {
+        return this._newState;
+    }
+
+    getViewToggableEntity(): ViewToggableEntity
+    {
+        return this._toggledEntity;
+    }
+}
+
 /*
 class SaveAsImageEvent extends BasePubSubEvent
 {
@@ -96,5 +115,6 @@ export {
     DeleteEmployeeCellActionEvent,
     EditTeamCellActionEvent,
     DeleteTeamCellActionEvent,
-    DropEntityOnEntityMouseEvent
+    DropEntityOnEntityMouseEvent,
+    ViewToggableEntityToggledEvent
 };

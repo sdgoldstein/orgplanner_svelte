@@ -18,8 +18,8 @@ import {
 import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
 import {
     OrgChartEntityVisibleStateImpl,
-} from "../../../orgChartViewState";
-import type {OrgChartProps, OrgChartProxy} from "../../../orgChartProxy";
+} from "../../common/core/orgChartViewState";
+import type {OrgChartProps, OrgChartProxy} from "../base/orgChartProxy";
 import {OrgChartEvents, OrgChartSelectionChangedEvent} from "../../../OrgChartEvents";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import {

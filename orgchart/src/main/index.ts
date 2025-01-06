@@ -1,4 +1,5 @@
 import {PrintableOrgChartProxy} from "./components/orgchart/graph/mode/printable/printableOrgChartProxy"
+import {OrgChartMode, type OrgChartProps, type ViewToggableEntity} from "./components/orgchart/orgChart";
 import OrgChart from "./components/orgchart/OrgChart.svelte"
 import {
     DeleteEmployeeCellActionEvent,
@@ -7,9 +8,9 @@ import {
     EditEmployeeCellActionEvent,
     EditTeamCellActionEvent,
     OrgChartEvents,
-    OrgChartSelectionChangedEvent
+    OrgChartSelectionChangedEvent,
+    ViewToggableEntityToggledEvent
 } from "./components/orgchart/OrgChartEvents"
-import {OrgChartMode} from "./components/orgchart/orgChartViewState"
 
 export {
     DeleteEmployeeCellActionEvent,
@@ -21,5 +22,7 @@ export {
     OrgChartEvents,
     OrgChartMode,
     OrgChartSelectionChangedEvent,
-    PrintableOrgChartProxy
+    PrintableOrgChartProxy,
+    ViewToggableEntityToggledEvent
 };
+export type{OrgChartProps, ViewToggableEntity};

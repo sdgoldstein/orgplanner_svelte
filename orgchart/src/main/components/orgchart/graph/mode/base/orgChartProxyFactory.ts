@@ -1,7 +1,9 @@
-import {OrgChartMode} from "./orgChartViewState";
-import {EditableOrgChartProxy} from "./graph/mode/editable/editableOrgChartProxy";
-import {PrintableOrgChartProxy} from "./graph/mode/printable/printableOrgChartProxy";
-import {ReadOnlyOrgChartProxy} from "./graph/mode/readonly/readonlyOrgChartProxy";
+
+import {OrgChartMode} from "../../../orgChart";
+import {EditableOrgChartProxy} from "../editable/editableOrgChartProxy";
+import {PrintableOrgChartProxy} from "../printable/printableOrgChartProxy";
+import {ReadOnlyOrgChartProxy} from "../readonly/readonlyOrgChartProxy";
+
 import type {OrgChartProxy} from "./orgChartProxy";
 
 class OrgChartProxyFactory
