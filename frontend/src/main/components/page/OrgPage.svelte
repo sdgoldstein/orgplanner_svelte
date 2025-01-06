@@ -63,7 +63,8 @@
     /**
      * Splitter variables
      */
-    let rightPanelSize = $state(0);
+    let rightStatPanelSize = $state(0);
+    let rightViewSettingsPanelSize = $state(0);
 
     /**
      * NewEdit Employee Modal Logic
@@ -284,28 +285,54 @@
 <div class="h-screen flex">
     <Splitpanes theme="org-chart-splitter-theme">
         <Pane class="relative">
-            <div
-                class="absolute top-3 right-0 w-8 h-8 z-50 flex justify-center"
-                style="background-color:{appDynamicColorTheme.secondary}"
-            >
-                <Button
-                    classOverride="p-1"
-                    onclick={() => {
-                        rightPanelSize = rightPanelSize === 0 ? 30 : 0;
-                    }}
+            <div class="absolute top-3 right-0 z-50 flex flex-col gap-y-0.5">
+                <div
+                    class="flex justify-center rounded-l-md w-8 h-8"
+                    style="background-color:{appDynamicColorTheme.secondary}"
                 >
-                    <Image src="pie-chart-icon-with-arrow.png" />
-                </Button>
+                    <Button
+                        classOverride="p-1"
+                        onclick={() => {
+                            rightStatPanelSize =
+                                rightStatPanelSize === 0 ? 30 : 0;
+                            rightViewSettingsPanelSize = 0;
+                        }}
+                    >
+                        <Image src="pie-chart-icon-with-arrow.png" />
+                    </Button>
+                </div>
+                <div
+                    class="flex justify-center rounded-l-md w-8 h-8"
+                    style="background-color:{appDynamicColorTheme.secondary}"
+                >
+                    <Button
+                        classOverride="p-1"
+                        onclick={() => {
+                            rightViewSettingsPanelSize =
+                                rightViewSettingsPanelSize === 0 ? 30 : 0;
+                            rightStatPanelSize = 0;
+                        }}
+                    >
+                        <Image src="pie-chart-icon-with-arrow.png" />
+                    </Button>
+                </div>
             </div>
             <OrgChartPanel {appDynamicColorTheme} {orgStructure} {settings} />
         </Pane>
-        <Pane snapSize={8} bind:size={rightPanelSize}>
-            <OrgStatisticsPanel
-                {orgStructure}
-                {settings}
-                {appDynamicColorTheme}
-            />
-        </Pane>
+        {#if rightStatPanelSize > 0}
+            <Pane snapSize={8} bind:size={rightStatPanelSize}>
+                <OrgStatisticsPanel
+                    {orgStructure}
+                    {settings}
+                    {appDynamicColorTheme}
+                />
+            </Pane>
+        {/if}
+        {#if rightViewSettingsPanelSize > 0}
+            <Pane snapSize={8} bind:size={rightViewSettingsPanelSize}>
+                View Settings
+            </Pane>
+        {/if}
     </Splitpanes>
 </div>
 
