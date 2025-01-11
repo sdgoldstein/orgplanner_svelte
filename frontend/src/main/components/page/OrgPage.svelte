@@ -39,6 +39,14 @@
     import OrgStatisticsPanel from "../orgStatistics/OrgStatisticsPanel.svelte";
     import { Button, Image } from "@sphyrna/uicomponents";
     import OrgChartViewSettingsPanel from "../orgchart/viewsettings/OrgChartViewSettingsPanel.svelte";
+    import {
+        ChartArea,
+        ChartColumn,
+        ChartPie,
+        ChevronLeft,
+        ChevronRight,
+        Eye,
+    } from "lucide-svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -62,10 +70,17 @@
      */
 
     /**
-     * Splitter variables
+     * Splitter variables/logic
      */
     let rightStatPanelSize = $state(0);
     let rightViewSettingsPanelSize = $state(0);
+
+    function isRightSplitterOpen() {
+        return rightStatPanelSize !== 0 || rightViewSettingsPanelSize !== 0;
+    }
+    /**
+     * End variables/logic
+     */
 
     /**
      * NewEdit Employee Modal Logic
@@ -288,33 +303,70 @@
         <Pane class="relative">
             <div class="absolute top-3 right-0 z-50 flex flex-col gap-y-0.5">
                 <div
-                    class="flex justify-center rounded-l-md w-8 h-8"
+                    class="flex justify-center rounded-l-md w-10 h-8 items-center"
                     style="background-color:{appDynamicColorTheme.secondary}"
                 >
                     <Button
-                        classOverride="p-1"
                         onclick={() => {
                             rightStatPanelSize =
                                 rightStatPanelSize === 0 ? 30 : 0;
                             rightViewSettingsPanelSize = 0;
                         }}
                     >
-                        <Image src="pie-chart-icon-with-arrow.png" />
+                        <div class="flex flex-row items-center">
+                            {#if !isRightSplitterOpen()}
+                                <ChevronLeft
+                                    fill={appDynamicColorTheme.textOnPrimary}
+                                    class="w-5 h-5 -ml-1.5 -mr-1"
+                                    size="5"
+                                />
+                            {/if}
+                            <ChartColumn
+                                strokeWidth=".15rem"
+                                color={appDynamicColorTheme.textOnPrimary}
+                                class="w-5 h-5"
+                            />
+                            {#if rightStatPanelSize > 0}
+                                <ChevronRight
+                                    fill={appDynamicColorTheme.textOnPrimary}
+                                    class="w-5 h-5 -ml-1 -mr-1.5"
+                                    size="5"
+                                />
+                            {/if}
+                        </div>
                     </Button>
                 </div>
                 <div
-                    class="flex justify-center rounded-l-md w-8 h-8"
+                    class="flex justify-center rounded-l-md w-10 h-8 items-center"
                     style="background-color:{appDynamicColorTheme.secondary}"
                 >
                     <Button
-                        classOverride="p-1"
                         onclick={() => {
                             rightViewSettingsPanelSize =
                                 rightViewSettingsPanelSize === 0 ? 30 : 0;
                             rightStatPanelSize = 0;
                         }}
                     >
-                        <Image src="pie-chart-icon-with-arrow.png" />
+                        <div class="flex flex-row items-center">
+                            {#if !isRightSplitterOpen()}
+                                <ChevronLeft
+                                    fill={appDynamicColorTheme.textOnPrimary}
+                                    class="w-5 h-5 -ml-1.5 -mr-1"
+                                />
+                            {/if}
+                            <Eye
+                                strokeWidth=".15rem"
+                                color={appDynamicColorTheme.textOnPrimary}
+                                class="w-5 h-5"
+                            />
+                            {#if rightViewSettingsPanelSize > 0}
+                                <ChevronRight
+                                    fill={appDynamicColorTheme.textOnPrimary}
+                                    class="w-5 h-5 -ml-1 -mr-1.5"
+                                    size="5"
+                                />
+                            {/if}
+                        </div>
                     </Button>
                 </div>
             </div>
