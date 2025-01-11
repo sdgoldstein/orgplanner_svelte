@@ -297,11 +297,10 @@
      */
 </script>
 
-<!-- The first pane is positioned relative so that the button div will position fixed inside the pane (rather than the window).  See https://www.w3schools.com/css/css_positioning.asp-->
-<div class="h-screen flex">
+<div class="flex">
     <Splitpanes theme="org-chart-splitter-theme">
-        <Pane class="relative">
-            <div class="absolute top-3 right-0 z-50 flex flex-col gap-y-0.5">
+        <Pane>
+            <div class="fixed right-0 z-50 flex flex-col mt-1 gap-y-0.5">
                 <div
                     class="flex justify-center rounded-l-md w-10 h-8 items-center"
                     style="background-color:{appDynamicColorTheme.secondary}"

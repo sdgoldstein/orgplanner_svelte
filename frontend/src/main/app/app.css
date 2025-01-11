@@ -16,4 +16,5 @@ body {
     @apply bg-surface;
     @apply min-h-screen;
     @apply font-sans;
+    @apply overscroll-none;
 }

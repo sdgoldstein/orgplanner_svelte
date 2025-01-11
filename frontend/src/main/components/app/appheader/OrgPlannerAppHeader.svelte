@@ -24,10 +24,12 @@
   );
 </script>
 
-<header>
+<header class="sticky top-0 left-0 right-0 z-50 w-full">
   <NavBar {colorVariant} {dynamicColorTheme}>
     <NavBarBrand {colorVariant} {dynamicColorTheme}>
       <NavBarBrandLogo
+        id="org_planner_logo_id"
+        testid="org_planner_logo_testid"
         {colorVariant}
         {dynamicColorTheme}
         src="organization-chart-icon.png"
