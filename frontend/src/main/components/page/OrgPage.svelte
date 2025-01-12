@@ -37,16 +37,9 @@
     } from "../orgchart/modal/modal";
     import { OrgChartEditingToolbarEvents } from "../orgchart/toolbar/OrgChartEditingToolbar.svelte";
     import OrgStatisticsPanel from "../orgStatistics/OrgStatisticsPanel.svelte";
-    import { Button, Image } from "@sphyrna/uicomponents";
+    import { Button } from "@sphyrna/uicomponents";
     import OrgChartViewSettingsPanel from "../orgchart/viewsettings/OrgChartViewSettingsPanel.svelte";
-    import {
-        ChartArea,
-        ChartColumn,
-        ChartPie,
-        ChevronLeft,
-        ChevronRight,
-        Eye,
-    } from "lucide-svelte";
+    import { ChartColumn, ChevronLeft, ChevronRight, Eye } from "lucide-svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -74,6 +67,9 @@
      */
     let rightStatPanelSize = $state(0);
     let rightViewSettingsPanelSize = $state(0);
+    let rightPanelSize = $derived(
+        rightStatPanelSize + rightViewSettingsPanelSize,
+    );
 
     function isRightSplitterOpen() {
         return rightStatPanelSize !== 0 || rightViewSettingsPanelSize !== 0;
@@ -298,9 +294,12 @@
 </script>
 
 <div class="h-screen flex">
-    <Splitpanes theme="org-chart-splitter-theme">
+    <Splitpanes theme="org-chart-splitter-theme" style="transition:none">
         <Pane>
-            <div class="fixed right-0 z-50 flex flex-col mt-1 gap-y-0.5">
+            <div
+                class="fixed z-50 flex flex-col mt-1 gap-y-0.5"
+                style={`right: ${rightPanelSize}%`}
+            >
                 <div
                     class="flex justify-center rounded-l-md w-10 h-8 items-center"
                     style="background-color:{appDynamicColorTheme.secondary}"
@@ -317,6 +316,7 @@
                                 <ChevronLeft
                                     fill={appDynamicColorTheme.textOnPrimary}
                                     class="w-5 h-5 -ml-1.5 -mr-1"
+                                    strokeWidth="0"
                                     size="5"
                                 />
                             {/if}
@@ -329,6 +329,7 @@
                                 <ChevronRight
                                     fill={appDynamicColorTheme.textOnPrimary}
                                     class="w-5 h-5 -ml-1 -mr-1.5"
+                                    strokeWidth="0"
                                     size="5"
                                 />
                             {/if}
@@ -351,6 +352,8 @@
                                 <ChevronLeft
                                     fill={appDynamicColorTheme.textOnPrimary}
                                     class="w-5 h-5 -ml-1.5 -mr-1"
+                                    strokeWidth="0"
+                                    size="5"
                                 />
                             {/if}
                             <Eye
@@ -362,6 +365,7 @@
                                 <ChevronRight
                                     fill={appDynamicColorTheme.textOnPrimary}
                                     class="w-5 h-5 -ml-1 -mr-1.5"
+                                    strokeWidth="0"
                                     size="5"
                                 />
                             {/if}
@@ -419,6 +423,13 @@
 />
 
 <style>
+    :global(.splitpanes--vertical) :global(.splitpanes__pane) {
+        transition: width 0s ease-out !important;
+    }
+    :global(.splitpanes--vertical) > :global(.splitpanes__pane) {
+        transition: width 0s ease-out !important;
+    }
+
     :global(.org-chart-splitter-theme) {
         background-color: white;
     }
