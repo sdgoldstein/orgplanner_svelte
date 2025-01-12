@@ -362,13 +362,16 @@ abstract class OrgChartMaxGraphBase extends Graph implements OrgChartMaxGraph, P
                             `<div data-testid="chart_cell_text_title_${employee.id}_testid">${employee.title}</div>`;
                     }
 
-                    for (const nextProperty of employee.propertyIterator())
+                    for (const nextProperty of employee.propertyDescriptorIterator())
                     {
-                        if (this.visibilityState.isVisible(nextProperty[0]) && nextProperty[0].enabled)
+                        if (this.visibilityState.isVisible(nextProperty) && nextProperty.enabled)
                         {
-                            let nextPropertyToDisplay = (nextProperty[1].length != 0) ? nextProperty[1] : "(unknown)";
-
-                            valueToReturn += `<div data-testid="chart_cell_text_${nextProperty[0].name}-${
+                            let nextPropertyToDisplay = employee.getPropertyValue(nextProperty.name);
+                            if (nextPropertyToDisplay.length === 0)
+                            {
+                                nextPropertyToDisplay = "(unknown)";
+                            }
+                            valueToReturn += `<div data-testid="chart_cell_text_${nextProperty.name}-${
                                 employee.id}_testid">${nextPropertyToDisplay}</div>`;
                         }
                     }

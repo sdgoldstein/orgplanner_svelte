@@ -69,9 +69,11 @@ interface OrgEntityPropertyCarrier
 {
     getPropertyValue(propertyName: string): string;
     setPropertyValue(propertyName: string, value: string): void;
-    propertyIterator(): IterableIterator<[ OrgEntityPropertyDescriptor, string ]>;
+    propertyDescriptorIterator(filter?: (propertyDescriptor: OrgEntityPropertyDescriptor) => boolean):
+        IterableIterator<OrgEntityPropertyDescriptor>;
 }
-type OrgEntityPropertyBag = Map<OrgEntityPropertyDescriptor, string>;
+
+type OrgEntityPropertyBag = Map<string, string>;
 const EMPTY_PROPERTY_BAG: OrgEntityPropertyBag = new Map();
 
 /**
@@ -80,8 +82,7 @@ const EMPTY_PROPERTY_BAG: OrgEntityPropertyBag = new Map();
  */
 class PropertyCarrierHelper implements OrgEntityPropertyCarrier
 {
-    private readonly _properties: Map<OrgEntityPropertyDescriptor, string> =
-        new Map<OrgEntityPropertyDescriptor, string>();
+    private readonly _properties: Map<string, string> = new Map<string, string>();
     private readonly _propertyDescriptors: Map<string, OrgEntityPropertyDescriptor> =
         new Map<string, OrgEntityPropertyDescriptor>();
 
@@ -90,15 +91,13 @@ class PropertyCarrierHelper implements OrgEntityPropertyCarrier
         for (const nextPropertyDescriptor of propertyDescriptors)
         {
             this._propertyDescriptors.set(nextPropertyDescriptor.name, nextPropertyDescriptor);
-            this._properties.set(nextPropertyDescriptor, nextPropertyDescriptor.defaultValue);
+            this._properties.set(nextPropertyDescriptor.name, nextPropertyDescriptor.defaultValue);
         }
 
         for (const nextProperty of properties)
         {
-            this.setPropertyValue(nextProperty[0].name, nextProperty[1]);
+            this.setPropertyValue(nextProperty[0], nextProperty[1]);
         }
-
-        // this._propertyDescriptors = propertyDescriptors;
     }
 
     getPropertyValue(propertyName: string): string
@@ -109,7 +108,7 @@ class PropertyCarrierHelper implements OrgEntityPropertyCarrier
             throw new Error("Property does not exist: " + propertyName);
         }
 
-        const valueToReturn = this._properties.get(propertyDescriptor);
+        const valueToReturn = this._properties.get(propertyName);
         if (valueToReturn === undefined)
         {
             throw new Error("Unepxecged condition:  Property value does not exist for property: " + propertyName);
@@ -125,12 +124,22 @@ class PropertyCarrierHelper implements OrgEntityPropertyCarrier
         {
             throw new Error("Property does not exist: " + propertyName);
         }
-        this._properties.set(propertyDescriptor, value);
+        this._properties.set(propertyName, value);
     }
 
-    propertyIterator(): IterableIterator<[ OrgEntityPropertyDescriptor, string ]>
+    propertyDescriptorIterator(filter?: (propertyDescriptor: OrgEntityPropertyDescriptor) => boolean):
+        IterableIterator<OrgEntityPropertyDescriptor>
     {
-        return this._properties.entries();
+        let valueToReturn: IterableIterator<OrgEntityPropertyDescriptor>;
+        if (filter !== undefined)
+        {
+            valueToReturn = Array.from(this._propertyDescriptors.values()).filter(filter)[Symbol.iterator]();
+        }
+        else
+        {
+            valueToReturn = this._propertyDescriptors.values();
+        }
+        return valueToReturn;
     }
 }
 
@@ -140,14 +149,17 @@ interface OrgEntityPropertyDescriptor
     title: string;
     defaultValue: string;
     defaultVisibility: boolean;
+    defaultDisplayOrder: number;
     enabled: boolean;
+    canDisable: boolean;
 }
 
 @RegisterSerializable("OrgEntityPropertyDescriptor", 1)
 class OrgEntityPropertyDescriptorImpl implements OrgEntityPropertyDescriptor
 {
     constructor(public name: string, public title: string, public defaultValue: string,
-                public defaultVisibility: boolean, public enabled: boolean)
+                public defaultVisibility: boolean, public defaultDisplayOrder: number, public enabled: boolean,
+                public canDisable: boolean)
     {
     };
 }
@@ -172,7 +184,9 @@ class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEn
         valueToReturn["title"] = serializableObject.title;
         valueToReturn["defaultValue"] = serializableObject.defaultValue;
         valueToReturn["defaultVisibility"] = serializableObject.defaultVisibility.toString();
+        valueToReturn["defaultDisplayOrder"] = serializableObject.defaultVisibility.toString();
         valueToReturn["enabled"] = serializableObject.enabled.toString();
+        valueToReturn["canDisable"] = serializableObject.canDisable.toString();
 
         return valueToReturn;
     }
@@ -180,9 +194,9 @@ class OrgEntityPropertyDescriptorImplSerializer extends BaseJSONSerializer<OrgEn
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgEntityPropertyDescriptor
     {
 
-        return new OrgEntityPropertyDescriptorImpl(dataObject.name, dataObject.title, dataObject.defaultValue,
-                                                   (dataObject.defaultVisibility === "true"),
-                                                   (dataObject.enabled === "true"));
+        return new OrgEntityPropertyDescriptorImpl(
+            dataObject.name, dataObject.title, dataObject.defaultValue, (dataObject.defaultVisibility === "true"),
+            dataObject.defaultDisplayOrder, (dataObject.enabled === "true"), (dataObject.canDelete === "true"));
     }
 }
 

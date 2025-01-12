@@ -163,8 +163,8 @@ class OrgTreeGenerator
         const workCity = this.randomChoice<string>([ "San Francisco, CA", "Austin, TX", "New York, NY" ]);
 
         const properties = new Map([
-            [ EmployeeReservedPropertyDescriptors.PHONE, mobilePhone ],
-            [ EmployeeReservedPropertyDescriptors.LOCATION, workCity ]
+            [ EmployeeReservedPropertyDescriptors.PHONE.name, mobilePhone ],
+            [ EmployeeReservedPropertyDescriptors.LOCATION.name, workCity ]
         ]);
 
         const employeeAdded = newOrgStructure.importEmployee(id, name, title, managerId, teamId, isManager, properties);

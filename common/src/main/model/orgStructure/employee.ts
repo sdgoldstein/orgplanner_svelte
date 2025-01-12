@@ -24,16 +24,16 @@ class EmployeeReservedPropertyDescriptors
     private static readonly NAME_TO_DESCRIPTOR_MAP: Map<string, OrgEntityPropertyDescriptor> =
         new Map<string, OrgEntityPropertyDescriptor>();
 
-    static readonly PHONE: OrgEntityPropertyDescriptor =
-        new OrgEntityPropertyDescriptorImpl("PHONE_PROPERTY_DESCRIPTOR", "Phone", "999-999-9999", false, true);
+    static readonly LOCATION: OrgEntityPropertyDescriptor = new OrgEntityPropertyDescriptorImpl(
+        "LOCATION_PROPERTY_DESCRIPTOR", "Location", "San Francisco", true, 3, true, true);
 
-    static readonly LOCATION: OrgEntityPropertyDescriptor =
-        new OrgEntityPropertyDescriptorImpl("LOCATION_PROPERTY_DESCRIPTOR", "Location", "San Francisco", true, true);
+    static readonly PHONE: OrgEntityPropertyDescriptor =
+        new OrgEntityPropertyDescriptorImpl("PHONE_PROPERTY_DESCRIPTOR", "Phone", "999-999-9999", false, 4, true, true);
 
     static
     {
-        EmployeeReservedPropertyDescriptors.NAME_TO_DESCRIPTOR_MAP.set(this.PHONE.name, this.PHONE);
         EmployeeReservedPropertyDescriptors.NAME_TO_DESCRIPTOR_MAP.set(this.LOCATION.name, this.LOCATION);
+        EmployeeReservedPropertyDescriptors.NAME_TO_DESCRIPTOR_MAP.set(this.PHONE.name, this.PHONE);
     }
 
     static getPropertyDescriptorByName(name: string): OrgEntityPropertyDescriptor

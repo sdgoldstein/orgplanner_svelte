@@ -16,8 +16,9 @@ class SimpleOrgTemplate implements OrgTemplate
     {
         const rootTeamName = orgTitle ?? "Your Organization";
         orgStructure.createRootTeam(rootTeamName);
-        orgStructure.createOrgLeader("First Last", "Your Job Title",
-                                     new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
+        orgStructure.createOrgLeader(
+            "First Last", "Your Job Title",
+            new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION.name, "Your Location" ] ]));
     }
 }
 
@@ -29,7 +30,7 @@ class SmallOrgTemplate implements OrgTemplate
         orgStructure.createRootTeam(rootTeamName);
         const orgLeader = orgStructure.createOrgLeader(
             "First Last", "Vice President",
-            new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION, "Your Location" ] ]));
+            new Map([ [ EmployeeReservedPropertyDescriptors.LOCATION.name, "Your Location" ] ]));
         orgStructure.createEmployee("Frank Smith", "Senior Manager", orgLeader.id, "NO_TEAM_ID", true,
                                     EMPTY_PROPERTY_BAG);
         orgStructure.createEmployee("Bilbo Baggins", "Engineer", orgLeader.id, "NO_TEAM_ID", false, EMPTY_PROPERTY_BAG);

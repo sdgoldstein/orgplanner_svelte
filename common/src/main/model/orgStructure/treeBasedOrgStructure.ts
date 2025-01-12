@@ -726,7 +726,7 @@ class TreeBasedOrgStructureSerializer extends BaseJSONSerializer<OrgStructure> i
                 const properties = new Map();
                 for (const nextProperty of nextEmployee.properties)
                 {
-                    properties.set(propertyDescriptorMap.get(nextProperty.name), nextProperty.value);
+                    properties.set(nextProperty.name, nextProperty.value);
                 }
 
                 orgStructureToReturn.importEmployee(nextEmployee.id, nextEmployee.name, nextEmployee.title,
