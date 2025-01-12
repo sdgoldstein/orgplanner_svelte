@@ -297,7 +297,7 @@
      */
 </script>
 
-<div class="flex">
+<div class="h-screen flex">
     <Splitpanes theme="org-chart-splitter-theme">
         <Pane>
             <div class="fixed right-0 z-50 flex flex-col mt-1 gap-y-0.5">
