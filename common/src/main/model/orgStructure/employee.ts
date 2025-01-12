@@ -111,9 +111,9 @@ abstract class BasePerson implements Person
         this._propertyHelper.setPropertyValue(propertyName, value);
     }
 
-    propertyIterator(): IterableIterator<[ OrgEntityPropertyDescriptor, string ]>
+    propertyDescriptorIterator(): IterableIterator<OrgEntityPropertyDescriptor>
     {
-        return this._propertyHelper.propertyIterator();
+        return this._propertyHelper.propertyDescriptorIterator();
     }
 
     canDelete(): boolean
@@ -227,12 +227,13 @@ class BasePersonSerializer extends BaseJSONSerializer<Person> implements Seriali
         // FIXME - This is SO BAD.  Copying from iterable because I don't know what else to do at this point
         let json = "[";
 
-        const serializableIterator = serializableObject.propertyIterator();
+        const serializableIterator = serializableObject.propertyDescriptorIterator();
         let nextSerializable = serializableIterator.next();
         while (!nextSerializable.done)
         {
-            json += `{"name":"${nextSerializable.value[0].name}",\n`;
-            json += `"value":"${nextSerializable.value[1]}"}\n`;
+            const nextPropertyName = nextSerializable.value.name;
+            json += `{"name":"${nextPropertyName}",\n`;
+            json += `"value":"${serializableObject.getPropertyValue(nextPropertyName)}"}\n`;
 
             nextSerializable = serializableIterator.next();
 

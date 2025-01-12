@@ -69,8 +69,7 @@ interface OrgEntityPropertyCarrier
 {
     getPropertyValue(propertyName: string): string;
     setPropertyValue(propertyName: string, value: string): void;
-    propertyDescriptorIterator(filter?: (propertyDescriptor: OrgEntityPropertyDescriptor) => boolean):
-        IterableIterator<OrgEntityPropertyDescriptor>;
+    propertyDescriptorIterator(): IterableIterator<OrgEntityPropertyDescriptor>;
 }
 
 type OrgEntityPropertyBag = Map<string, string>;
@@ -127,19 +126,9 @@ class PropertyCarrierHelper implements OrgEntityPropertyCarrier
         this._properties.set(propertyName, value);
     }
 
-    propertyDescriptorIterator(filter?: (propertyDescriptor: OrgEntityPropertyDescriptor) => boolean):
-        IterableIterator<OrgEntityPropertyDescriptor>
+    propertyDescriptorIterator(): IterableIterator<OrgEntityPropertyDescriptor>
     {
-        let valueToReturn: IterableIterator<OrgEntityPropertyDescriptor>;
-        if (filter !== undefined)
-        {
-            valueToReturn = Array.from(this._propertyDescriptors.values()).filter(filter)[Symbol.iterator]();
-        }
-        else
-        {
-            valueToReturn = this._propertyDescriptors.values();
-        }
-        return valueToReturn;
+        return this._propertyDescriptors.values();
     }
 }
 
