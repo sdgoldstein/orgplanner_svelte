@@ -15,6 +15,7 @@
     }
   },
   "scripts": {
+    "clean": "",
     "build": "tsc --project tsconfig.json",
     "generateOrgs": "npx tsx src/tools/typescript/runGenerateOrgTree.ts ./build/generated_orgs",
     "test": "vitest run"

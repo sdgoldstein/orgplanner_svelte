@@ -6,10 +6,15 @@
   "workspaces": [
     "common",
     "orgchart",
-    "frontend",
-    "backend"
+    "frontend"
   ],
   "overrides": {
     "svelte": "5.1.13"
+  },
+  "scripts": {
+    "clean": "npm run clean --workspace",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "lint": "npm run lint --workspaces"
   }
 }
