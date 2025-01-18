@@ -40,6 +40,7 @@
     import { Button } from "@sphyrna/uicomponents";
     import OrgChartViewSettingsPanel from "../orgchart/viewsettings/OrgChartViewSettingsPanel.svelte";
     import { ChartColumn, ChevronLeft, ChevronRight, Eye } from "lucide-svelte";
+    import { OrgPlannerAppEvents } from "../app/orgPlannerAppEvents";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
