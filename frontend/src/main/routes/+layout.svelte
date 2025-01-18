@@ -3,6 +3,7 @@
     import {
         ChangeSettingsActionEvent,
         CreateNewOrgEvent,
+        ImportPlanEvent,
         OrgPlannerAppEvents,
         SettingsChangedEvent,
     } from "@src/components/app/orgPlannerAppEvents";
@@ -11,10 +12,18 @@
     import OrgPlannerAppHeader from "@src/components/app/appheader/OrgPlannerAppHeader.svelte";
     import PageHeader from "@src/components/page/header/PageHeader.svelte";
     import { getAppDynamicColorTheme } from "@src/components/theme";
-    import type { OrgPlannerManager } from "@src/model/orgPlanner";
+    import type { OrgPlanner, OrgPlannerManager } from "@src/model/orgPlanner";
     import { OrgPlannerAppServicesConstants } from "@src/services/orgPlannerAppServicesConstants";
-    import { PubSubManager } from "orgplanner-common/jscore";
-    import type { PubSubEvent, PubSubListener } from "orgplanner-common/jscore";
+    import {
+        PubSubManager,
+        SERIALIZATION_SERVICE_NAME,
+        SerializationFormat,
+    } from "orgplanner-common/jscore";
+    import type {
+        PubSubEvent,
+        PubSubListener,
+        SerializationService,
+    } from "orgplanner-common/jscore";
     import type { Snippet } from "svelte";
     import type { LayoutData } from "./$types";
     import { invalidateAll } from "$app/navigation";
@@ -39,6 +48,29 @@
 
             const orgPlanner =
                 orgPlannerManager.createOrgPlannerWithTitle(orgName);
+            orgPlannerManager.storeOrgPlanner(orgPlanner);
+            invalidateAll();
+        },
+    });
+
+    pubSubManager.registerListener(OrgPlannerAppEvents.IMPORT_PLAN, {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            const importOrgEvent = eventToHandle as ImportPlanEvent;
+
+            const orgPlannerManager =
+                ServiceManager.getService<OrgPlannerManager>(
+                    OrgPlannerAppServicesConstants.ORG_PLANNER_MANAGER_SERVICE,
+                ) as OrgPlannerManager;
+            const serializationSevice: SerializationService =
+                ServiceManager.getService<SerializationService>(
+                    SERIALIZATION_SERVICE_NAME,
+                );
+
+            const orgPlanner = serializationSevice.deserialize<OrgPlanner>(
+                importOrgEvent.jsonToImport,
+                SerializationFormat.JSON,
+            );
+
             orgPlannerManager.storeOrgPlanner(orgPlanner);
             invalidateAll();
         },

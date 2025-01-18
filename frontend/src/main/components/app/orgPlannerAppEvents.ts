@@ -17,7 +17,7 @@ class OrgPlannerAppEvents
     // public static readonly DELETE_EMPLOYEE_FROM_PLAN: string = "DELETE_EMPLOYEE_FROM_PLAN";
     // public static readonly RESET_PLAN: string = "RESET_PLAN";
     public static readonly EXPORT_PLAN: string = "EXPORT_PLAN";
-    // public static readonly IMPORT_PLAN: string = "IMPORT_PLAN";
+    public static readonly IMPORT_PLAN: string = "IMPORT_PLAN";
     // public static readonly SHOW_ADD_EMPLOYEE_MODAL: string = "SHOW_ADD_EMPLOYEE_MODAL";
     // public static readonly EMPLOYEE_EDITED: string = "EMPLOYEE_EDITED";
     // public static readonly SHOW_EDIT_EMPLOYEE_MODAL: string = "SHOW_EDIT_EMPLOYEE_MODAL";
@@ -70,4 +70,27 @@ class ExportPlanEvent extends BasePubSubEvent
     }
 }
 
-export {OrgPlannerAppEvents, CreateNewOrgEvent, ChangeSettingsActionEvent, SettingsChangedEvent, ExportPlanEvent};
+class ImportPlanEvent extends BasePubSubEvent
+{
+    private readonly _jsonToImport: string;
+
+    constructor(jsonToImport: string)
+    {
+        super(OrgPlannerAppEvents.IMPORT_PLAN);
+        this._jsonToImport = jsonToImport;
+    }
+
+    get jsonToImport(): string
+    {
+        return this._jsonToImport;
+    }
+}
+
+export {
+    OrgPlannerAppEvents,
+    CreateNewOrgEvent,
+    ChangeSettingsActionEvent,
+    SettingsChangedEvent,
+    ExportPlanEvent,
+    ImportPlanEvent
+};

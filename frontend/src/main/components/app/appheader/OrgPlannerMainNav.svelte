@@ -33,7 +33,13 @@
             newEditOrgModalOpen = true;
         }}>New</NavMenuItem
     >
-    <NavMenuItem href="/" {colorVariant} {dynamicColorTheme}>Import</NavMenuItem
+    <NavMenuItem
+        testid="import_org_main_nav_item_testid"
+        {colorVariant}
+        {dynamicColorTheme}
+        onclick={() => {
+            importOrgModalOpen = true;
+        }}>Import</NavMenuItem
     >
     <NavMenuItem
         testid="export_org_main_nav_item_testid"
