@@ -185,6 +185,7 @@ export {
     OrgEntityColorThemes,
     DefaultOrgEntityColorThemeImpl,
     DefaultOrgEntityColorThemeImplSerializer,
-    OrgEntityTypeColorAssignmentImplSerializer
+    OrgEntityTypeColorAssignmentImplSerializer,
+    OrgEntityTypeColorAssignmentImpl
 };
 export type{OrgEntityColorTheme, ColorHex};

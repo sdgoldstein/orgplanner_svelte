@@ -18,7 +18,13 @@
         tempgetDynamicColorTheme,
     } from "@src/components/theme";
     import type { BaseComponentProps } from "@src/components/ui/uicomponents";
-    import { OrgEntityColorThemes } from "orgplanner-common/model";
+    import {
+        DefaultOrgEntityColorThemeImpl,
+        OrgEntityColorThemes,
+        OrgEntityTypeColorAssignmentImpl,
+        OrgEntityTypes,
+        type ColorHex,
+    } from "orgplanner-common/model";
     import { ChangeSettingsActionEvent } from "@src/components/app/orgPlannerAppEvents";
     import { PubSubManager } from "orgplanner-common/jscore";
     import ColorPicker from "svelte-awesome-color-picker";
@@ -41,9 +47,52 @@
             throw new Error("Could not obtain form elements");
         }
 
-        const changedColorScheme = OrgEntityColorThemes.getColorThemeByName(
-            colorThemeElement.valueOf() as string,
-        );
+        let changedColorScheme;
+        if (colorThemeElement == "custom_color_theme_option") {
+            const managerColor: FormDataEntryValue | null = formData.get(
+                "custom_color_manager_option_name",
+            );
+            const teamColor: FormDataEntryValue | null = formData.get(
+                "custom_color_team_option_name",
+            );
+            const icColor: FormDataEntryValue | null = formData.get(
+                "custom_color_ic_option_name",
+            );
+
+            if (!managerColor || !teamColor || !icColor) {
+                throw new Error("Custom Color Pickers not found");
+            }
+
+            changedColorScheme = new DefaultOrgEntityColorThemeImpl(
+                "Custom",
+                "Custom",
+            );
+            changedColorScheme.setColorAssignment(
+                OrgEntityTypes.MANAGER,
+                new OrgEntityTypeColorAssignmentImpl(
+                    managerColor as ColorHex,
+                    "#FFFFFF",
+                ),
+            );
+            changedColorScheme.setColorAssignment(
+                OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                new OrgEntityTypeColorAssignmentImpl(
+                    icColor as ColorHex,
+                    "#FFFFFF",
+                ),
+            );
+            changedColorScheme.setColorAssignment(
+                OrgEntityTypes.TEAM,
+                new OrgEntityTypeColorAssignmentImpl(
+                    teamColor as ColorHex,
+                    "#FFFFFF",
+                ),
+            );
+        } else {
+            changedColorScheme = OrgEntityColorThemes.getColorThemeByName(
+                colorThemeElement.valueOf() as string,
+            );
+        }
         const changedOrgPlannerSettings = new OrgPlannerSettingsDefaultImpl(
             orgPlannerSettings.employeePropertyDescriptors,
             changedColorScheme,
@@ -70,7 +119,7 @@
 
     let selectedTheme = $state(orgPlannerSettings.colorTheme.name);
     let showCustomThemeInput = $derived(
-        selectedTheme == "color_theme_option" ? true : false,
+        selectedTheme == "custom_color_theme_option" ? true : false,
     );
 </script>
 
@@ -108,8 +157,8 @@
                 {/each}
                 <RadioGroupOption
                     id={`custom_color_option_id`}
-                    value="color_theme_option"
-                    group="color_theme_option_name"
+                    value="custom_color_theme_option"
+                    group="custom_color_theme_option_name"
                     {colorVariant}
                     {dynamicColorTheme}>Custom</RadioGroupOption
                 >
