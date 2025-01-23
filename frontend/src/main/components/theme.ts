@@ -37,12 +37,11 @@ function getAppDynamicColorTheme(orgEntityColorTheme: OrgEntityColorTheme): AppD
 {
     // Map the manager color to the primary color and IC to secondary
     const managerColorAssignment = orgEntityColorTheme.getColorAssignment(OrgEntityTypes.MANAGER);
-    const icColorAssignment = orgEntityColorTheme.getColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR);
     return {
         primary : managerColorAssignment.primary,
         textOnPrimary : managerColorAssignment.textOnPrimary,
-        secondary : icColorAssignment.primary,
-        textOnSecondary : icColorAssignment.textOnPrimary
+        secondary : orgEntityColorTheme.accentColor.primary,
+        textOnSecondary : orgEntityColorTheme.accentColor.textOnPrimary
     };
 }
 

@@ -98,7 +98,7 @@
                 );
             }
             properties.set(
-                propertyDescriptor,
+                propertyDescriptor.name,
                 propertyElement.valueOf() as string,
             );
         }

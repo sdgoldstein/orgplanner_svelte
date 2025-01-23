@@ -12,7 +12,7 @@ import {type OrgEntityType, OrgEntityTypes} from "../orgStructure/orgEntity";
 
 type ColorHex = `#${string}`;
 
-interface OrgEntityTypeColorAssignment
+interface ColorPairing
 {
     primary: ColorHex;
     textOnPrimary: ColorHex;
@@ -20,19 +20,19 @@ interface OrgEntityTypeColorAssignment
 
 // FIXME - Serialization for these simple classes shouldn't be this hard.  It's not a lot of code, but why is code
 // required at all?
-@RegisterSerializable("OrgEntityTypeColorAssignment", 1)
-class OrgEntityTypeColorAssignmentImpl implements OrgEntityTypeColorAssignment
+@RegisterSerializable("ColorPairing", 1)
+class ColorPairingImpl implements ColorPairing
 {
     constructor(public primary: ColorHex, public textOnPrimary: ColorHex) {}
 }
 
-@RegisterSerializer("OrgEntityTypeColorAssignment", SerializationFormat.JSON)
-class OrgEntityTypeColorAssignmentImplSerializer extends BaseJSONSerializer<OrgEntityTypeColorAssignment> implements
-    Serializer<OrgEntityTypeColorAssignment, SerializationFormat.JSON>
+@RegisterSerializer("ColorPairing", SerializationFormat.JSON)
+class ColorPairingImplSerializer extends BaseJSONSerializer<ColorPairing> implements
+    Serializer<ColorPairing, SerializationFormat.JSON>
 {
-    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgEntityTypeColorAssignment
+    deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): ColorPairing
     {
-        return new OrgEntityTypeColorAssignmentImpl(dataObject.primary, dataObject.textOnPrimary);
+        return new ColorPairingImpl(dataObject.primary, dataObject.textOnPrimary);
     }
 }
 
@@ -40,19 +40,19 @@ interface OrgEntityColorTheme
 {
     name: string;
     label: string;
+    accentColor: ColorPairing;
 
-    getColorAssignment(orgEntityType: OrgEntityType): OrgEntityTypeColorAssignment;
+    getColorAssignment(orgEntityType: OrgEntityType): ColorPairing;
 }
 
 @RegisterSerializable("OrgEntityColorTheme", 1)
 class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
 {
-    private readonly _typeToAssignmentMap: Map<string, OrgEntityTypeColorAssignment> =
-        new Map<string, OrgEntityTypeColorAssignment>();
+    private readonly _typeToAssignmentMap: Map<string, ColorPairing> = new Map<string, ColorPairing>();
 
-    constructor(public name: string, public label: string) {}
+    constructor(public name: string, public label: string, public accentColor: ColorPairing) {}
 
-    getColorAssignment(orgEntityType: OrgEntityType): OrgEntityTypeColorAssignment
+    getColorAssignment(orgEntityType: OrgEntityType): ColorPairing
     {
         const valueToReturn = this._typeToAssignmentMap.get(orgEntityType.name);
         if (valueToReturn === undefined)
@@ -63,7 +63,7 @@ class DefaultOrgEntityColorThemeImpl implements OrgEntityColorTheme
         return valueToReturn;
     }
 
-    setColorAssignment(orgEntityType: OrgEntityType, colorAssignment: OrgEntityTypeColorAssignment)
+    setColorAssignment(orgEntityType: OrgEntityType, colorAssignment: ColorPairing)
     {
         this._typeToAssignmentMap.set(orgEntityType.name, colorAssignment);
     }
@@ -79,13 +79,14 @@ class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEnt
 
         valueToReturn["name"] = serializableObject.name;
         valueToReturn["label"] = serializableObject.label;
+        valueToReturn["accentColor"] =
+            serializationHelper.serialize(serializableObject.accentColor as unknown as Serializable);
 
         // FIXME - Need a better way to handle Maps
         const typeToAssignmentJSONArray: Array<string> = new Array<string>();
         for (const nextOrgEntityType of OrgEntityTypes.typeIterator())
         {
-            const nextColorAssignment: OrgEntityTypeColorAssignment =
-                serializableObject.getColorAssignment(nextOrgEntityType);
+            const nextColorAssignment: ColorPairing = serializableObject.getColorAssignment(nextOrgEntityType);
 
             // @ts-ignore FIXME - This is a hack to get the JSON to serialize correctly
             typeToAssignmentJSONArray.push(`{"${nextOrgEntityType.name}": ${
@@ -101,17 +102,17 @@ class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEnt
     {
         const name: string = dataObject.name;
         const label: string = dataObject.label;
+        const accentColor: ColorPairing = serializationHelper.deserialize(dataObject.accentColor);
 
-        const colorTheme: DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(name, label);
+        const colorTheme: DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(name, label, accentColor);
 
         const typeToAssignmentMap = dataObject.orgTypeToColorAssignmentMap;
         for (const nextAssignment of typeToAssignmentMap)
         {
             // FIXME - This is ugly.  The map keys have been conversted to properties of the object
             Object.entries(nextAssignment).forEach(([ key, value ]) => {
-                colorTheme.setColorAssignment(
-                    OrgEntityTypes.getTypeByName(key),
-                    serializationHelper.deserializeObject<OrgEntityTypeColorAssignment>(value));
+                colorTheme.setColorAssignment(OrgEntityTypes.getTypeByName(key),
+                                              serializationHelper.deserializeObject<ColorPairing>(value));
             });
         }
 
@@ -125,39 +126,33 @@ class OrgEntityColorThemes
         new Map<string, OrgEntityColorTheme>();
 
     static readonly DEEP_BLUE_THEME: OrgEntityColorTheme =
-        new DefaultOrgEntityColorThemeImpl("DEEP_BLUE_THEME", "Deep Blue");
+        new DefaultOrgEntityColorThemeImpl("DEEP_BLUE_THEME", "Deep Blue", new ColorPairingImpl("#1e3a8a", "#FFFFFF"));
     static readonly DEEP_RED_THEME: OrgEntityColorTheme =
-        new DefaultOrgEntityColorThemeImpl("DEEP_RED_THEME", "Deep Red");
-    static readonly DEEP_GREEN_THEME: OrgEntityColorTheme =
-        new DefaultOrgEntityColorThemeImpl("DEEP_GREEN_THEME", "Deep Green");
+        new DefaultOrgEntityColorThemeImpl("DEEP_RED_THEME", "Deep Red", new ColorPairingImpl("#7f1d1d", "#FFFFFF"));
+    static readonly DEEP_GREEN_THEME: OrgEntityColorTheme = new DefaultOrgEntityColorThemeImpl(
+        "DEEP_GREEN_THEME", "Deep Green", new ColorPairingImpl("#14532d", "#FFFFFF"));
 
     static
     {
         /* A bit ugly here in that we're type casting, but not sure of a better way to handle this without passing a
          * mapping in the constructor */
         let deepBlueTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_BLUE_THEME as DefaultOrgEntityColorThemeImpl)
-        deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER,
-                                         new OrgEntityTypeColorAssignmentImpl("#172554", "#FFFFFF"));
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.MANAGER, new ColorPairingImpl("#172554", "#FFFFFF"));
         deepBlueTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                         new OrgEntityTypeColorAssignmentImpl("#1e3a8a", "#FFFFFF"));
-        deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM,
-                                         new OrgEntityTypeColorAssignmentImpl("#172554", "#FFFFFF"));
+                                         new ColorPairingImpl("#1e3a8a", "#FFFFFF"));
+        deepBlueTheme.setColorAssignment(OrgEntityTypes.TEAM, new ColorPairingImpl("#172554", "#FFFFFF"));
 
         let deepRedTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_RED_THEME as DefaultOrgEntityColorThemeImpl)
-        deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER,
-                                        new OrgEntityTypeColorAssignmentImpl("#450a0a", "#FFFFFF"));
+        deepRedTheme.setColorAssignment(OrgEntityTypes.MANAGER, new ColorPairingImpl("#450a0a", "#FFFFFF"));
         deepRedTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                        new OrgEntityTypeColorAssignmentImpl("#7f1d1d", "#FFFFFF"));
-        deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM,
-                                        new OrgEntityTypeColorAssignmentImpl("#450a0a", "#FFFFFF"));
+                                        new ColorPairingImpl("#7f1d1d", "#FFFFFF"));
+        deepRedTheme.setColorAssignment(OrgEntityTypes.TEAM, new ColorPairingImpl("#450a0a", "#FFFFFF"));
 
         let deepGreenTheme: DefaultOrgEntityColorThemeImpl = (this.DEEP_GREEN_THEME as DefaultOrgEntityColorThemeImpl)
-        deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER,
-                                          new OrgEntityTypeColorAssignmentImpl("#052e16", "#FFFFFF"));
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.MANAGER, new ColorPairingImpl("#052e16", "#FFFFFF"));
         deepGreenTheme.setColorAssignment(OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                                          new OrgEntityTypeColorAssignmentImpl("#14532d", "#FFFFFF"));
-        deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM,
-                                          new OrgEntityTypeColorAssignmentImpl("#052e16", "#FFFFFF"));
+                                          new ColorPairingImpl("#14532d", "#FFFFFF"));
+        deepGreenTheme.setColorAssignment(OrgEntityTypes.TEAM, new ColorPairingImpl("#052e16", "#FFFFFF"));
 
         OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_BLUE_THEME.name, this.DEEP_BLUE_THEME);
         OrgEntityColorThemes.NAME_TO_THEME_MAP.set(this.DEEP_RED_THEME.name, this.DEEP_RED_THEME);
@@ -185,7 +180,7 @@ export {
     OrgEntityColorThemes,
     DefaultOrgEntityColorThemeImpl,
     DefaultOrgEntityColorThemeImplSerializer,
-    OrgEntityTypeColorAssignmentImplSerializer,
-    OrgEntityTypeColorAssignmentImpl
+    ColorPairingImplSerializer as OrgEntityTypeColorAssignmentImplSerializer,
+    ColorPairingImpl as OrgEntityTypeColorAssignmentImpl
 };
 export type{OrgEntityColorTheme, ColorHex};
