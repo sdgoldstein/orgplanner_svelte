@@ -102,7 +102,7 @@ class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEnt
     {
         const name: string = dataObject.name;
         const label: string = dataObject.label;
-        const accentColor: ColorPairing = serializationHelper.deserialize(dataObject.accentColor);
+        const accentColor: ColorPairing = serializationHelper.deserializeObject(dataObject.accentColor);
 
         const colorTheme: DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(name, label, accentColor);
 
@@ -180,7 +180,7 @@ export {
     OrgEntityColorThemes,
     DefaultOrgEntityColorThemeImpl,
     DefaultOrgEntityColorThemeImplSerializer,
-    ColorPairingImplSerializer as OrgEntityTypeColorAssignmentImplSerializer,
-    ColorPairingImpl as OrgEntityTypeColorAssignmentImpl
+    ColorPairingImplSerializer,
+    ColorPairingImpl
 };
 export type{OrgEntityColorTheme, ColorHex};

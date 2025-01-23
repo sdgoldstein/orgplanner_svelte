@@ -21,7 +21,7 @@
     import {
         DefaultOrgEntityColorThemeImpl,
         OrgEntityColorThemes,
-        OrgEntityTypeColorAssignmentImpl,
+        ColorPairingImpl,
         OrgEntityTypes,
         type ColorHex,
     } from "orgplanner-common/model";
@@ -58,35 +58,30 @@
             const icColor: FormDataEntryValue | null = formData.get(
                 "custom_color_ic_option_name",
             );
+            const accentColor: FormDataEntryValue | null = formData.get(
+                "custom_color_accent_option_name",
+            );
 
-            if (!managerColor || !teamColor || !icColor) {
+            if (!managerColor || !teamColor || !icColor || !accentColor) {
                 throw new Error("Custom Color Pickers not found");
             }
 
             changedColorScheme = new DefaultOrgEntityColorThemeImpl(
                 "Custom",
                 "Custom",
+                new ColorPairingImpl(accentColor as ColorHex, "#FFFFFF"),
             );
             changedColorScheme.setColorAssignment(
                 OrgEntityTypes.MANAGER,
-                new OrgEntityTypeColorAssignmentImpl(
-                    managerColor as ColorHex,
-                    "#FFFFFF",
-                ),
+                new ColorPairingImpl(managerColor as ColorHex, "#FFFFFF"),
             );
             changedColorScheme.setColorAssignment(
                 OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
-                new OrgEntityTypeColorAssignmentImpl(
-                    icColor as ColorHex,
-                    "#FFFFFF",
-                ),
+                new ColorPairingImpl(icColor as ColorHex, "#FFFFFF"),
             );
             changedColorScheme.setColorAssignment(
                 OrgEntityTypes.TEAM,
-                new OrgEntityTypeColorAssignmentImpl(
-                    teamColor as ColorHex,
-                    "#FFFFFF",
-                ),
+                new ColorPairingImpl(teamColor as ColorHex, "#FFFFFF"),
             );
         } else {
             changedColorScheme = OrgEntityColorThemes.getColorThemeByName(
@@ -180,6 +175,12 @@
                             id="custom_color_team_option_id"
                             name="custom_color_team_option_name"
                             label="Team"
+                            position="responsive"
+                        />
+                        <ColorPicker
+                            id="custom_color_accent_option_id"
+                            name="custom_color_accent_option_name"
+                            label="Action"
                             position="responsive"
                         />
                     </div>
