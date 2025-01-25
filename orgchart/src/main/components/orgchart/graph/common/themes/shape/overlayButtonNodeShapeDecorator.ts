@@ -1,4 +1,4 @@
-import {AbstractCanvas2D, CellState, type CellStateStyle, constants} from "@maxgraph/core";
+import {AbstractCanvas2D, CellState, type CellStateStyle, type ColorValue, constants} from "@maxgraph/core";
 import type {OrgChartNodeShapeDecorator} from "./orgChartNodeShapeDecorator";
 
 abstract class OverlayButtonNodeShapeDecorator implements OrgChartNodeShapeDecorator
@@ -14,20 +14,12 @@ abstract class OverlayButtonNodeShapeDecorator implements OrgChartNodeShapeDecor
     }
 
     protected _paintButton(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number,
-                           radius: number, filled: boolean)
+                           strokeColor: ColorValue, fillColor: ColorValue, radius: number)
     {
         canvas.save();
 
-        canvas.setStrokeColor(canvas.state.strokeColor);
-
-        if (filled)
-        {
-            canvas.setFillColor(canvas.state.strokeColor);
-        }
-        else
-        {
-            canvas.setFillColor("#FFFFFF"); // We fill with white to make sure it is an overlay (covers what's there).
-        }
+        canvas.setStrokeColor(strokeColor);
+        canvas.setFillColor(fillColor);
 
         canvas.setStrokeWidth(1);
         canvas.setStrokeAlpha(0.5);

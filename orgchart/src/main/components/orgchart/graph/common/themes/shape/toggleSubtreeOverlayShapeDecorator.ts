@@ -1,4 +1,4 @@
-import type {AbstractCanvas2D, Cell, CellState, CellStateStyle} from "@maxgraph/core";
+import type {AbstractCanvas2D, Cell, CellState, CellStateStyle, ColorValue} from "@maxgraph/core";
 import type {OrgChartNodeShapeDecorator} from "./orgChartNodeShapeDecorator";
 import type {OrgPlannerChartVertex} from "../../core/orgPlannerChartModel";
 import {OverlayButtonNodeShapeDecorator} from "./overlayButtonNodeShapeDecorator";
@@ -8,6 +8,9 @@ class ToggleSubtreeOveralyShapeDecorator extends OverlayButtonNodeShapeDecorator
     paintBackground(canvas: AbstractCanvas2D, x: number, y: number, width: number, height: number, cellState: CellState,
                     cellStyle: CellStateStyle): void
     {
+        const fillColor: ColorValue = "#FFFFFF";
+        const strokeColor: ColorValue = cellStyle.strokeColor as ColorValue;
+
         const radius = this._getBaseRoundedCornerRadius(width, height, cellStyle) / 2;
 
         const size = 10; // Need a better way to determine this
@@ -17,7 +20,12 @@ class ToggleSubtreeOveralyShapeDecorator extends OverlayButtonNodeShapeDecorator
         // FIXME - Need to all determine if this call HAS children
         if (currentCellValue.canBeParent() && this._hasChildren(currentCell))
         {
-            this._paintButton(canvas, x + width / 2, y + height, size, size, radius, false);
+            this._paintButton(canvas, x + width / 2, y + height, size, size, strokeColor, fillColor, radius);
+
+            canvas.save();
+
+            canvas.setStrokeColor(strokeColor);
+            canvas.setFillColor(strokeColor);
 
             canvas.setStrokeWidth(1);
             canvas.begin();
@@ -31,6 +39,8 @@ class ToggleSubtreeOveralyShapeDecorator extends OverlayButtonNodeShapeDecorator
                 canvas.lineTo(x + width / 2, y + height + size / 4);
             }
             canvas.fillAndStroke();
+
+            canvas.restore();
         }
     }
 

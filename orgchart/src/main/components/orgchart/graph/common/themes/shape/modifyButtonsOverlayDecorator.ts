@@ -1,5 +1,6 @@
-import type {AbstractCanvas2D, CellState, CellStateStyle, SvgCanvas2D} from "@maxgraph/core";
+import type {AbstractCanvas2D, CellState, CellStateStyle, ColorValue, SvgCanvas2D} from "@maxgraph/core";
 import {OverlayButtonNodeShapeDecorator} from "./overlayButtonNodeShapeDecorator";
+import type {OrgChartMaxGraphThemeCellStateStyle} from "../orgChartMaxGraphThemeDefault";
 
 class ModifyButtonsOverlayDecorator extends OverlayButtonNodeShapeDecorator
 {
@@ -24,12 +25,17 @@ class ModifyButtonsOverlayDecorator extends OverlayButtonNodeShapeDecorator
                              state: CellState, style: CellStateStyle, radius: number, size: number, buttonWidth: number,
                              buttonYPos: number)
     {
+        const fontColor: ColorValue = (style as OrgChartMaxGraphThemeCellStateStyle).textOnActionColor ?? "#FFFFFF";
+        const strokeColor: ColorValue =
+            ((style as OrgChartMaxGraphThemeCellStateStyle).actionColor ?? style.strokeColor) as ColorValue;
+
         const editButtonXPos = x + width - buttonWidth / 2 - 5;
-        this._paintButton(canvas, editButtonXPos, buttonYPos, buttonWidth, size, radius, true);
+        this._paintButton(canvas, editButtonXPos, buttonYPos, buttonWidth, size, strokeColor, strokeColor, radius);
 
         canvas.save();
 
-        canvas.setFillColor("#FFFFFF"); // We fill with white.  Should be the font color?
+        canvas.setFillColor(fontColor);
+        canvas.setStrokeColor(strokeColor);
 
         const symbolSize = size * .675;
         const svgCanvas: SvgCanvas2D = canvas as SvgCanvas2D;
@@ -52,12 +58,17 @@ class ModifyButtonsOverlayDecorator extends OverlayButtonNodeShapeDecorator
                               state: CellState, style: CellStateStyle, radius: number, size: number,
                               buttonWidth: number, buttonYPos: number)
     {
+        const fontColor: ColorValue = (style as OrgChartMaxGraphThemeCellStateStyle).textOnActionColor ?? "#FFFFFF";
+        const strokeColor: ColorValue =
+            ((style as OrgChartMaxGraphThemeCellStateStyle).actionColor ?? style.strokeColor) as ColorValue;
+
         const deleteButtonXPos = x + width - buttonWidth / 2 - 10 - size;
-        this._paintButton(canvas, deleteButtonXPos, buttonYPos, buttonWidth, size, radius, true);
+        this._paintButton(canvas, deleteButtonXPos, buttonYPos, buttonWidth, size, strokeColor, strokeColor, radius);
 
         canvas.save();
 
-        canvas.setFillColor("#FFFFFF"); // We fill with white.  Should be the font color?
+        canvas.setFillColor(fontColor);
+        canvas.setStrokeColor(strokeColor);
 
         const symbolSize = size * .675;
         const svgCanvas: SvgCanvas2D = canvas as SvgCanvas2D;

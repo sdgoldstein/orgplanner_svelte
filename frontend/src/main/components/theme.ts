@@ -36,10 +36,10 @@ function tempgetDynamicColorTheme(colorTheme: AppDynamicColorTheme): {colorTheme
 function getAppDynamicColorTheme(orgEntityColorTheme: OrgEntityColorTheme): AppDynamicColorTheme
 {
     // Map the manager color to the primary color and IC to secondary
-    const managerColorAssignment = orgEntityColorTheme.getColorAssignment(OrgEntityTypes.MANAGER);
+    const teamColorAssignment = orgEntityColorTheme.getColorAssignment(OrgEntityTypes.TEAM);
     return {
-        primary : managerColorAssignment.primary,
-        textOnPrimary : managerColorAssignment.textOnPrimary,
+        primary : teamColorAssignment.primary,
+        textOnPrimary : teamColorAssignment.textOnPrimary,
         secondary : orgEntityColorTheme.accentColor.primary,
         textOnSecondary : orgEntityColorTheme.accentColor.textOnPrimary
     };

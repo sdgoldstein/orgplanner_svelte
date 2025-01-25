@@ -7,6 +7,8 @@ import {OrgChartNodeShapeDefault} from "./shape/orgChartNodeShapeDefault";
 
 type CellStateStyleExtension = {
     cellHeaderFontColor?: string;
+    actionColor?: string;
+    textOnActionColor?: string;
 }
 
 type OrgChartMaxGraphThemeCellStateStyle = CellStateStyle&CellStateStyleExtension;
@@ -82,6 +84,9 @@ class OrgChartMaxGraphThemeDefault implements MaxGraphTheme
     constructor(colorTheme: OrgEntityColorTheme)
     {
         this.colorTheme = colorTheme;
+
+        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.actionColor = colorTheme.accentColor.primary;
+        OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE.textOnActionColor = colorTheme.accentColor.textOnPrimary;
 
         const managerStyle = Object.assign({}, OrgChartMaxGraphThemeDefault.DEFAULT_CELL_STYLE);
         managerStyle.strokeColor = this.colorTheme.getColorAssignment(OrgEntityTypes.MANAGER).primary;
