@@ -160,28 +160,39 @@
                 {#if showCustomThemeInput}
                     <div class="flex flex-col">
                         <ColorPicker
+                            id="custom_color_team_option_id"
+                            name="custom_color_team_option_name"
+                            label="Team"
+                            position="responsive"
+                            hex={orgPlannerSettings.colorTheme.getColorAssignment(
+                                OrgEntityTypes.TEAM,
+                            ).primary}
+                        />
+                        <ColorPicker
                             id="custom_color_manager_option_id"
                             name="custom_color_manager_option_name"
                             label="Manager"
                             position="responsive"
+                            hex={orgPlannerSettings.colorTheme.getColorAssignment(
+                                OrgEntityTypes.MANAGER,
+                            ).primary}
                         />
                         <ColorPicker
                             id="custom_color_ic_option_id"
                             name="custom_color_ic_option_name"
                             label="Individual Contributor"
                             position="responsive"
-                        />
-                        <ColorPicker
-                            id="custom_color_team_option_id"
-                            name="custom_color_team_option_name"
-                            label="Team"
-                            position="responsive"
+                            hex={orgPlannerSettings.colorTheme.getColorAssignment(
+                                OrgEntityTypes.INDIVIDUAL_CONTRIBUTOR,
+                            ).primary}
                         />
                         <ColorPicker
                             id="custom_color_accent_option_id"
                             name="custom_color_accent_option_name"
                             label="Action"
                             position="responsive"
+                            hex={orgPlannerSettings.colorTheme.accentColor
+                                .primary}
                         />
                     </div>
                 {/if}
