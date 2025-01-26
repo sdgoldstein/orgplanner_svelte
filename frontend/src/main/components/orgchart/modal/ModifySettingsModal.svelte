@@ -67,7 +67,7 @@
             }
 
             changedColorScheme = new DefaultOrgEntityColorThemeImpl(
-                "Custom",
+                "custom_color_theme_option",
                 "Custom",
                 new ColorPairingImpl(accentColor as ColorHex, "#FFFFFF"),
             );
