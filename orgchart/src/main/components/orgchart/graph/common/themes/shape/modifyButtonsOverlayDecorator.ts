@@ -42,7 +42,7 @@ class ModifyButtonsOverlayDecorator extends OverlayButtonNodeShapeDecorator
         svgCanvas.node = svgCanvas.createElement("g", "");
 
         const editButtonIconNode = svgCanvas.createElement("use", "");
-        editButtonIconNode.setAttribute("href", "symbols.svg#edit");
+        editButtonIconNode.setAttribute("href", "/symbols.svg#edit");
         editButtonIconNode.setAttribute("width", symbolSize.toString());
         editButtonIconNode.setAttribute("height", symbolSize.toString());
         editButtonIconNode.setAttribute("x", (editButtonXPos - symbolSize / 2).toString());
@@ -75,7 +75,7 @@ class ModifyButtonsOverlayDecorator extends OverlayButtonNodeShapeDecorator
         svgCanvas.node = svgCanvas.createElement("g", "");
 
         const deleteButtonIconNode = svgCanvas.createElement("use", "");
-        deleteButtonIconNode.setAttribute("href", "symbols.svg#delete");
+        deleteButtonIconNode.setAttribute("href", "/symbols.svg#delete");
         deleteButtonIconNode.setAttribute("width", symbolSize.toString());
         deleteButtonIconNode.setAttribute("height", symbolSize.toString());
         deleteButtonIconNode.setAttribute("x", (deleteButtonXPos - symbolSize / 2).toString());

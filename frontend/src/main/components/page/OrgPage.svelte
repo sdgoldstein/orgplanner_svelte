@@ -40,7 +40,7 @@
     import { Button } from "@sphyrna/uicomponents";
     import OrgChartViewSettingsPanel from "../orgchart/viewsettings/OrgChartViewSettingsPanel.svelte";
     import { ChartColumn, ChevronLeft, ChevronRight, Eye } from "lucide-svelte";
-    import { OrgPlannerAppEvents } from "../app/orgPlannerAppEvents";
+    import CreateSnapshotModal from "../orgchart/modal/CreateSnapshotModal.svelte";
 
     let { appDynamicColorTheme, orgStructure, settings } = $props();
 
@@ -292,6 +292,29 @@
     /**
      * End Save As Image Logic
      */
+
+    /**
+     * Create Snapshot Logic
+     */
+    let createSnapshotModalOpen: boolean = $state(false);
+    class CreateSnapshotController implements PubSubListener {
+        onEvent(eventName: string, eventToHandle: PubSubEvent): void {
+            if (
+                eventName ===
+                OrgChartEditingToolbarEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION
+            ) {
+                createSnapshotModalOpen = true;
+            }
+        }
+    }
+    const createSnapshotListener = new CreateSnapshotController();
+    PubSubManager.instance.registerListener(
+        OrgChartEditingToolbarEvents.CREATE_SNAPSHOT_TOOLBAR_ACTION,
+        createSnapshotListener,
+    );
+    /**
+     * End Save As Image Logic
+     */
 </script>
 
 <div class="h-screen flex">
@@ -421,6 +444,11 @@
     bind:teamToEdit
     {appDynamicColorTheme}
     {orgStructure}
+/>
+
+<CreateSnapshotModal
+    bind:open={createSnapshotModalOpen}
+    {appDynamicColorTheme}
 />
 
 <style>

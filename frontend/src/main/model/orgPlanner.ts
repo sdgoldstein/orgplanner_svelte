@@ -11,14 +11,13 @@ import {
     type OrgEntityColorTheme,
     OrgEntityColorThemes,
     type OrgEntityPropertyDescriptor,
-    OrgPlanDefaultImpl,
     type OrgSnapshot,
     type OrgStructure,
     type OrgTemplate,
     type OrgTemplateFactoryService,
     type PlanningProject,
-    PlanningProjectDefaultImpl,
-    TreeBasedOrgStructure
+    TreeBasedOrgStructure,
+    type PlanningProjectFactoryService,
 } from "orgplanner-common/model";
 import {v4 as uuidv4} from "uuid";
 
@@ -70,8 +69,9 @@ class OrgPlannerSettingsDefaultImplSerializer extends BaseJSONSerializer<OrgPlan
  * OrgPlanner is the root data model of the Org Planner application.
  *
  * In future, OrgPlannerApp will have 1-n OrgPlanner's
+ * OrgPlanner will 1 root planning project
  * OrgPlanner will have 1 - n PlanningProject's
- * PlanningPronject will have 1 - n plans or drafts
+ * PlanningPronject will have 1 - n plans or drafts and snapshots of that plan
  *
  * Depending on how it's created, an OrgPlanner may or may not have a present org structure
  * It will always have at least one planning project with at least one planning org structure that will be built using
@@ -84,25 +84,23 @@ interface OrgPlanner
     settings: OrgPlannerSettings;
 
     /**
-     * The id of the org leader for the org being planned
+     * The end user displayed title of the org
      */
     orgTitle: string;
 
     /**
-     * The org snapshots that have been imported or saves
-     */
-    readonly orgSnapshots: OrgSnapshot[];
-
-    /**
-     * The root planning project the represents the planning state.  In the future, could have multiple planning
-     * projects per org
+     * The root planning project the represents the planning state.  This is a container for org plans and org snapshots
+     * that appear at the root level of this org planner.  They could direclty be members of the org planner, but this
+     * allows more code reuse
      */
     readonly rootPlanningProject: PlanningProject;
 
-    /*
-     *  Create a new snapshot of the planning org
+    /**
+     * Future
      */
-    createSnapshot(snapshotName: string): void;
+    // public getPlanningProject(id: string): PlanningProject;
+    // public Iterable<PlanningProject> getPlanningProjects();
+    // public createPlanningProject(title:string, ?): PlanningProject;
 }
 
 @RegisterSerializable("OrgPlanner", 1)
@@ -114,11 +112,8 @@ class OrgPlannerDefaultImpl implements OrgPlanner
 
     constructor(orgTitle: string);
     constructor(orgTitle: string, id: string, planningOrg: PlanningProject);
-    constructor(orgTitle: string, id: string, planningOrg: PlanningProject, orgSnapshots: OrgSnapshot[]);
-    constructor(orgTitle: string, id: string, planningOrg: PlanningProject, orgSnapshots: OrgSnapshot[],
-                settings: OrgPlannerSettings);
+    constructor(orgTitle: string, id: string, planningOrg: PlanningProject, settings: OrgPlannerSettings);
     constructor(orgTitle: string, id?: string, planningOrg?: PlanningProject,
-                public readonly orgSnapshots: OrgSnapshot[] = [],
                 public readonly settings: OrgPlannerSettings = new OrgPlannerSettingsDefaultImpl())
     {
         this.orgTitle = orgTitle;
@@ -130,45 +125,30 @@ class OrgPlannerDefaultImpl implements OrgPlanner
         }
         else
         {
-            let planningOrgDataCore: OrgDataCore;
-            if (this.orgSnapshots.length > 0)
-            {
-                // Load form the first snapshot?  Not ideal, but not sure if there is an altnerative at this point
-                planningOrgDataCore = this.orgSnapshots[0].orgDataCore.clone();
-            }
-            else
-            {
-                const orgStructure: OrgStructure = new TreeBasedOrgStructure(this.settings.employeePropertyDescriptors);
-                planningOrgDataCore = new OrgDataCoreDefaultImpl(orgTitle, orgStructure);
-            }
+            const planningProjectFactoryService: PlanningProjectFactoryService =
+                ServiceManager.getService<PlanningProjectFactoryService>(
+                    OrgPlannerAppServicesConstants.PLANNING_PROJECT_FACTORY_SERVICE_NAME);
 
-            const orgPlan = new OrgPlanDefaultImpl(planningOrgDataCore);
-            this.rootPlanningProject = new PlanningProjectDefaultImpl(orgTitle, orgPlan);
+            const orgStructure: OrgStructure = new TreeBasedOrgStructure(this.settings.employeePropertyDescriptors);
+            const planningOrgDataCore = new OrgDataCoreDefaultImpl(orgStructure);
+            this.rootPlanningProject =
+                planningProjectFactoryService.createFromOrgDataCore(orgTitle, planningOrgDataCore);
         }
-    }
-
-    createSnapshot(snapshotName: string): void
-    {
-        const snapshotOrgDataCore = this.rootPlanningProject.orgPlan.orgDataCore.clone();
-        snapshotOrgDataCore.title = snapshotName;
-        this.orgSnapshots.push({orgDataCore : snapshotOrgDataCore} as OrgSnapshot)
     }
 }
 
 @RegisterSerializer("OrgPlanner", SerializationFormat.JSON)
-class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlanner> implements
+class OrgPlannerDefaultImplSerializer extends BaseJSONSerializer<OrgPlanner> implements
     Serializer<OrgPlanner, SerializationFormat.JSON>
 {
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlanner
     {
         const settings: OrgPlannerSettings = serializationHelper.deserializeObject(dataObject.settings);
-        const orgSnapshots: OrgSnapshot[] =
-            this.deserializeIterable<OrgSnapshot>(dataObject.orgSnapshots, serializationHelper);
+
         const rootPlanningProject: PlanningProject =
             serializationHelper.deserializeObject(dataObject.rootPlanningProject);
 
-        return new OrgPlannerDefaultImpl(dataObject.orgTitle, dataObject.id, rootPlanningProject, orgSnapshots,
-                                         settings);
+        return new OrgPlannerDefaultImpl(dataObject.orgTitle, dataObject.id, rootPlanningProject, settings);
     }
 }
 
@@ -178,6 +158,8 @@ class OrgPlannerManager extends BaseService implements Service
 
     createOrgPlannerSync(bypassLocalStorageTemplate?: string): OrgPlanner
     {
+        // FIX BYPASS LOCAL STORAGE to DELETE LOCAL STORAGE!!!!
+
         const dataService =
             ServiceManager.getService<DataService>(OrgPlannerAppServicesConstants.LOCAL_STORAGE_DATA_SERVICE);
         const jsonOrgData = dataService.getData();
@@ -194,6 +176,7 @@ class OrgPlannerManager extends BaseService implements Service
         {
             valueToReturn =
                 this.createOrgPlannerWithTitle(OrgPlannerConstants.NEW_ORG_STRUCTURE_TITLE, bypassLocalStorageTemplate);
+            this.storeOrgPlanner(valueToReturn);
         }
 
         return valueToReturn;
@@ -237,7 +220,7 @@ export {
     OrgPlannerManager,
     OrgPlannerDefaultImpl,
     OrgPlannerSettingsDefaultImpl,
-    OrgPlanDefaultImplSerializer,
+    OrgPlannerDefaultImplSerializer as OrgPlanDefaultImplSerializer,
     DEFAULT_EMPLOYEE_PROPERTY_DESCRIPTORS
 };
 export type{OrgPlanner, OrgPlannerSettings, OrgPlannerSettingsDefaultImplSerializer};

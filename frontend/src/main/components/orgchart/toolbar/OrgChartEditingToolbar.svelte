@@ -76,7 +76,7 @@
     } from "@src/components/theme";
     import { BasePubSubEvent, PubSubManager } from "orgplanner-common/jscore";
     import type { OrgStructure } from "orgplanner-common/model";
-    import { Trash2 } from "lucide-svelte";
+    import { Camera, Trash2 } from "lucide-svelte";
     import { FileDown } from "lucide-svelte";
     import { Settings } from "lucide-svelte";
 
@@ -143,12 +143,15 @@
         }}><FileDown strokeWidth=".15rem" /></IconButton
     >
 
-    <!--FIXME<OrgChartEditingToolbarButton symbol="preview" {appDynamicColorTheme}
-    onclick={() => {
-                const eventToFire = new CreateSnapshotToolbarEvent();
-                PubSubManager.instance.fireEvent(eventToFire);
-      }}
-    ></OrgChartEditingToolbarButton>-->
+    <IconButton
+        id="create_snapshot_org_chart_toolbar_button"
+        dynamicColorTheme={dynamicColorThemeMap}
+        {colorVariant}
+        onclick={() => {
+            const eventToFire = new CreateSnapshotToolbarEvent();
+            PubSubManager.instance.fireEvent(eventToFire);
+        }}><Camera strokeWidth=".15rem" /></IconButton
+    >
 
     <IconButton
         id="save_as_image_org_chart_toolbar_button"

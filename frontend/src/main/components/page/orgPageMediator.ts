@@ -54,6 +54,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.registerListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.registerListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         PubSubManager.instance.registerListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
+        PubSubManager.instance.registerListener(OrgPageEvents.CREATE_SNAPSHOT, this);
     }
 
     reset()
@@ -68,6 +69,7 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         PubSubManager.instance.unregisterListener(OrgChartEvents.ORG_CHART_SELECTION_CHANGED_EVENT, this);
         PubSubManager.instance.unregisterListener(OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT, this);
         PubSubManager.instance.unregisterListener(OrgChartEditingToolbarEvents.SAVE_AS_IMAGE_TOOLBAR_ACTION, this);
+        PubSubManager.instance.unregisterListener(OrgPageEvents.CREATE_SNAPSHOT, this);
     }
 
     getFirstSelectedManager(): Manager
@@ -180,6 +182,9 @@ class DefaultOrgPageMediator implements PubSubListener, OrgPageMediator
         {
             const orgStructureChangedEvent = new SaveAsImageEvent();
             PubSubManager.instance.fireEvent(orgStructureChangedEvent);
+        }
+        else if (eventName === OrgPageEvents.CREATE_SNAPSHOT)
+        {
         }
         else if (eventName === OrgChartEvents.DROP_ENTITY_ON_ENTITY_MOUSE_EVENT)
         {

@@ -4,25 +4,28 @@ import {
     RegisterSerializer,
     RegisterSerializable,
     SerializationFormat,
-    type SerializationHelper,
     type Serializer,
     JSONSerializationHelper
 } from "orgplanner-common/jscore";
+import {v4 as uuidv4} from "uuid";
 
 interface OrgPlan
 {
+    readonly id: string;
+    title: string;
     orgDataCore: OrgDataCore;
 }
 
 interface OrgSnapshot
 {
+    readonly id: string;
+    title: string;
     orgDataCore: OrgDataCore;
 }
 
 // Should this be a Mixin rather than an interface?
 interface OrgDataCore
 {
-    title: string;
     orgStructure: OrgStructure;
     clone(): OrgDataCore;
 }
@@ -30,18 +33,16 @@ interface OrgDataCore
 @RegisterSerializable("OrgDataCore", 1)
 class OrgDataCoreDefaultImpl implements OrgDataCore
 {
-    title: string;
     orgStructure: OrgStructure;
 
-    constructor(title: string, orgStructure: OrgStructure)
+    constructor(orgStructure: OrgStructure)
     {
-        this.title = title;
         this.orgStructure = orgStructure;
     }
 
     clone(): OrgDataCore
     {
-        return new OrgDataCoreDefaultImpl(this.title, this.orgStructure.deepClone());
+        return new OrgDataCoreDefaultImpl(this.orgStructure.deepClone());
     }
 }
 
@@ -56,34 +57,24 @@ class OrgDataCoreDefaultImplSerializer extends BaseJSONSerializer<OrgDataCore> i
         return OrgDataCoreDefaultImplSerializer.KEY;
     }
 
-    getValue(serializableObject: OrgDataCoreDefaultImpl,
-             serializationHelper: SerializationHelper<SerializationFormat.JSON>): Record<string, string>
-    {
-        const valueToReturn: Record<string, string> = {};
-
-        valueToReturn["title"] = serializableObject.title;
-        valueToReturn["orgStructure"] = serializationHelper.serialize(serializableObject.orgStructure);
-
-        return valueToReturn;
-    }
-
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgDataCore
     {
-        const title: string = dataObject.title;
         const orgStructure: OrgStructure = serializationHelper.deserializeObject(dataObject.orgStructure);
 
-        return new OrgDataCoreDefaultImpl(title, orgStructure);
+        return new OrgDataCoreDefaultImpl(orgStructure);
     }
 }
 
 @RegisterSerializable("OrgPlan", 1)
 class OrgPlanDefaultImpl implements OrgPlan
 {
-    orgDataCore: OrgDataCore;
+    readonly id: string;
 
-    constructor(orgDataCore: OrgDataCore)
+    constructor(title: string, orgDataCore: OrgDataCore);
+    constructor(title: string, orgDataCore: OrgDataCore, id: string);
+    constructor(public title: string, public orgDataCore: OrgDataCore, id?: string)
     {
-        this.orgDataCore = orgDataCore;
+        this.id = id ?? uuidv4();
     }
 }
 
@@ -94,18 +85,20 @@ class OrgPlanDefaultImplSerializer extends BaseJSONSerializer<OrgPlan> implement
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
     {
         const orgDataCore = serializationHelper.deserializeObject<OrgDataCore>(dataObject.orgDataCore);
-        return new OrgPlanDefaultImpl(orgDataCore);
+        return new OrgPlanDefaultImpl(dataObject.title, orgDataCore, dataObject.id);
     }
 }
 
 @RegisterSerializable("OrgSnapshot", 1)
 class OrgSnapshotDefaultImpl implements OrgSnapshot
 {
-    orgDataCore: OrgDataCore;
+    readonly id: string;
 
-    constructor(orgDataCore: OrgDataCore)
+    constructor(title: string, orgDataCore: OrgDataCore);
+    constructor(title: string, orgDataCore: OrgDataCore, id: string);
+    constructor(public title: string, public orgDataCore: OrgDataCore, id?: string)
     {
-        this.orgDataCore = orgDataCore;
+        this.id = id ?? uuidv4();
     }
 }
 
@@ -116,7 +109,7 @@ class OrgSnapshotDefaultImplSerializer extends BaseJSONSerializer<OrgSnapshot> i
     deserializeObject(dataObject: any, serializationHelper: JSONSerializationHelper): OrgPlan
     {
         const orgDataCore = serializationHelper.deserializeObject<OrgDataCore>(dataObject.orgDataCore);
-        return new OrgSnapshotDefaultImpl(orgDataCore);
+        return new OrgSnapshotDefaultImpl(dataObject.title, orgDataCore, dataObject.id);
     }
 }
 

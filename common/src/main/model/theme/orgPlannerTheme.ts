@@ -102,7 +102,7 @@ class DefaultOrgEntityColorThemeImplSerializer extends BaseJSONSerializer<OrgEnt
     {
         const name: string = dataObject.name;
         const label: string = dataObject.label;
-        const accentColor: ColorPairing = serializationHelper.deserializeObjecta(dataObject.accentColor);
+        const accentColor: ColorPairing = serializationHelper.deserializeObject(dataObject.accentColor);
 
         const colorTheme: DefaultOrgEntityColorThemeImpl = new DefaultOrgEntityColorThemeImpl(name, label, accentColor);
 

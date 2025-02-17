@@ -2,7 +2,7 @@
 import {DefaultServiceManagerStrategyImpl, ServiceManager} from "@sphyrna/service-manager-ts";
 import {OrgPlannerManager} from "@src/model/orgPlanner";
 import {BrowserBasedFileService, SERIALIZATION_SERVICE_NAME, SerializationServiceImpl} from "orgplanner-common/jscore";
-import {OrgTemplateFactoryImpl} from "orgplanner-common/model";
+import {OrgTemplateFactoryImpl, PlanningProjectFactorServiceDefaultImpl} from "orgplanner-common/model";
 
 import {LocalStorageDataService} from "./data/localStorageDataService";
 import {OrgPlannerExportServiceDefaultImpl} from "./import/orgPlannerExportService";
@@ -25,6 +25,9 @@ class OrgPlannerAppServices
                                                         LocalStorageDataService);
         serviceManagerStrategy.registerSingletonService(OrgPlannerAppServicesConstants.FILE_SERVICE,
                                                         BrowserBasedFileService);
+        serviceManagerStrategy.registerSingletonService(
+            OrgPlannerAppServicesConstants.PLANNING_PROJECT_FACTORY_SERVICE_NAME,
+            PlanningProjectFactorServiceDefaultImpl);
         serviceManagerStrategy.registerSingletonService(SERIALIZATION_SERVICE_NAME, SerializationServiceImpl);
 
         // let dataServiceProvider = new SingletonServiceProvider(ServerDataService);

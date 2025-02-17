@@ -25,7 +25,7 @@
         SerializationService,
     } from "orgplanner-common/jscore";
     import type { Snippet } from "svelte";
-    import type { LayoutData } from "./$types";
+    import type { LayoutData } from "../$types";
     import { invalidateAll } from "$app/navigation";
 
     let { data, children }: { data: LayoutData; children: Snippet } = $props();
@@ -101,6 +101,6 @@
 </script>
 
 <OrgPlannerAppHeader {appDynamicColorTheme}></OrgPlannerAppHeader>
-<PageHeader></PageHeader>
+<PageHeader {appDynamicColorTheme}></PageHeader>
 
 {@render children()}

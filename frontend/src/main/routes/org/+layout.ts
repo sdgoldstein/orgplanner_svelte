@@ -2,7 +2,7 @@ import {ServiceManager} from "@sphyrna/service-manager-ts";
 import type {OrgPlanner, OrgPlannerManager} from "@src/model/orgPlanner";
 import {OrgPlannerAppServicesConstants} from "@src/services/orgPlannerAppServicesConstants";
 
-import type {LayoutLoad} from "./$types";
+import type {LayoutLoad} from "../$types";
 
 export const ssr = false;
 
@@ -15,15 +15,4 @@ export const load: LayoutLoad = ({url}) => {
     const orgPlanner: OrgPlanner = orgPlannerManager.createOrgPlannerSync(bypassLocalStorageParam);
 
     return {orgPlanner : orgPlanner};
-
-    // Always start in planning mode
-    // this.planningModeEnabled = true;
-
-    // this._appState = new OrgPlannerAppState();
-
-    // this.registerCommands();
-
-    //// store planner and then store frequently
-    // orgPlannerManager.storeOrgPlanner(this.orgPlanner)
-    // setInterval(() => orgPlannerManager.storeOrgPlanner(this.orgPlanner), 1000);
 };

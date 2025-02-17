@@ -32,7 +32,7 @@
         testid="org_planner_logo_testid"
         {colorVariant}
         {dynamicColorTheme}
-        src="organization-chart-icon.png"
+        src="/organization-chart-icon.png"
         alt="Org Chart Icon"
       />
       <NavBarBrandTitle>Organization Architect</NavBarBrandTitle>

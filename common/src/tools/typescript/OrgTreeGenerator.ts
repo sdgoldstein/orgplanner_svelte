@@ -76,8 +76,7 @@ class OrgTreeGenerator
 
     private _writeToOutputFile(generatedOrgTree: TreeBasedOrgStructure, outputFile: string)
     {
-        const newOrgCoreData: OrgDataCore =
-            new OrgDataCoreDefaultImpl(this.randomString(this.randomNumber(25)), generatedOrgTree);
+        const newOrgCoreData: OrgDataCore = new OrgDataCoreDefaultImpl(generatedOrgTree);
 
         // Finally, export to a file
         const serializationSevice: SerializationService =

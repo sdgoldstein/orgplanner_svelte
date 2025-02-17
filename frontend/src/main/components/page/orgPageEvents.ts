@@ -34,6 +34,7 @@ class OrgPageEvents
      * Other Events
      */
     public static readonly SAVE_AS_IMAGE: string = "SAVE_AS_IMAGE";
+    public static readonly CREATE_SNAPSHOT = "CREATE_SNAPSHOT";
 }
 
 class OrgPageSelectionChangedEvent extends BasePubSubEvent
@@ -117,6 +118,14 @@ class SaveAsImageEvent extends BasePubSubEvent
     }
 }
 
+class CreateSnapshotEvent extends BasePubSubEvent
+{
+    constructor(public readonly snapshotNameorg: string)
+    {
+        super(OrgPageEvents.CREATE_SNAPSHOT);
+    }
+}
+
 export {
     OrgPageEvents,
     OrgPageSelectionChangedEvent,
@@ -127,5 +136,6 @@ export {
     NewTeamEvent,
     EditTeamEvent,
     DeleteTeamEvent,
-    NewEmployeeAndTeamEvent
+    NewEmployeeAndTeamEvent,
+    CreateSnapshotEvent
 };

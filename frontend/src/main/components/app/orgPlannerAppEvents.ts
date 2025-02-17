@@ -26,7 +26,7 @@ class OrgPlannerAppEvents
     public static readonly SETTINGS_CHANGED: string = "SETTINGS_CHANGED";
     // public static readonly SHOW_SETTINGS_MODAL: string = "SHOW_SETTINGS_MODAL";
     // public static readonly SHOW_CREATE_SNAPSHOT_MODAL: string = "SHOW_CREATE_SNAPSHOT_MODAL";
-    // public static readonly SNAPSHOT_CREATED = "SNAPSHOT_CREATED";
+    // public static readonly CREATE_SNAPSHOT = "CREATE_SNAPSHOT";
     // public static readonly VIEW_TOGGABLE_ENTITY_TOGGLED = "VIEW_TOGGABLE_ENTITY_TOGGLED";
 }
 
@@ -92,5 +92,5 @@ export {
     ChangeSettingsActionEvent,
     SettingsChangedEvent,
     ExportPlanEvent,
-    ImportPlanEvent
+    ImportPlanEvent,
 };
