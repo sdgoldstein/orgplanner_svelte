@@ -1,9 +1,9 @@
 <script lang="ts">
     import {
         Breadcrumbs,
-        BreadcrumbsItem,
         BreadcrumbsDropdown,
-        BreadcrumbsDropdownItem,
+        BreadcrumbsDropdownRouteItem,
+        BreadcrumbsRouteItem,
     } from "@sphyrna/uicomponents";
     import {
         AppDynamicColorThemeColorSelector,
@@ -22,8 +22,8 @@
 </script>
 
 <Breadcrumbs>
-    <BreadcrumbsItem>Your Organization</BreadcrumbsItem>
+    <BreadcrumbsRouteItem>Your Organization</BreadcrumbsRouteItem>
     <BreadcrumbsDropdown>
-        <BreadcrumbsDropdownItem>Planning</BreadcrumbsDropdownItem>
+        <BreadcrumbsDropdownRouteItem>Planning</BreadcrumbsDropdownRouteItem>
     </BreadcrumbsDropdown>
 </Breadcrumbs>

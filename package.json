@@ -8,9 +8,6 @@
     "orgchart",
     "frontend"
   ],
-  "overrides": {
-    "svelte": "5.1.13"
-  },
   "scripts": {
     "clean": "npm run clean --workspace",
     "build": "npm run build --workspaces",
