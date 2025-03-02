@@ -110,7 +110,7 @@
     }
 
     function loadSelectedOrg(selected: SelectValue): void {
-        fetch(data.orgList[selected])
+        fetch(data.orgList[selected as number])
             .then((response) => response.text())
             .then((orgJSON) => {
                 const serializationService =

@@ -1,5 +1,6 @@
 
-import type {OrgChartProps, OrgChartProxy} from "../base/orgChartProxy";
+import type {OrgChartProps} from "@src/components/orgchart/orgChart";
+import type {OrgChartProxy} from "../base/orgChartProxy";
 
 abstract class OrgChartProxyBase implements OrgChartProxy
 {

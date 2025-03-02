@@ -1,7 +1,6 @@
 import {AbstractCanvas2D, type CellStateStyle, constants, Rectangle} from "@maxgraph/core";
 
 import {DecoratedRectangleMaxGraphShape} from "./decoratedRectangleMaxGraphShape";
-import type {L} from "vitest/dist/chunks/reporters.D7Jzd9GS.js";
 
 class OrgChartNodeSelectionShapeBase extends DecoratedRectangleMaxGraphShape
 {

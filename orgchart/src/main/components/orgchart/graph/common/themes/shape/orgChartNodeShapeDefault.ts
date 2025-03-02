@@ -1,4 +1,4 @@
-import {AbstractCanvas2D, Rectangle, SvgCanvas2D} from "@maxgraph/core";
+import {Rectangle} from "@maxgraph/core";
 
 import {ModifyButtonsOverlayDecorator} from "./modifyButtonsOverlayDecorator";
 import {OrgChartNodeShapeBase} from "./orgChartNodeShapeBase";

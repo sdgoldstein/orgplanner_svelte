@@ -19,7 +19,7 @@ import {EditableOrgChartMaxGraph} from "./editbleOrgChartMaxGraph";
 import {
     OrgChartEntityVisibleStateImpl,
 } from "../../common/core/orgChartViewState";
-import type {OrgChartProps, OrgChartProxy} from "../base/orgChartProxy";
+import type {OrgChartProxy} from "../base/orgChartProxy";
 import {OrgChartEvents, OrgChartSelectionChangedEvent} from "../../../OrgChartEvents";
 import {OrgChartProxyBase} from "../shared/orgChartProxyBase";
 import {
@@ -29,6 +29,7 @@ import {
 } from "../shared/viewToggableEntityEventHandler";
 import {EditableOrgChartMaxGraphTheme} from "./editableOrgChartMaxGraphTheme";
 import {InternalEvent} from "@maxgraph/core";
+import type {OrgChartProps} from "@src/components/orgchart/orgChart";
 
 /**
  * This is a class used by all clients/external logic of the orgchart to make orgchat changes, whether by event or
@@ -147,6 +148,11 @@ class EditableOrgChartProxy extends OrgChartProxyBase implements OrgChartProxy, 
         this._propertyDescriptors = orgChartProps.propertyDescriptors;
         this._orgStructure = orgChartProps.orgStructure;
         this._colorTheme = orgChartProps.colorTheme;
+
+        if (this._orgStructure === undefined)
+        {
+            throw new Error("OrgStructure must be provided");
+        }
 
         const orgChartTheme = new EditableOrgChartMaxGraphTheme(this._colorTheme);
         const visibiltyState = new OrgChartEntityVisibleStateImpl(this._propertyDescriptors);

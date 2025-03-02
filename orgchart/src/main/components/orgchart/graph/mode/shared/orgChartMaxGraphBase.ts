@@ -5,7 +5,6 @@ import {
     Graph,
     GraphLayout,
     LayoutManager,
-    SelectionHandler,
     type GraphPluginConstructor
 } from "@maxgraph/core";
 

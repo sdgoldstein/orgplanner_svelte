@@ -1,4 +1,4 @@
-import type {AbstractCanvas2D, Rectangle} from "@maxgraph/core";
+import type {Rectangle} from "@maxgraph/core";
 import {DecoratedRectangleMaxGraphShape} from "./decoratedRectangleMaxGraphShape";
 
 class NoLabelOrgChartShape extends DecoratedRectangleMaxGraphShape
