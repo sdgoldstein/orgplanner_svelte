@@ -18,6 +18,7 @@
         RadioGroupOption,
         Select,
         SelectOption,
+        type SelectValue,
     } from "@sphyrna/uicomponents";
     import OrgChart from "@src/components/orgchart/OrgChart.svelte";
     import {
@@ -40,10 +41,8 @@
 
     let { data }: { data: PageData } = $props();
 
-    let selectedOrg = $state({
-        value: 0,
-        label: data.orgList[0],
-    });
+    let selectedOrg: number = $state(0);
+
     let mode = $state(
         data.modeParam != null
             ? OrgChartMode[data.modeParam as keyof typeof OrgChartMode]
@@ -78,6 +77,8 @@
             valueToReturn = new Set<OrgEntityPropertyDescriptor>([
                 ...orgStructure.employeePropertyIterator(),
             ]);
+        } else {
+            valueToReturn = new Set<OrgEntityPropertyDescriptor>();
         }
 
         return valueToReturn;
@@ -100,26 +101,16 @@
     }
 
     function loadNextOrg() {
-        const newIndex =
-            selectedOrg.value < data.orgList.length - 1
-                ? selectedOrg.value + 1
-                : 0;
-        selectedOrg = { value: newIndex, label: data.orgList[newIndex] };
+        selectedOrg =
+            selectedOrg < data.orgList.length - 1 ? selectedOrg + 1 : 0;
     }
     function loadPreviousOrg() {
-        const newIndex =
-            selectedOrg.value > 0
-                ? selectedOrg.value - 1
-                : data.orgList.length - 1;
-        selectedOrg = { value: newIndex, label: data.orgList[newIndex] };
+        selectedOrg =
+            selectedOrg > 0 ? selectedOrg - 1 : data.orgList.length - 1;
     }
 
-    function loadSelectedOrg(selected: {
-        disabled: boolean;
-        label: string;
-        value: number;
-    }): void {
-        fetch(data.orgList[selected.value])
+    function loadSelectedOrg(selected: SelectValue): void {
+        fetch(data.orgList[selected])
             .then((response) => response.text())
             .then((orgJSON) => {
                 const serializationService =
@@ -138,7 +129,7 @@
     }
 
     $effect(() => {
-        loadSelectedOrg({ ...selectedOrg, disabled: false });
+        loadSelectedOrg(selectedOrg);
     });
 
     class TestListener implements PubSubListener {
@@ -294,11 +285,13 @@
         <Select
             id="orglist_input_id"
             name="orglist_input_name"
-            bind:selected={selectedOrg}
+            bind:value={selectedOrg}
             onValueChange={loadSelectedOrg}
         >
             {#each data.orgList as nextOrg: String, index}
-                <SelectOption value={index}>{nextOrg}</SelectOption>
+                <SelectOption value={index} typeaheadIndex={nextOrg}
+                    >{nextOrg}</SelectOption
+                >
             {/each}
         </Select>
         <Button onclick={loadNextOrg}><ChevronRight /></Button>

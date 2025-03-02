@@ -9,7 +9,7 @@
     "frontend"
   ],
   "scripts": {
-    "clean": "npm run clean --workspace",
+    "clean": "npm run clean --workspaces",
     "build": "npm run build --workspaces",
     "test": "npm run test --workspaces",
     "lint": "npm run lint --workspaces"
