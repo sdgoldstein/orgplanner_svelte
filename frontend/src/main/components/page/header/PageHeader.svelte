@@ -5,14 +5,23 @@
         BreadcrumbsDropdownRouteItem,
         BreadcrumbsRouteItem,
     } from "@sphyrna/uicomponents";
-    import type { OrgPlannerColorThemableComponentProps } from "@src/components/theme";
+    import {
+        AppDynamicColorThemeColorSelector,
+        tempgetDynamicColorTheme,
+        type OrgPlannerColorThemableComponentProps,
+    } from "@src/components/theme";
 
     interface PageHeaderProps extends OrgPlannerColorThemableComponentProps {}
 
-    let { appDynamicColorTheme, ...restProps }: PageHeaderProps = $props();
+    let { appDynamicColorTheme }: PageHeaderProps = $props();
+
+    const dynamicColorTheme = $derived(
+        tempgetDynamicColorTheme(appDynamicColorTheme),
+    );
+    const colorVariant = AppDynamicColorThemeColorSelector.SECONDARY.toString();
 </script>
 
-<Breadcrumbs>
+<Breadcrumbs {colorVariant} {dynamicColorTheme}>
     <BreadcrumbsRouteItem route="/">Your Organization</BreadcrumbsRouteItem>
     <BreadcrumbsDropdown route="/">
         <BreadcrumbsDropdownRouteItem route="/"

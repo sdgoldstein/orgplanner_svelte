@@ -100,6 +100,9 @@
 
         let eventToFire;
         if (mode == NewEditEmployeeModalModes.NEW) {
+            if (!isManagerElement) {
+                throw new Error("Could not obtain isManager form element");
+            }
             if (teamId === "<<-- New Team -->>") {
                 const newTeamTitle: FormDataEntryValue | null = formData.get(
                     "new_team_name_input_name",

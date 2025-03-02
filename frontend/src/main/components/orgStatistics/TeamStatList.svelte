@@ -6,7 +6,7 @@
         TeamStatListTableDataSource,
         TeamStatListConstants,
     } from "./teamStatList";
-    import type { TableDataSource } from "../ui/datatable/datatable";
+    import type { TableDataSource } from "@sphyrna/uicomponents";
 
     interface OrgStatListProps {
         teamStatistics: TeamStatistics;

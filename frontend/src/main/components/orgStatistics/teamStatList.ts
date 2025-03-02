@@ -1,5 +1,5 @@
 import {TeamStatistic, type TeamStatistics} from "orgplanner-common/model";
-import type {DataRow, TableDataSource} from "../ui/datatable/datatable";
+import type {DataRow, TableDataSource} from "@sphyrna/uicomponents";
 import {StatListDataRowIterator} from "./statList";
 
 class TeamStatListConstants
