@@ -1,6 +1,5 @@
 @import "tailwindcss";
 
-@source "./src/main/**/*.{html,js,svelte,ts}";
 @source "../../../node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}";
 
 @theme {

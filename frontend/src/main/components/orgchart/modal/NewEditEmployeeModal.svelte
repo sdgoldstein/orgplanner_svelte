@@ -5,8 +5,7 @@
         static readonly NEW: NewEditEmployeeModalMode = "New";
     }
     interface NewEditEmployeeModalProps
-        extends BaseComponentProps,
-            OrgPlannerColorThemableComponentProps {
+        extends OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgStructure: OrgStructure;
         managerId: string;
@@ -27,7 +26,6 @@
     import type {
         Employee,
         OrgEntityPropertyBag,
-        OrgEntityPropertyDescriptor,
         OrgStructure,
     } from "orgplanner-common/model";
     import { PubSubManager } from "orgplanner-common/jscore";
@@ -83,10 +81,7 @@
             teamId = teamElement.valueOf() as string;
         }
 
-        const properties: OrgEntityPropertyBag = new Map<
-            OrgEntityPropertyDescriptor,
-            string
-        >();
+        const properties: OrgEntityPropertyBag = new Map<string, string>();
         for (const propertyDescriptor of orgStructure.employeePropertyIterator()) {
             const propertyElement: FormDataEntryValue | null = formData.get(
                 `${propertyDescriptor.name}_input_name`,
@@ -160,12 +155,9 @@
         ...restProps
     }: NewEditEmployeeModalProps = $props();
 
-    let selectedTeam: { value: any; label: string } | undefined =
-        $state(undefined);
+    let selectedTeam: string | undefined = $state(undefined);
     let showNewTeamNameInput = $derived(
-        selectedTeam && selectedTeam.value == "<<-- New Team -->>"
-            ? true
-            : false,
+        selectedTeam && selectedTeam == "<<-- New Team -->>" ? true : false,
     );
 
     const colorVariant = AppDynamicColorThemeColorSelector.PRIMARY.toString();
@@ -176,10 +168,7 @@
     $effect.pre(() => {
         selectedTeam =
             mode == NewEditEmployeeModalModes.EDIT && employeeToEdit
-                ? {
-                      value: employeeToEdit.team.id,
-                      label: employeeToEdit.team.title,
-                  }
+                ? employeeToEdit.team.id
                 : undefined;
     });
 </script>
@@ -230,16 +219,21 @@
         id="team_input_id"
         name="team_input_name"
         placeholder="Select a Team"
-        bind:selected={selectedTeam}
+        bind:value={selectedTeam}
         {colorVariant}
         {dynamicColorTheme}
-        disabled={mode == NewEditEmployeeModalModes.EDIT && employeeToEdit}
+        disabled={mode == NewEditEmployeeModalModes.EDIT &&
+            employeeToEdit !== undefined}
     >
         {#each orgStructure.getTeams() as nextTeam: Team}
-            <SelectOption value={nextTeam.id}>{nextTeam.title}</SelectOption>
+            <SelectOption value={nextTeam.id} typeaheadIndex={nextTeam.title}
+                >{nextTeam.title}</SelectOption
+            >
         {/each}
 
-        <SelectOption value="<<-- New Team -->>">-- New Team --</SelectOption>
+        <SelectOption value="<<-- New Team -->>" typeaheadIndex="New Team"
+            >-- New Team --</SelectOption
+        >
     </Select>
 
     {#if showNewTeamNameInput}
@@ -284,7 +278,6 @@
         <RadioGroupOption
             id="is_manager_yes_option_id"
             value="true"
-            group="is_manager_option_name"
             {colorVariant}
             {dynamicColorTheme}
             disabled={mode == NewEditEmployeeModalModes.EDIT}
@@ -293,7 +286,6 @@
         <RadioGroupOption
             id="is_manager_no_option_id"
             value="false"
-            group="is_manager_option_name"
             {colorVariant}
             {dynamicColorTheme}
             disabled={mode == NewEditEmployeeModalModes.EDIT}

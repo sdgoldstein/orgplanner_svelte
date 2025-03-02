@@ -1,3 +1,9 @@
+<script lang="ts" module>
+    interface LayoutDataExtended {
+        orgPlanner: OrgPlanner;
+    }
+</script>
+
 <script lang="ts">
     import { ServiceManager } from "@sphyrna/service-manager-ts";
     import {
@@ -25,10 +31,10 @@
         SerializationService,
     } from "orgplanner-common/jscore";
     import type { Snippet } from "svelte";
-    import type { LayoutData } from "../$types";
     import { invalidateAll } from "$app/navigation";
 
-    let { data, children }: { data: LayoutData; children: Snippet } = $props();
+    let { data, children }: { data: LayoutDataExtended; children: Snippet } =
+        $props();
 
     let appDynamicColorTheme = $state(
         getAppDynamicColorTheme(data.orgPlanner.settings.colorTheme),

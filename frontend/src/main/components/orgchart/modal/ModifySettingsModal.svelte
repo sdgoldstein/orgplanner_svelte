@@ -17,7 +17,6 @@
         AppDynamicColorThemeColorSelector,
         tempgetDynamicColorTheme,
     } from "@src/components/theme";
-    import type { BaseComponentProps } from "@src/components/ui/uicomponents";
     import {
         DefaultOrgEntityColorThemeImpl,
         OrgEntityColorThemes,
@@ -30,8 +29,7 @@
     import ColorPicker from "svelte-awesome-color-picker";
 
     interface ModifySettingsModalProps
-        extends BaseComponentProps,
-            OrgPlannerColorThemableComponentProps {
+        extends OrgPlannerColorThemableComponentProps {
         open: boolean;
         orgPlannerSettings: OrgPlannerSettings;
     }
@@ -123,15 +121,22 @@
     bind:open
     title="Settings"
     description="Configure Application Settings"
-    }
     actionButtonText="Save"
     {colorVariant}
     {dynamicColorTheme}
     onsubmit={handleSubmit}
     {...restProps}
 >
-    <TabbedPane {colorVariant} {dynamicColorTheme}>
-        <Tab id="color_settings_tab" label="Color">
+    <TabbedPane
+        selectedTab="color_settings_tab_name"
+        {colorVariant}
+        {dynamicColorTheme}
+    >
+        <Tab
+            id="color_settings_tab_id"
+            name="color_settings_tab_name"
+            label="Color"
+        >
             <Label for="color_theme_option_label_id">Color Theme</Label>
             <RadioGroup
                 id="color_theme_option_label_id"
@@ -144,7 +149,6 @@
                     <RadioGroupOption
                         id={`${nextColorTheme.name}_option_id`}
                         value={nextColorTheme.name}
-                        group="color_theme_option_name"
                         {colorVariant}
                         {dynamicColorTheme}
                         >{nextColorTheme.label}</RadioGroupOption
@@ -153,7 +157,6 @@
                 <RadioGroupOption
                     id={`custom_color_option_id`}
                     value="custom_color_theme_option"
-                    group="custom_color_theme_option_name"
                     {colorVariant}
                     {dynamicColorTheme}>Custom</RadioGroupOption
                 >
@@ -198,17 +201,28 @@
                 {/if}
             </RadioGroup>
         </Tab>
-        <Tab id="employee_fields_settings_tab" label="Employee Fields">
+        <Tab
+            id="employee_fields_settings_tab_id"
+            name="employee_fields_settings_tab_name"
+            label="Employee Fields"
+        >
             <div class="flex flex-col">
-                <Checkbox id="name-input-id" disabled checked
-                    >Name (required)</Checkbox
+                <Checkbox
+                    id="name-input-id"
+                    name="name-input-name"
+                    disabled
+                    checked>Name (required)</Checkbox
                 >
-                <Checkbox type="checkbox" id="title-input-id" disabled checked
-                    >Title (required)</Checkbox
+                <Checkbox
+                    id="title-input-id"
+                    name="title-input-name"
+                    disabled
+                    checked>Title (required)</Checkbox
                 >
                 {#each orgPlannerSettings.employeePropertyDescriptors as nextPropertyDescriptor}
                     <Checkbox
                         id={`${nextPropertyDescriptor.name}-input-id`}
+                        name={`${nextPropertyDescriptor.name}-input-name`}
                         checked={nextPropertyDescriptor.enabled}
                         >{nextPropertyDescriptor.title}</Checkbox
                     >

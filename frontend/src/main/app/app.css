@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@source "../../../node_modules/@sphyrna/uicomponents/build/dist/**/*.{html,js,svelte,ts}";
+
 @theme {
     --font-sans: "Inter", ui-sans-serif, system-ui, "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto",
         "Helvetica Neue", "Arial", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
@@ -7,27 +9,6 @@
 
     --color-black: var(--color-black);
     --color-overlay: var(--color-neutral-950);
-
-    --color-primary: #D4163C;
-    --color-primary-lightest: #EEA2B1;
-    --color-primary-light: #E15C77;
-    --color-primary-dark: #BF1435;
-    --color-primary-darkest: #9F112D;
-    --color-primary-text: var(--color-white);
-
-    --color-secondary: #4784AF;
-    --color-secondary-lightest: #B5CEDF;
-    --color-secondary-light: #7EAAC7;
-    --color-secondary-dark: #3F789E;
-    --color-secondary-darkest: #346483;
-    --color-secondary-text: var(--color-white);
-
-    --color-tertiary: #C0B6B4;
-    --color-tertiary-lightest: #E6E2E1;
-    --color-tertiary-light: #D3CCCB;
-    --color-tertiary-dark: #ADA4A2;
-    --color-tertiary-darkest: #908987;
-    --color-tertiary-text: var(--color-black);
 
     --color-surface: var(--color-white);
     --color-surface-lightest: #FFFFFF;
@@ -63,7 +44,5 @@
 
 body {
     @apply bg-surface;
-    @apply min-h-screen;
     @apply font-sans;
-    @apply overscroll-none;
 }

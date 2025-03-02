@@ -269,12 +269,14 @@
                 throw new Error("saveAsImageChartContainer undefined in mount");
             }
             // FIXME - Could we avoid accessing tghe proxy directly and intead create a component here?
-            const printableOrgChart = new PrintableOrgChartProxy(
-                saveAsImageChartContainer,
+            const printableOrgChart = new PrintableOrgChartProxy();
+            printableOrgChart.onMount(saveAsImageChartContainer);
+            printableOrgChart.onUpdate({
                 orgStructure,
-                settings.colorTheme,
-                settings.employeePropertyDescriptors,
-            );
+                colorTheme: settings.colorTheme,
+                employeePropertyDescriptors:
+                    settings.employeePropertyDescriptors,
+            });
             const a = document.createElement("a");
             const file = new Blob([saveAsImageChartContainer.innerHTML], {
                 type: "image/svg+xml",
@@ -443,7 +445,6 @@
     bind:managerId={newTeamManagerId}
     bind:teamToEdit
     {appDynamicColorTheme}
-    {orgStructure}
 />
 
 <CreateSnapshotModal
