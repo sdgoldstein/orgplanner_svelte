@@ -21,11 +21,13 @@
     const colorVariant = AppDynamicColorThemeColorSelector.SECONDARY.toString();
 </script>
 
-<Breadcrumbs {colorVariant} {dynamicColorTheme}>
-    <BreadcrumbsRouteItem route="/">Your Organization</BreadcrumbsRouteItem>
-    <BreadcrumbsDropdown route="/">
-        <BreadcrumbsDropdownRouteItem route="/"
-            >Planning</BreadcrumbsDropdownRouteItem
-        >
-    </BreadcrumbsDropdown>
-</Breadcrumbs>
+<div class="sticky top-0">
+    <Breadcrumbs {colorVariant} {dynamicColorTheme}>
+        <BreadcrumbsRouteItem route="/">Your Organization</BreadcrumbsRouteItem>
+        <BreadcrumbsDropdown route="/">
+            <BreadcrumbsDropdownRouteItem route="/"
+                >Planning</BreadcrumbsDropdownRouteItem
+            >
+        </BreadcrumbsDropdown>
+    </Breadcrumbs>
+</div>

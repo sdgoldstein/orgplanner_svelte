@@ -45,4 +45,10 @@
 body {
     @apply bg-surface;
     @apply font-sans;
+    @apply min-h-screen;
+    @apply font-sans;
+    @apply overscroll-none;
+
+    /* Added this after overscroll-none.  Initially, overscroll-none prevented "bouncing" on overflow.  Decided later to just make the body not scroll */
+    @apply overflow-hidden;
 }
