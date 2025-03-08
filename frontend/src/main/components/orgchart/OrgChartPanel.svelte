@@ -17,9 +17,9 @@
     let propertyDescriptors = $derived(settings.employeePropertyDescriptors);
 </script>
 
-<div class="p-2">
-    <OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
-    ></OrgChartEditingToolbar>
+<OrgChartEditingToolbar {appDynamicColorTheme} {orgStructure}
+></OrgChartEditingToolbar>
+<div class="p-1">
     <OrgChart
         data-id="org_chart"
         {orgStructure}

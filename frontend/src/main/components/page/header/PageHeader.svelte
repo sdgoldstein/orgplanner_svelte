@@ -21,7 +21,7 @@
     const colorVariant = AppDynamicColorThemeColorSelector.SECONDARY.toString();
 </script>
 
-<div class="sticky top-0">
+<div class="bg-surface">
     <Breadcrumbs {colorVariant} {dynamicColorTheme}>
         <BreadcrumbsRouteItem route="/">Your Organization</BreadcrumbsRouteItem>
         <BreadcrumbsDropdown route="/">

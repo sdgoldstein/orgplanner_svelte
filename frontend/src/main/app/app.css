@@ -7,7 +7,6 @@
         "Helvetica Neue", "Arial", "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
         "Segoe UI Symbol", "Noto Color Emoji";
 
-    --color-black: var(--color-black);
     --color-overlay: var(--color-neutral-950);
 
     --color-surface: var(--color-white);
@@ -30,6 +29,7 @@
     --color-error-dark: #C9696B;
     --color-error-darkest: #B44143;
     --color-error-text: var(--color-black);
+
 }
 
 @layer components {
@@ -49,6 +49,9 @@ body {
     @apply font-sans;
     @apply overscroll-none;
 
-    /* Added this after overscroll-none.  Initially, overscroll-none prevented "bouncing" on overflow.  Decided later to just make the body not scroll */
+    /* Added this after overscroll-none.  Initially, overscroll-none prevented "bouncing" on overflow.  Decided later to just make the body not scroll 
     @apply overflow-hidden;
+    @apply h-full;
+    @apply w-full;
+    @apply fixed;*/
 }

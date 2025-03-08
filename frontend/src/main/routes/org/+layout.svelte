@@ -106,7 +106,9 @@
     );
 </script>
 
-<OrgPlannerAppHeader {appDynamicColorTheme}></OrgPlannerAppHeader>
-<PageHeader {appDynamicColorTheme}></PageHeader>
+<div class="sticky top-0 left-0 right-0 z-50 w-full">
+    <OrgPlannerAppHeader {appDynamicColorTheme}></OrgPlannerAppHeader>
+    <PageHeader {appDynamicColorTheme}></PageHeader>
+</div>
 
 {@render children()}
